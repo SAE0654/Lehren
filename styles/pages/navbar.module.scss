@@ -1,0 +1,110 @@
+@use "../util/mixins" as mix;
+@use "../util/colors" as color;
+@forward "../util/fonts";
+
+.navbar {
+    @include mix.flexBox(row, center, flex-end);
+    width: 100%;
+    max-width: 1300px;
+    margin: auto;
+    background-color: transparent;
+    border-bottom: 1px solid rgba(227, 216, 216, 0.216);
+    img {
+        width: 20vw;
+        max-width: 300px;
+        padding: 1em 0em;
+    }
+    ul {
+        @include mix.flexBox(row, center, center);
+        width: 80%;
+        gap: 1em;
+        z-index: 2000;
+        li {
+            @include mix.flexBox(row, center, flex-end);
+            width: 100%;
+            position: relative;
+            a {
+                display: block;
+                padding: 1em;
+                color: rgb(255, 255, 255);
+                position: relative;
+                font-family: "Quicksand", sans-serif !important;
+                border-left: 1px solid rgba(255, 255, 255, 0.363);
+                text-transform: uppercase;
+                &:first-child {
+                    border-left: none;
+                }
+                &::before {
+                    content: '';
+                    position: absolute;
+                    bottom: -2px;
+                    left: 0;
+                    width: 100%;
+                    height: 2px;
+                    background: linear-gradient(to right, #ffffff, #2b2727, #9c9fa5);
+                    z-index: 1;
+                    transform: scaleX(0);
+                    transform-origin: left;
+                    transition: transform 0.5s ease-in-out;
+                  }
+                  &:hover::before {
+                    transform: scaleX(1);
+                  }
+            }
+            button {
+                display: flex;
+                flex-direction: row;
+                align-items: center;
+                justify-content: center;
+                gap: 1em;
+                border-radius: 150px;
+                border: 1px solid #fff;
+                color: #fff;
+                padding: 1em;
+                font-weight: 500;
+                font-size: 2.5rem;
+                background-color: transparent;
+            }
+            ul {
+                display: none;
+                position: absolute;
+                width: 100%;
+                top: 100%;
+                padding: 0;
+                z-index: 2000;
+                li {
+                    width: 100% !important;
+                    margin: 0;
+                    button {
+                        width: 100%;
+                        font-size: 0.8rem;
+                        color: #fff;
+                        margin-left: 6em;
+                        margin-top: 2em;
+                        background-color: color.$bg_form;
+                        border: 1px solid transparent;
+                        transition: 500ms ease-in;
+                        &:hover {
+                            color: rgb(211, 38, 38);
+                            border: 1px solid rgb(150, 30, 30);
+                        }
+                    }
+                }
+            }
+            &:nth-child(2) {
+                width: 30%;
+                &:hover ul {
+                    display: block;
+                    animation: appear 500ms forwards;
+                }
+            }
+        }
+    }
+    ul[data-animation="to-left"] a::before {
+        transform-origin: right;
+      }
+      
+    ul[data-animation="center"] a::before {
+        transform-origin: center;
+      }
+}

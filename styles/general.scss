@@ -1,0 +1,415 @@
+@use "util/mixins" as mix;
+@use "util/colors" as color;
+@forward "util/fonts";
+
+body {
+    margin: 0;
+    padding: 0;
+    background-color: lavender;
+    width: 100%;
+    transition: 500ms ease-in;
+    overflow-x: hidden;
+    &.login, &.menu, &.consultas_bg, &.registro_bg {
+        position: absolute;
+        min-height: 100vh;
+        width: 100%;
+        background-size: cover;
+        background-attachment: fixed;
+        background-position: center;
+        background-repeat: repeat;
+        max-width: inherit;
+    }
+    &.login {
+        background-image: url("/img/Login_back.svg");      
+        // form {
+        //     background-color: rgba(255, 255, 255, 0.938);
+        // }
+    }
+    &.menu {
+        background-image: url("/img/bg4.png");
+    }
+    &.consultas_bg {
+        background-image: url("/img/bg3.png");
+        min-height: 100vh;
+    }
+    &.registro_bg {
+        background-image: url("/img/bg2.png");
+    }
+    &::-webkit-scrollbar {
+        width: 8px;
+        height: 8px;
+    }
+    &::-webkit-scrollbar-thumb {
+        background: #000;
+        border-radius: 10px;
+    }
+    &::-webkit-scrollbar-thumb:hover {
+        background: gray;
+        box-shadow: 0 0 2px 1px rgba(0, 0, 0, 0.2);
+    }
+
+    &::-webkit-scrollbar-thumb:active {
+        background-color: rgba(128, 128, 128, 0.808);
+    }
+}
+
+.mini {
+    font-size: 1rem !important;
+    text-align: center;
+}
+
+.scroll {
+    &::-webkit-scrollbar {
+        width: 4px;
+        height: 10px;
+    }
+    &::-webkit-scrollbar-thumb {
+        background: #000;
+        border-radius: 10px;
+    }
+
+    &::-webkit-scrollbar-thumb:hover {
+        background: rgb(43, 40, 40);
+        box-shadow: 0 0 2px 1px rgba(0, 0, 0, 0.776);
+    }
+
+    &::-webkit-scrollbar-thumb:active {
+        background-color: rgb(49, 44, 44);
+    }
+}
+
+main,
+.main_content {
+    display: block;
+    width: 95%;
+    max-width: 1400px;
+    margin: auto;
+    transition: 500ms ease-in;
+    animation: appear 500ms forwards;
+    
+}
+
+@keyframes appear {
+    from {
+        transform: translateY(100%);
+    }
+    to {
+        transform: translateY(0%);
+    }
+}
+
+.window_confirm {
+    display: flex;
+    width: 100%;
+    max-width: 400px;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-family: "Poppins", sans-serif;
+    background-color: color.$bg_input;
+    border-radius: 5px;
+    padding: 1em;
+    color: #fff;
+    z-index: 3000;
+    .cancel_continue {
+        display: flex;
+        flex-direction: row;
+        gap: 1em;
+        button {
+            padding: 1em;
+            margin-bottom: 1em;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            &:nth-child(1) {
+                background-color: #0074d9;
+            }
+            &:nth-child(2) {
+                background-color: red;
+            }
+        }
+    }
+}
+
+.wrapper_bg {
+    display: block;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.671);
+    left: 0;
+    top: 0;
+    z-index: 2500;
+}
+
+.hide {
+    display: none;
+}
+
+li,
+ol {
+    list-style: none;
+}
+
+a {
+    text-decoration: none;
+    font-family: "Quicksand", sans-serif;
+}
+
+.light {
+    filter: invert(0.9);
+}
+
+button,
+input[type="submit"],
+.btn {
+    border: none;
+    cursor: pointer;
+    font-family: "Quicksand", sans-serif;
+    &:active {
+        transform: scale(0.9);
+    }
+}
+
+input,
+select {
+    border: none;
+    outline: none;
+    font-weight: 500;
+}
+
+.active {
+    font-weight: bold;
+}
+
+.error {
+    color: rgb(209, 23, 23);
+    font-family: "Quicksand", sans-serif;
+    font-weight: bold;
+}
+
+.long {
+    // td tablas
+    min-width: 270px;
+}
+
+.medium {
+    // td tablas
+    min-width: 150px;
+}
+
+.short {
+    max-width: 100px;
+}
+
+.invalid-feedback {
+    color: red;
+}
+
+.currentEditingTr {
+    background-color: #000000 !important;
+    color: #ffffff !important;
+    input,
+    textarea {
+        color: rgb(255, 255, 255) !important;
+        &::placeholder {
+            color: #fff !important;
+        }
+    }
+}
+
+.closeIcon,
+.saveIcon {
+    background-color: transparent;
+    margin: 0.5em;
+    font-size: 1rem;
+}
+
+.closeIcon {
+    color: rgb(158, 49, 49);
+}
+
+.saveIcon {
+    color: rgb(41, 40, 143);
+}
+
+.closeIcon:hover, .saveIcon:hover {
+    color: #fff
+}
+
+button:disabled {
+    cursor: not-allowed;
+    filter: opacity(0.5);
+    &:active {
+        transform: scale(1)
+    }
+}
+
+.icon_button {
+    font-size: 5rem;
+    border: 1px solid #fff;
+    border-radius: 150px;
+    padding: 0.3em;
+}
+
+.radio_ck_section {
+    display: block;
+    width: 90%;
+    margin: auto;
+}
+.control {
+    display: inline-block;
+    position: relative;
+    padding-left: 1.5rem;
+    margin-bottom: 1em;
+    margin-right: 1em;
+    padding-top: 4px;
+    cursor: pointer;
+    font-size: 0.8rem;
+    color: rgb(214, 198, 198);
+    font-family: "Quicksand", sans-serif;
+}
+.control input {
+    position: absolute;
+    z-index: -1;
+    opacity: 0;
+}
+.control_indicator {
+    position: absolute;
+    top: 6px;
+    left: 0;
+    height: 20px;
+    width: 20px;
+    background: #e9e1e1;
+    border: 0px hidden #22268d;
+}
+
+.control:hover input ~ .control_indicator,
+.control input:focus ~ .control_indicator {
+    background: #d5d2df;
+}
+
+.control input:checked ~ .control_indicator {
+    background: #465055;
+}
+.control:hover input:not([disabled]):checked ~ .control_indicator,
+.control input:checked:focus ~ .control_indicator {
+    background: #06647d;
+}
+.control input:disabled ~ .control_indicator {
+    background: #e6e6e6;
+    opacity: 14;
+    pointer-events: none;
+}
+.control_indicator:after {
+    box-sizing: unset;
+    content: "";
+    position: absolute;
+    display: none;
+}
+.control input:checked ~ .control_indicator:after {
+    display: block;
+}
+
+.control-radio .control_indicator {
+    border-radius: 50%;
+}
+
+.control-radio .control_indicator:after {
+    left: 4px;
+    top: 4px;
+    height: 12px;
+    width: 12px;
+    border-radius: 50%;
+    background: #f9f8f9;
+    transition: background 250ms;
+}
+
+.control-radio input:disabled ~ .control_indicator:after {
+    background: #e9d1d1;
+}
+.control-radio .control_indicator::before {
+    content: "";
+    display: block;
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 4.5rem;
+    height: 4.5rem;
+    margin-left: -1.3rem;
+    margin-top: -1.3rem;
+    background: #2aa1c0;
+    border-radius: 3rem;
+    opacity: 0.6;
+    z-index: 99999;
+    transform: scale(0);
+}
+
+@keyframes s-ripple {
+    0% {
+        opacity: 0;
+        transform: scale(0);
+    }
+    20% {
+        transform: scale(1);
+    }
+    100% {
+        opacity: 0.01;
+        transform: scale(1);
+    }
+}
+
+@keyframes s-ripple-dup {
+    0% {
+        transform: scale(0);
+    }
+    30% {
+        transform: scale(1);
+    }
+    60% {
+        transform: scale(1);
+    }
+    100% {
+        opacity: 0;
+        transform: scale(1);
+    }
+}
+
+.control-radio input + .control_indicator::before {
+    animation: s-ripple 250ms ease-out;
+}
+.control-radio input:checked + .control_indicator::before {
+    animation-name: s-ripple-dup;
+}
+
+.badge_info {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #fff;
+    padding: 1em;
+    border-radius: 5px;
+    max-width: 1000px;
+    h1 {
+        display: block;
+        font-family: "Poppins", sans-serif;
+        text-align: center;
+    }
+    img {
+        width: 100%;
+        max-width: 300px;
+    }
+    a {
+        margin-top: 2em;
+        text-decoration: underline;
+    }
+}

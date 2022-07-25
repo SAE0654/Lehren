@@ -1,0 +1,30 @@
+{
+  "name": "edc-system",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "axios": "^0.27.2",
+    "bcryptjs": "^2.4.3",
+    "mongoose": "^6.4.0",
+    "next": "^12.2.3-canary.6",
+    "next-auth": "^4.5.0",
+    "next-pwa": "^5.5.4",
+    "react": "18.2.0",
+    "react-dom": "18.2.0",
+    "react-icons": "^4.4.0",
+    "react-router-dom": "^6.3.0",
+    "react-toastify": "^9.0.5",
+    "sass": "^1.52.3",
+    "webpack": "^5.73.0"
+  },
+  "devDependencies": {
+    "eslint": "8.18.0",
+    "eslint-config-next": "12.1.6"
+  }
+}

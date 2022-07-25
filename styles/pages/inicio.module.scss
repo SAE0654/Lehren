@@ -1,0 +1,48 @@
+@use "util/mixins" as mix;
+@use "util/colors" as color;
+@forward "util/fonts";
+
+.quest_next {
+    width: 100%;
+    max-width: 1300px;
+    margin: auto;
+    h1 {
+        @include mix.fontTitle(2.5rem);
+        text-align: left;
+        margin-top: 1em;
+        margin-bottom: 1em;
+        font-family: "Poppins", sans-serif;
+        color: #ffffff;
+        border-bottom: 1px solid gray;
+        padding-bottom: 1em;
+        letter-spacing: 3px;
+    }
+
+    .options {
+        @include mix.flexBox(row, center, center);
+
+        a {
+            @include mix.flexBox(column, center, center);
+            width: 35%;
+            padding: 1em;
+            color: rgb(255, 255, 255);
+            text-align: center;
+            border-radius: 5px;
+            font-family: "Poppins", sans-serif;
+            background-color: #1a2225bb;
+            box-shadow: 10px 10px 15px rgba(245, 240, 245, 0.067);
+            min-height: 30vh;
+            transition: 250ms ease-in;
+
+            &:hover {
+                background-color: rgba(0, 0, 0, 0.884);
+            }
+
+            span {
+                display: block;
+                font-size: 2rem;
+                font-weight: 500;
+            }
+        }
+    }
+}
