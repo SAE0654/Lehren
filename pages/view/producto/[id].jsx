@@ -1,7 +1,7 @@
 import { useRouter } from 'next/router'
 import { getSession, useSession } from "next-auth/react";
 import { useEffect, useState } from 'react'
-import axios from 'axios'
+import axios from 'axios';
 import Head from 'next/head';
 import Layout from '../../../components/Layout';
 import styles from "../../../styles/pages/ventas.module.scss";

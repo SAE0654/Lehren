@@ -58,6 +58,22 @@ body {
     text-align: center;
 }
 
+.btn_normal {
+    display: block;
+    width: 100%;
+    max-width: 200px;
+    padding: 1em;
+    background-color: #000;
+    color: #fff;
+    position: absolute;
+    top: 0;
+    right: 0;
+}
+
+.overWrapper {
+    z-index: 3000;
+}
+
 .scroll {
     &::-webkit-scrollbar {
         width: 4px;

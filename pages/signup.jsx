@@ -4,12 +4,14 @@ import Layout from "../components/Layout";
 import { FaUserAlt, FaUsers } from "react-icons/fa";
 import { RiLockPasswordFill, RiLockPasswordLine } from "react-icons/ri";
 import { toast } from 'react-toastify';
-import { AiOutlineMail } from 'react-icons/ai';
+import { AiOutlineMail, AiOutlineClose } from 'react-icons/ai';
 import axios from 'axios';
 import { getSession } from 'next-auth/react';
 import { Router, useRouter } from 'next/router';
 import styles from "../styles/pages/login.module.scss";
 import { sessionHasExpired } from '../utils/forms';
+import Search from '../components/Search';
+import { useSession } from "next-auth/react"
 
 export default function Login() {
     const [Data, setData] = useState({});
@@ -19,7 +21,10 @@ export default function Login() {
     const [OnChangeRoute, setOnChangeRoute] = useState(false);
     const [NextRoute, setNextRoute] = useState(null);
     const [GoToNext, setGoToNext] = useState(false);
+    // Función de búsqueda
+    const [IsSearching, setIsSearching] = useState(false);
     const Route = useRouter();
+    const { data: session } = useSession()
 
     useEffect(() => {
         document.querySelector("body").className = '';
@@ -46,8 +51,6 @@ export default function Login() {
             Router.events.off('routeChangeStart', beforeRouteHandler);
         };
     }, [notSaved, GoToNext]);
-
-
 
     const handleLogin = (e) => {
         e.preventDefault();
@@ -91,7 +94,7 @@ export default function Login() {
         </Head>
         <Layout>
             <div className={styles.signup}>
-                <div className={OnChangeRoute ? "wrapper_bg" : "wrapper_bg hide"} aria-hidden="true"></div>
+                <div className={OnChangeRoute || IsSearching ? "wrapper_bg" : "wrapper_bg hide"} aria-hidden="true"></div>
                 <div className={OnChangeRoute ? "window_confirm" : "window_confirm hide"}>
                     <h1 className="mini">¿Seguro que quieres salir? Perderás tu trabajo actual</h1>
                     <div className="cancel_continue">
@@ -99,6 +102,15 @@ export default function Login() {
                         <button onClick={() => setOnChangeRoute(false)}>Cancelar</button>
                     </div>
                 </div>
+                {session.user.rol === 'administrador' ? <button className="btn_normal" onClick={() => setIsSearching(!IsSearching)}>Buscar usuario</button> : null}
+                {IsSearching ?
+                    <>
+                        <Search />
+                        <button className={"overWrapper " + styles.btn_search} onClick={() => setIsSearching(!IsSearching)}>
+                            <AiOutlineClose />
+                        </button>
+                    </>
+                    : null}
                 <form onSubmit={(e) => handleLogin(e)}>
                     <br />
                     <img src="/img/Logo_Vertical.svg" alt="" />

@@ -18,6 +18,14 @@
         letter-spacing: 7px;
         margin-top: -1em
     }
+    .btn_search {
+        position: absolute;
+        top: 10%;
+        right: 8%;
+        background-color: transparent;
+        color: #fff;
+
+    }
     form {
         @include mix.flexBox(column, center, center);
         background-color: color.$bg_form;
