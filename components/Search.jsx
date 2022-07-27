@@ -32,7 +32,7 @@ export default function Search() {
         const idMsg = toast.loading("Buscando usuario...");
         let nombre = Name;
         nombre = nombre[0].toUpperCase() + nombre.substring(1);
-        axios.get("http://localhost:3000/api/usuario/" + nombre)
+        axios.get("https://lehren-productos.vercel.app/api/usuario/" + nombre)
             .then((res) => {
                 if (res.data.length === 0) {
                     toast.info("No existe ningún usuario con este correo");
@@ -59,7 +59,7 @@ export default function Search() {
             return;
         }
         const idMsg = toast.loading("Actualizando datos...")
-        await axios.put("http://localhost:3000/api/usuario/update", Resultados)
+        await axios.put("https://lehren-productos.vercel.app/api/usuario/update", Resultados)
             .then(() => {
                 toast.success("Usuario actualizado con éxito");    
             });
