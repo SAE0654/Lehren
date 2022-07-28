@@ -13,7 +13,7 @@ function Nav() {
     const { data } = useSession();
 
     useEffect(() => {
-        if(!data) return;
+        if (!data) return;
         setRolInterface();
     }, [data]);
 
@@ -24,45 +24,49 @@ function Nav() {
                 break;
             case 'staff':
                 setInterface(STAFF);
+                break;
+            case 'docente':
+                setInterface(STAFF);
+                break;
             default:
                 break;
         }
     }
 
     return (
-            data ? (
+        data ? (
             <nav className={styles.navbar}>
-            <img src="/img/Logo_horizontal.svg" alt="" />
-            <ul data-animation="center">
-                <li>
-                    <NavLink href="/" exact>
-                        <AiFillHome /> &nbsp;&nbsp;
-                        Inicio
-                    </NavLink>
-                    {
-                        Interface.map((item, index) => (
-                            <NavLink href={item.link} exact key={index}>
-                                {item.texto}
-                            </NavLink>
-                        ))
-                    }
-                </li>
-                <li>
-                    <button>
-                        <AiOutlineUser />
-                    </button>
-                    <ul>
-                        <li>
-                            <button onClick={() => (signOut(), localStorage.removeItem('L'))}>
-                                <AiOutlinePoweroff />
-                                Cerrar sesión
-                            </button>
-                        </li>
-                    </ul>
-                </li>
-            </ul>
-        </nav>)
-        : null
+                <img src="/img/Logo_horizontal.svg" alt="" />
+                <ul data-animation="center">
+                    <li>
+                        <NavLink href="/" exact>
+                            <AiFillHome /> &nbsp;&nbsp;
+                            Inicio
+                        </NavLink>
+                        {
+                            Interface.map((item, index) => (
+                                <NavLink href={item.link} exact key={index}>
+                                    {item.texto}
+                                </NavLink>
+                            ))
+                        }
+                    </li>
+                    <li>
+                        <button>
+                            <AiOutlineUser />
+                        </button>
+                        <ul>
+                            <li>
+                                <button onClick={() => (signOut(), localStorage.removeItem('L'))}>
+                                    <AiOutlinePoweroff />
+                                    Cerrar sesión
+                                </button>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </nav>)
+            : null
     );
 }
 

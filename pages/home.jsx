@@ -34,7 +34,13 @@ export default function Home() {
         STAFF[0].icono = <AiOutlineFolderAdd className="icon_button" />;
         setInterface(STAFF);
         break;
+      case 'docente':
+        STAFF[1].icono = <AiOutlineFileSearch className="icon_button" />;
+        STAFF[0].icono = <AiOutlineFolderAdd className="icon_button" />;
+        setInterface(STAFF);
+        break;
       default:
+        console.error("ALGO SALIÓ TERRIBLEMENTE MAL. COMPRA OTRA PC")
         break;
     }
   }
