@@ -86,6 +86,8 @@ export default function Login() {
         return false;
     }
 
+    if(typeof session === 'undefined') return <h1>Cargando</h1>
+
     return (<>
         <Head>
             <title>Registro de usuario</title>

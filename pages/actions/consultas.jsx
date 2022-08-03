@@ -71,6 +71,7 @@ export default function Consultas() {
     const computePages = (data) => {
         const firstPageIndex = (currentPage - 1) * pageSize;
         let lastPageIndex = firstPageIndex + pageSize;
+        setlastPage(lastPageIndex)
         data === null ? setTempProductos(Productos.slice(firstPageIndex, lastPageIndex)) : setTempProductos(data.slice(firstPageIndex, lastPageIndex));
         return Productos.slice(firstPageIndex, lastPageIndex);
     }
@@ -295,7 +296,7 @@ export default function Consultas() {
                                         {Query !== '' ?
                                             <AiOutlineClose
                                                 className="btn"
-                                                onClick={() => (setQuery(''), setNoResults(false), setTempProductos(Productos), setCurrentPage(1))} />
+                                                onClick={() => (setQuery(''), setNoResults(false), computePages(Productos), setCurrentPage(1))} />
                                             : <BsSearch />}
                                     </label>
                                     <input
@@ -344,7 +345,7 @@ export default function Consultas() {
                                                 <label htmlFor="institucion">Institución</label>
                                             </div>
                                             {TempProductos.length <= 0 ?
-                                                <button type="submit" onClick={() => (setBoxFilter(!BoxFilter), computePages(Productos))}>
+                                                <button type="submit" onClick={() => (setBoxFilter(!BoxFilter), computePages(Productos), setCurrentPage(1))}>
                                                     Restaurar datos
                                                 </button>
                                                 : <button type="submit" onClick={() => setBoxFilter(!BoxFilter)}>
@@ -381,7 +382,7 @@ export default function Consultas() {
                                             {
                                                 TempProductos.map((producto, index) => (
                                                     <tr key={index} className={index === CurrentIndex ? 'currentEditingTr' : null}>
-                                                        <td>{index + 1}</td>
+                                                        <td>{(lastPage - pageSize) + index + 1}</td>
                                                         <td>
                                                             {index !== CurrentIndex ? <div className={styles.action_by_id + " action_edit"}>
                                                                 {
