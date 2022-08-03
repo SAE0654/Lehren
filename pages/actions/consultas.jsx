@@ -79,7 +79,7 @@ export default function Consultas() {
     }, [currentPage]);
 
     const getProductos = async () => {
-        await axios(`https://lehren-productos.vercel.app/api/productos/all`).then((res) => {
+        await axios(`http://localhost:3000/api/productos/all`).then((res) => {
             setProductos(res.data);
             setEditInformation(res.data)
             // setTempProductos(res.data);
