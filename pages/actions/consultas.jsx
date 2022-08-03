@@ -81,14 +81,12 @@ export default function Consultas() {
 
     const getProductos = async () => {
         setLoading(true);
-        toast.loading("Cargando datos...");
         await axios(`https://lehren-productos.vercel.app/api/productos/all`).then((res) => {
             setProductos(res.data);
             setEditInformation(res.data);
             setTempProductos(res.data);
             setLoading(false);
             computePages(res.data);
-            toast.dismiss();
         });
     }
 
