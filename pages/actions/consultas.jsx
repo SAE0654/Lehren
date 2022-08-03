@@ -79,10 +79,10 @@ export default function Consultas() {
     }, [currentPage]);
 
     const getProductos = async () => {
-        await axios(`http://localhost:3000/api/productos/all`).then((res) => {
+        await axios(`https://lehren-productos.vercel.app/api/productos/all`).then((res) => {
             setProductos(res.data);
-            setEditInformation(res.data)
-            // setTempProductos(res.data);
+            setEditInformation(res.data);
+            setTempProductos(res.data);
             setLoading(false);
             computePages(res.data);
         });
@@ -121,16 +121,17 @@ export default function Consultas() {
         }
         if (omitir.length <= 0) {
             toast.info("Filtro restaurado");
+            // setTempProductos(Productos);
             computePages(Productos);
             setRestaurar(false);
             return;
         }
         omitir.push("aprobado");
-        console.log(TempProductos)
         Productos.map((student) => {
             temp.push(omit(student, omitir));
         });
-        computePages(temp);
+        // setTempProductos(temp);
+        computePages(temp)
         clearFilters(e);
         toast.success("Filtro aplicado");
         setRestaurar(true);
@@ -562,6 +563,7 @@ export default function Consultas() {
                                 totalCount={Productos.length}
                                 pageSize={pageSize}
                                 onPageChange={page => setCurrentPage(page)}
+                                key={1}
                             />
                         </div></>
             }
