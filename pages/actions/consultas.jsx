@@ -80,13 +80,15 @@ export default function Consultas() {
     }, [currentPage]);
 
     const getProductos = async () => {
+        setLoading(true);
+        toast.loading("Cargando datos...");
         await axios(`https://lehren-productos.vercel.app/api/productos/all`).then((res) => {
             setProductos(res.data);
             setEditInformation(res.data);
             setTempProductos(res.data);
             setLoading(false);
             computePages(res.data);
-            console.log(res.data)
+            toast.dismiss();
         });
     }
 
@@ -567,7 +569,7 @@ export default function Consultas() {
 
                             }
                             {
-                                TempProductos.length === 0 ?
+                                TempProductos.length === 0 && !Loading ?
                                     <div className={styles.info}>
                                         <button onClick={() => (computePages(Productos), setCurrentPage(1))}>Volver a página 1</button>
                                     </div> :
