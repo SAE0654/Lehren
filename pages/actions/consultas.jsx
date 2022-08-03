@@ -2,7 +2,7 @@ import Head from 'next/head';
 import styles from "../../styles/pages/ventas.module.scss";
 import { getSession, useSession } from "next-auth/react";
 import Layout from '../../components/Layout';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import axios from 'axios';
 import { AiOutlineClose, AiTwotoneEdit, AiOutlineEye, AiFillDelete, AiOutlineSave } from 'react-icons/ai';
 import { BsSearch } from "react-icons/bs";
@@ -10,6 +10,9 @@ import { toast } from 'react-toastify';
 import { getTimeStamp, sessionHasExpired } from '../../utils/forms';
 import { NavLink } from '../../components/NavLink';
 import { Router, useRouter } from 'next/router';
+import Pagination from '../../components/Pagination';
+
+let pageSize = 4;
 
 export default function Consultas() {
     const [Productos, setProductos] = useState([]);
@@ -29,6 +32,8 @@ export default function Consultas() {
     const [OnChangeRoute, setOnChangeRoute] = useState(false);
     const [NextRoute, setNextRoute] = useState(null);
     const [GoToNext, setGoToNext] = useState(false);
+
+    const [currentPage, setCurrentPage] = useState(1);
     const Route = useRouter();
 
     const { data: session } = useSession();
@@ -57,20 +62,29 @@ export default function Consultas() {
         } else {
             Router.events.off('routeChangeStart', beforeRouteHandler);
         }
-        console.log("RECARGA")
         return () => {
             Router.events.off('routeChangeStart', beforeRouteHandler);
         };
     }, [notSaved, GoToNext]);
 
+    const computePages = (data) => {
+        const firstPageIndex = (currentPage - 1) * pageSize;
+        const lastPageIndex = firstPageIndex + pageSize;
+        data === null ? setTempProductos(Productos.slice(firstPageIndex, lastPageIndex)) : setTempProductos(data.slice(firstPageIndex, lastPageIndex));
+        return Productos.slice(firstPageIndex, lastPageIndex);
+    }
+
+    useMemo(() => {
+        computePages(null);
+    }, [currentPage]);
 
     const getProductos = async () => {
-        console.log(process.env.NEXTAUTH_URL)
-        await axios(`https://lehren-productos.vercel.app/api/productos/all`).then((res) => {
+        await axios(`http://localhost:3000/api/productos/all`).then((res) => {
             setProductos(res.data);
             setEditInformation(res.data)
-            setTempProductos(res.data);
+            // setTempProductos(res.data);
             setLoading(false);
+            computePages(res.data);
         });
     }
 
@@ -102,20 +116,21 @@ export default function Consultas() {
         for (let i = 0; i <= 9; i++) {
             if (e.target[i].checked) {
                 omitir.push(e.target[i].name);
+                console.log(e.target[i].name)
             }
         }
-        console.log(omitir)
         if (omitir.length <= 0) {
             toast.info("Filtro restaurado");
-            setTempProductos(Productos);
+            computePages(Productos);
             setRestaurar(false);
             return;
         }
-        omitir.push("aprobado")
+        omitir.push("aprobado");
+        console.log(TempProductos)
         Productos.map((student) => {
             temp.push(omit(student, omitir));
         });
-        setTempProductos(temp);
+        computePages(temp);
         clearFilters(e);
         toast.success("Filtro aplicado");
         setRestaurar(true);
@@ -246,37 +261,37 @@ export default function Consultas() {
                     <NavLink href="/actions/producto">Carga tu primer producto</NavLink>
                 </div> :
                     <>
+                        <div className={Deleting ? "window_confirm" : "window_confirm hide"}>
+                            <h1>¿Eliminar producto?</h1>
+                            <div className="cancel_continue">
+                                <button onClick={() => deleteProduct(Id)}>Continuar</button>
+                                <button onClick={() => ((setDeleting(false), setId(null), document.querySelector("body").style.overflow = "auto"))}>Cancelar</button>
+                            </div>
+                        </div>
+                        <div className={Aprobando ? "window_confirm" : "window_confirm hide"}>
+                            <h1>¿Aprobar producto?</h1>
+                            <div className="cancel_continue">
+                                <button onClick={() => aprobarProduct(Id)}>Aprobar</button>
+                                <button onClick={() => ((setAprobando(false), setId(null), document.querySelector("body").style.overflow = "auto"))}>Cancelar</button>
+                            </div>
+                        </div>
+                        <div className={OnChangeRoute ? "window_confirm" : "window_confirm hide"}>
+                            <h1 className="mini">¿Seguro que quieres salir? Perderás tu trabajo actual</h1>
+                            <div className="cancel_continue">
+                                <button onClick={() => (setGoToNext(true), Route.push(NextRoute))}>Continuar</button>
+                                <button onClick={() => setOnChangeRoute(false)}>Cancelar</button>
+                            </div>
+                        </div>
                         <div className={Deleting || Aprobando || OnChangeRoute ? "wrapper_bg" : "wrapper_bg hide"} aria-hidden="true"></div>
                         <div className={styles.main_content}>
-                        <h1>Consultas</h1>
-                            <div className={Deleting ? "window_confirm" : "window_confirm hide"}>
-                                <h1>¿Eliminar producto?</h1>
-                                <div className="cancel_continue">
-                                    <button onClick={() => deleteProduct(Id)}>Continuar</button>
-                                    <button onClick={() => ((setDeleting(false), setId(null), document.querySelector("body").style.overflow = "auto"))}>Cancelar</button>
-                                </div>
-                            </div>
-                            <div className={Aprobando ? "window_confirm" : "window_confirm hide"}>
-                                <h1>¿Aprobar producto?</h1>
-                                <div className="cancel_continue">
-                                    <button onClick={() => aprobarProduct(Id)}>Aprobar</button>
-                                    <button onClick={() => ((setAprobando(false), setId(null), document.querySelector("body").style.overflow = "auto"))}>Cancelar</button>
-                                </div>
-                            </div>
-                            <div className={OnChangeRoute ? "window_confirm" : "window_confirm hide"}>
-                                <h1 className="mini">¿Seguro que quieres salir? Perderás tu trabajo actual</h1>
-                                <div className="cancel_continue">
-                                    <button onClick={() => (setGoToNext(true), Route.push(NextRoute))}>Continuar</button>
-                                    <button onClick={() => setOnChangeRoute(false)}>Cancelar</button>
-                                </div>
-                            </div>
+                            <h1>Consultas</h1>
                             <div className={styles.action_bar}>
                                 <div className={styles.search} onSubmit={(e) => search(e)}>
                                     <label htmlFor="search" className={styles.search_icon}>
                                         {Query !== '' ?
                                             <AiOutlineClose
                                                 className="btn"
-                                                onClick={() => (setQuery(''), setNoResults(false), setTempProductos(Productos))} />
+                                                onClick={() => (setQuery(''), setNoResults(false), setTempProductos(Productos), setCurrentPage(1))} />
                                             : <BsSearch />}
                                     </label>
                                     <input
@@ -291,7 +306,7 @@ export default function Consultas() {
                                         NoResults ?
                                             <span className={styles.alert_badge}>
                                                 {Query.trim().length <= 0 ?
-                                                    <>Escribe algo o <a onClick={() => (setTempProductos(Productos), setNoResults(false))}>restaura los datos</a></>
+                                                    <>Escribe algo o <a onClick={() => (computePages(Productos), setNoResults(false))}>restaura los datos</a></>
                                                     : <>No hay resultados para <b>{Query}</b></>}
                                             </span>
                                             : null
@@ -325,7 +340,7 @@ export default function Consultas() {
                                                 <label htmlFor="institucion">Institución</label>
                                             </div>
                                             {TempProductos.length <= 0 ?
-                                                <button type="submit" onClick={() => (setBoxFilter(!BoxFilter), setTempProductos(Productos))}>
+                                                <button type="submit" onClick={() => (setBoxFilter(!BoxFilter), computePages(Productos))}>
                                                     Restaurar datos
                                                 </button>
                                                 : <button type="submit" onClick={() => setBoxFilter(!BoxFilter)}>
@@ -415,9 +430,9 @@ export default function Consultas() {
                                                         </td>
                                                         {producto.nombre ?
                                                             <td className="long">
-                                                                <textarea 
-                                                                name="nombre"
-                                                                className={producto._id}
+                                                                <textarea
+                                                                    name="nombre"
+                                                                    className={producto._id}
                                                                     placeholder={producto.nombre}
                                                                     disabled={index !== currentId ? true : false}
                                                                     autoComplete="off"
@@ -539,11 +554,17 @@ export default function Consultas() {
                                             }
                                         </tbody>
                                     </table>
-                            }
 
+                            }
+                            <Pagination
+                                className="pagination-bar"
+                                currentPage={currentPage}
+                                totalCount={Productos.length}
+                                pageSize={pageSize}
+                                onPageChange={page => setCurrentPage(page)}
+                            />
                         </div></>
             }
-
 
         </Layout>
     </>
