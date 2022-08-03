@@ -26,7 +26,7 @@ export default function Consultas() {
     const [Aprobando, setAprobando] = useState(false);
     const [Loading, setLoading] = useState(true);
     // Monitor
-    const [currentId, setCurrentId] = useState(null);
+    const [CurrentIndex, setCurrentIndex] = useState(null);
     const [EditInformation, setEditInformation] = useState([]);
     const [notSaved, setNotSaved] = useState(false);
     const [OnChangeRoute, setOnChangeRoute] = useState(false);
@@ -34,6 +34,7 @@ export default function Consultas() {
     const [GoToNext, setGoToNext] = useState(false);
 
     const [currentPage, setCurrentPage] = useState(1);
+    const [lastPage, setlastPage] = useState(1);
     const Route = useRouter();
 
     const { data: session } = useSession();
@@ -69,7 +70,7 @@ export default function Consultas() {
 
     const computePages = (data) => {
         const firstPageIndex = (currentPage - 1) * pageSize;
-        const lastPageIndex = firstPageIndex + pageSize;
+        let lastPageIndex = firstPageIndex + pageSize;
         data === null ? setTempProductos(Productos.slice(firstPageIndex, lastPageIndex)) : setTempProductos(data.slice(firstPageIndex, lastPageIndex));
         return Productos.slice(firstPageIndex, lastPageIndex);
     }
@@ -85,6 +86,7 @@ export default function Consultas() {
             setTempProductos(res.data);
             setLoading(false);
             computePages(res.data);
+            console.log(res.data)
         });
     }
 
@@ -152,11 +154,11 @@ export default function Consultas() {
     // Funciones de editado
 
     const editFieldById = (index) => {
-        setCurrentId(index);
+        setCurrentIndex(index);
     }
 
     const restoreFieldInfo = (id, index) => {
-        setCurrentId(null);
+        setCurrentIndex(null);
         const inputs = document.getElementsByClassName(id);
         for (let i = 0; i < inputs.length; i++) {
             inputs[i].value = TempProductos[index][inputs[i].name];
@@ -207,7 +209,7 @@ export default function Consultas() {
                 toast.dismiss(loadingId);
             })
         setEditInformation([]);
-        setCurrentId(null);
+        setCurrentIndex(null);
     }
 
     const handleChange = (e) => {
@@ -256,16 +258,17 @@ export default function Consultas() {
         </Head>
         <Layout>
             {
-                Productos.length <= 0 && !Loading ? <div className="badge_info">
-                    <h1>No hay consultas</h1>
-                    <img src="/img/sad.jpg" alt="" />
-                    <NavLink href="/actions/producto">Carga tu primer producto</NavLink>
-                </div> :
+                Productos.length <= 0 && !Loading ?
+                    <div className="badge_info">
+                        <h1>No hay consultas</h1>
+                        <img src="/img/sad.jpg" alt="" />
+                        <NavLink href="/actions/producto">Carga tu primer producto</NavLink>
+                    </div> :
                     <>
                         <div className={Deleting ? "window_confirm" : "window_confirm hide"}>
                             <h1>¿Eliminar producto?</h1>
                             <div className="cancel_continue">
-                                <button onClick={() => deleteProduct(Id)}>Continuar</button>
+                                <button onClick={() => (deleteProduct(Id))}>Continuar</button>
                                 <button onClick={() => ((setDeleting(false), setId(null), document.querySelector("body").style.overflow = "auto"))}>Cancelar</button>
                             </div>
                         </div>
@@ -377,10 +380,10 @@ export default function Consultas() {
                                         <tbody>
                                             {
                                                 TempProductos.map((producto, index) => (
-                                                    <tr key={index} className={index === currentId ? 'currentEditingTr' : null}>
+                                                    <tr key={index} className={index === CurrentIndex ? 'currentEditingTr' : null}>
                                                         <td>{index + 1}</td>
                                                         <td>
-                                                            {index !== currentId ? <div className={styles.action_by_id + " action_edit"}>
+                                                            {index !== CurrentIndex ? <div className={styles.action_by_id + " action_edit"}>
                                                                 {
                                                                     producto.aprobado === 'on' ? <NavLink href={"/view/producto/" + producto._id} exact>
                                                                         <button>
@@ -396,10 +399,7 @@ export default function Consultas() {
                                                                     <AiTwotoneEdit />
                                                                 </button>
                                                                 <button
-                                                                    onClick={() => (
-                                                                        setDeleting(true),
-                                                                        setId(producto._id),
-                                                                        document.querySelector("body").style.overflow = "hidden")}>
+                                                                    onClick={() => (setDeleting(true), setId(producto._id), document.querySelector("body").style.overflow = "hidden")}>
                                                                     <AiFillDelete />
                                                                 </button>
                                                                 {
@@ -435,43 +435,52 @@ export default function Consultas() {
                                                                     name="nombre"
                                                                     className={producto._id}
                                                                     placeholder={producto.nombre}
-                                                                    disabled={index !== currentId ? true : false}
+                                                                    disabled={index !== CurrentIndex ? true : false}
                                                                     autoComplete="off"
                                                                     onChange={(e) => handleChange(e)}></textarea>
 
                                                             </td> : null}
                                                         {producto.tipo ?
                                                             <td className="short">
-                                                                <select name="tipo" className={producto._id} defaultValue={producto.tipo} disabled={index !== currentId ? true : false} onChange={(e) => handleChange(e)}>
-                                                                    <option value="default">Tipo de oferta (nivel académico)</option>
-                                                                    <option value="asincronico">Curso asincrónico</option>
-                                                                    <option value="diplomado">Diplomado</option>
-                                                                    <option value="especialidad">Especialidad</option>
-                                                                    <option value="licenciatura">Licenciatura</option>
-                                                                    <option value="maestria">Maestría</option>
-                                                                    <option value="taller">Taller</option>
+                                                                <select name="tipo" className={producto._id} disabled={index !== CurrentIndex ? true : false} onChange={(e) => handleChange(e)}>
+                                                                    <option value="default">Tipo de oferta</option>
+                                                                    <option value="diplomado" selected={producto.tipo === "diplomado" ? true : false}>Diplomado</option>
+                                                                    <option value="especialidad" selected={producto.tipo === "especialidad" ? true : false} >Especialidad</option>
+                                                                    <option value="licenciatura" selected={producto.tipo === "licenciatura" ? true : false} >Licenciatura</option>
+                                                                    <option value="maestria" selected={producto.tipo === "maestria" ? true : false} >Maestría</option>
+                                                                    <option value="taller" selected={producto.tipo === "taller" ? true : false} >Taller</option>
+                                                                    <option value="curso" selected={producto.tipo === "curso" ? true : false}>Curso</option>
                                                                 </select>
                                                             </td> : null}
                                                         {producto.modalidad ?
                                                             <td>
-                                                                <select name="modalidad" defaultValue={producto.modalidad} disabled={index !== currentId ? true : false} onChange={(e) => handleChange(e)}>
+                                                                <select name="modalidad" disabled={index !== CurrentIndex ? true : false} onChange={(e) => handleChange(e)}>
                                                                     <option value="default">Modalidad de oferta</option>
-                                                                    <option value="linea">En línea</option>
-                                                                    <option value="mixto">Mixto</option>
-                                                                    <option value="presencial">Presencial</option>
+                                                                    <option value="presencial" selected={producto.modalidad === "presencial" ? true : false} >Presencial</option>
+                                                                    <option value="mixto" selected={producto.modalidad === "mixto" ? true : false} >Mixto</option>
+                                                                    <option value="lineaAsync" selected={producto.modalidad === "lineaAsync" ? true : false} >En línea asincrónico</option>
+                                                                    <option value="lineaSync" selected={producto.modalidad === "lineaSync" ? true : false} >En línea sincrónico</option>
                                                                 </select>
                                                             </td> : null}
                                                         {producto.areaV ?
                                                             <td>
-                                                                <select name="areaV" defaultValue={producto.areaV} disabled={index !== currentId ? true : false} onChange={(e) => handleChange(e)}>
+                                                                <select name="areaV" disabled={index !== CurrentIndex ? true : false} onChange={(e) => handleChange(e)} style={producto.institucion === 'sae' ? { display: 'block' } : { display: 'none' }}>
                                                                     <option value="default">Área a la que se víncula</option>
-                                                                    <option value="cinedigital">Cine digital</option>
-                                                                    <option value="animacionefectos">Animación y efectos visuales</option>
-                                                                    <option value="comunicacion">Comunicación</option>
-                                                                    <option value="videojuegosD">Diseño de videojuegos</option>
-                                                                    <option value="audio">Ingeniería de audio</option>
-                                                                    <option value="musicB">Negocios de la música</option>
-                                                                    <option value="videojuegosP">Programación de videojuegos</option>
+                                                                    <option value="cinedigital" selected={producto.areaV === "cinedigital" ? true : false} >Cine digital</option>
+                                                                    <option value="animacionefectos" selected={producto.areaV === "animacionefectos" ? true : false} >Animación y efectos visuales</option>
+                                                                    <option value="comunicacion" selected={producto.areaV === "comunicacion" ? true : false} >Comunicación</option>
+                                                                    <option value="videojuegosD" selected={producto.areaV === "videojuegosD" ? true : false} >Diseño de videojuegos</option>
+                                                                    <option value="audio" selected={producto.areaV === "audio" ? true : false} >Ingeniería de audio</option>
+                                                                    <option value="musicB" selected={producto.areaV === "musicB" ? true : false} >Negocios de la música</option>
+                                                                    <option value="videojuegosP" selected={producto.areaV === "videojuegosP" ? true : false}>Programación de videojuegos</option>
+                                                                </select>
+                                                                <select name="areaV" disabled={index !== CurrentIndex ? true : false} onChange={(e) => handleChange(e)} style={producto.institucion === 'artek' ? { display: 'block' } : { display: 'none' }}>
+                                                                    <option value="default">Área a la que se víncula</option>
+                                                                    <option value="gestionTech" selected={producto.areaV === "gestionTech" ? true : false} >Gestión Tecnológica</option>
+                                                                    <option value="softwareDev" selected={producto.areaV === "softwareDev" ? true : false} >Desarrollo de Software</option>
+                                                                    <option value="dataScience" selected={producto.areaV === "dataScience" ? true : false} >Ciencia de Datos</option>
+                                                                    <option value="cyberSec" selected={producto.areaV === "cyberSec" ? true : false} >Ciberseguridad</option>
+                                                                    <option value="IA" selected={producto.areaV === "IA" ? true : false} >Inteligencia Artificial</option>
                                                                 </select>
                                                             </td> : null}
                                                         {producto.quienPropone ?
@@ -480,7 +489,7 @@ export default function Consultas() {
                                                                     type="text"
                                                                     name="quienPropone"
                                                                     placeholder={producto.quienPropone}
-                                                                    disabled={index !== currentId ? true : false}
+                                                                    disabled={index !== CurrentIndex ? true : false}
                                                                     autoComplete="off"
                                                                     onChange={(e) => handleChange(e)} />
                                                             </td> : null}
@@ -490,7 +499,7 @@ export default function Consultas() {
                                                                     name="razon"
                                                                     className="scroll"
                                                                     placeholder={producto.razon}
-                                                                    disabled={index !== currentId ? true : false}
+                                                                    disabled={index !== CurrentIndex ? true : false}
                                                                     autoComplete="off"
                                                                     onChange={(e) => handleChange(e)} />
                                                             </td> : null}
@@ -500,7 +509,7 @@ export default function Consultas() {
                                                                     type="text"
                                                                     name="poblacionObj"
                                                                     placeholder={producto.poblacionObj}
-                                                                    disabled={index !== currentId ? true : false}
+                                                                    disabled={index !== CurrentIndex ? true : false}
                                                                     autoComplete="off"
                                                                     onChange={(e) => handleChange(e)} />
                                                             </td> : null}
@@ -510,13 +519,13 @@ export default function Consultas() {
                                                                     name="descripcion"
                                                                     className="scroll"
                                                                     placeholder={producto.descripcion}
-                                                                    disabled={index !== currentId ? true : false}
+                                                                    disabled={index !== CurrentIndex ? true : false}
                                                                     autoComplete="off"
                                                                     onChange={(e) => handleChange(e)} />
                                                             </td> : null}
                                                         {producto.RVOE ?
                                                             <td>
-                                                                {index !== currentId ?
+                                                                {index !== CurrentIndex ?
                                                                     producto.RVOE === 'on' ? 'Tiene RVOE' : 'No tiene RVOE' :
                                                                     <>
                                                                         <input type="checkbox" name="RVOE" defaultChecked={producto.RVOE === 'on' ? true : false} onChange={(e) => handleChange(e)} />
@@ -529,7 +538,7 @@ export default function Consultas() {
                                                                     type="text"
                                                                     name="institucion"
                                                                     placeholder={producto.institucion}
-                                                                    disabled={index !== currentId ? true : false}
+                                                                    disabled={index !== CurrentIndex ? true : false}
                                                                     autoComplete="off"
                                                                     onChange={(e) => handleChange(e)} />
                                                             </td> : null}
@@ -557,14 +566,20 @@ export default function Consultas() {
                                     </table>
 
                             }
-                            <Pagination
-                                className="pagination-bar"
-                                currentPage={currentPage}
-                                totalCount={Productos.length}
-                                pageSize={pageSize}
-                                onPageChange={page => setCurrentPage(page)}
-                                key={1}
-                            />
+                            {
+                                TempProductos.length === 0 ?
+                                    <div className={styles.info}>
+                                        <button onClick={() => (computePages(Productos), setCurrentPage(1))}>Volver a página 1</button>
+                                    </div> :
+                                    <Pagination
+                                        className="pagination-bar"
+                                        currentPage={currentPage}
+                                        totalCount={Productos.length}
+                                        pageSize={pageSize}
+                                        onPageChange={(page) => (setCurrentPage(page), setCurrentIndex(null))}
+                                    />
+                            }
+
                         </div></>
             }
 

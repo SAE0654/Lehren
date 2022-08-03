@@ -55,7 +55,6 @@ export default function Producto() {
         const producto = Producto;
         producto = { ...producto, creadoPor: session.user.names };
         producto = { ...producto, RVOE: producto.RVOE ? producto.RVOE : 'off' };
-        console.log(producto)
         if (isAnyFieldEmpty(e.target)
             || producto.institucion === 'default'
             || typeof producto.institucion === 'undefined'
@@ -114,7 +113,6 @@ export default function Producto() {
             <div className={styles.main_content}>
                 <h1>Genera un producto</h1>
                 <div className={styles.box_container}>
-
                     <form onSubmit={(e) => registerCourse(e)}>
                         <div className={styles.form_group}>
                             <h2>Datos generales</h2>

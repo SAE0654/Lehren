@@ -672,3 +672,19 @@
         padding: 0.5em 1em;
     }
 }
+
+.info {
+    display: block;
+    width: 95%;
+    max-width: 1000px;
+    margin: auto;
+    button {
+        display: block;
+        padding: 1em;
+        background-color: #ffffff;
+        color: rgb(56, 48, 48);
+        margin: auto;
+        font-size: 1.2rem;
+        margin-top: 3em;
+    }
+}
