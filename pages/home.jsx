@@ -2,7 +2,7 @@ import Head from 'next/head';
 import { AiOutlineFileSearch, AiOutlineFolderAdd } from "react-icons/ai";
 import { MdPersonAdd } from "react-icons/md";
 import { NavLink } from '../components/NavLink';
-import { signOut, useSession } from 'next-auth/react';
+import { useSession } from 'next-auth/react';
 import { useEffect, useState } from 'react';
 import { ADMIN, STAFF } from '../utils/roles';
 import Layout from '../components/Layout';

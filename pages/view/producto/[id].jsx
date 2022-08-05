@@ -33,7 +33,7 @@ export default function ViewProduct() {
   }
 
   const getProductoById = async () => {
-    await axios.get(`https://lehren-productos.vercel.app/api/productos/` + id)
+    await axios.get(`${process.env.NEXT_PUBLIC_ENDPOINT}api/productos/` + id)
       .then((res) => {
         setProducto(res.data);
       });
@@ -67,21 +67,7 @@ export default function ViewProduct() {
                 <p className={styles.right_border}>{Producto.areaV}</p>
                 <p className={styles.last_row}><b>Persona que propone el producto:</b></p>
                 <p className={styles.right_bottom_border}>{Producto.quienPropone}</p>
-                <h2 className={styles.title2}>Análisis de mercado</h2>
-                <p><b>Instrumentos de validación empleados:</b></p>
-                <p className={styles.right_border}>{Producto.instrumentoValidacion}</p>
-                <p><b>Datos que sustentan la propuesta:</b></p>
-                <p className={styles.right_border}>{Producto.datosSustentan}</p>
-                <p><b>Oferta frente a la que compite:</b></p>
-                <p className={styles.right_border}>{Producto.competencia}</p>
-                <p className={styles.last_row}><b>Mercado en el que incide:</b></p>
-                <p className={styles.right_bottom_border}>{Producto.mercado}</p>
-                <h2 className={styles.title3}>Análisis financiero</h2>
-                <p><b>Enlace a ROI:</b></p>
-                <p className={styles.right_border}>{Producto.ROI}</p>
-                <p className={styles.last_row}><b>Comentarios adicionales:</b></p>
-                <p className={styles.right_bottom_border}>{Producto.comentarios}</p>
-                <h2 className={styles.title4}>Análisis académico</h2>
+                <h2 className={styles.title2}>Análisis académico</h2>
                 <p><b>Razón y necesidad de la propuesta:</b></p>
                 <p className={styles.right_border}>{Producto.razon}</p>
                 <p><b>A quién va dirigido:</b></p>
@@ -111,6 +97,23 @@ export default function ViewProduct() {
                 <p className={styles.right_border}>{Producto.experto}</p>
                 <p className={styles.last_row}><b>Requerimientos:</b></p>
                 <p className={styles.right_bottom_border}>{Producto.requerimientos}</p>
+                <h2 className={styles.title3}>Análisis de mercado</h2>
+                <p><b>Instrumentos de validación empleados:</b></p>
+                <p className={styles.right_border}>{Producto.instrumentoValidacion}</p>
+                <p><b>Datos que sustentan la propuesta:</b></p>
+                <p className={styles.right_border}>{Producto.datosSustentan}</p>
+                <p><b>Oferta frente a la que compite:</b></p>
+                <p className={styles.right_border}>{Producto.competencia}</p>
+                <p className={styles.last_row}><b>Mercado en el que incide:</b></p>
+                <p className={styles.right_bottom_border}>{Producto.mercado}</p>
+                <h2 className={styles.title4}>Herramientas de validación</h2>
+                <p className={styles.right_bottom_border}><b>Prueba de datos: </b></p>
+                <p className={styles.last_row}>Prueba</p>
+                <h2 className={styles.title5}>Análisis financiero</h2>
+                <p><b>Enlace a ROI:</b></p>
+                <p className={styles.right_border} style={{minHeight: '60px'}}>{Producto.ROI}</p>
+                <p className={styles.last_row}><b>Comentarios adicionales:</b></p>
+                <p className={styles.right_bottom_border} style={{minHeight: '60px'}}>{Producto.comentarios}</p>
             </div>
           </div>
           <NavLink href="/actions/consultas" exact>

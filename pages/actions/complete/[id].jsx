@@ -60,7 +60,7 @@ export default function Complete() {
   }
 
   const getProductoById = async () => {
-    await axios.get(`https://lehren-productos.vercel.app/api/productos/` + id)
+    await axios.get(`${process.env.NEXT_PUBLIC_ENDPOINT}api/productos/` + id)
       .then((res) => {
         setProducto(res.data);
       });
@@ -82,7 +82,7 @@ export default function Complete() {
       toast.error("Rellena todos los campos");
       return;
     }
-    await axios.put(`https://lehren-productos.vercel.app/api/productos/` + id, producto,
+    await axios.put(`${process.env.NEXT_PUBLIC_ENDPOINT}api/productos/` + id, producto,
       {
         headers: {
           accept: '*/*',
@@ -91,7 +91,7 @@ export default function Complete() {
       }).then((res) => {
         toast.info(res.data.message);
         e.target.reset();
-        router.push("https://lehren-productos.vercel.app/actions/consultas")
+        router.push(`${process.env.NEXT_PUBLIC_ENDPOINT}actions/consultas`)
       }).catch((err) => {
         toast.error("Error al completar")
       })
@@ -103,7 +103,7 @@ export default function Complete() {
     const producto = Producto;
     producto.aprobado = 'off';
     producto.aprobadoPor = 'Mandado a revisión';
-    await axios.put('https://lehren-productos.vercel.app/api/productos/' + producto._id, producto, {
+    await axios.put(`${process.env.NEXT_PUBLIC_ENDPOINT}api/productos/` + producto._id, producto, {
       headers: {
         accept: '*/*',
         'Content-Type': 'application/json'

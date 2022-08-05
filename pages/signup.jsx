@@ -69,7 +69,7 @@ export default function Login() {
         };
 
         const toastId = toast.loading('Guardando...');
-        axios.post("https://lehren-productos.vercel.app/api/signup", Data)
+        axios.post(`${process.env.NEXT_PUBLIC_ENDPOINT}api/signup`, Data)
             .then(() => {
                 toast.success("Usuario registrado");
                 toast.dismiss(toastId)

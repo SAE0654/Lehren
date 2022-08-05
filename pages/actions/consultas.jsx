@@ -72,7 +72,8 @@ export default function Consultas() {
         const firstPageIndex = (currentPage - 1) * pageSize;
         let lastPageIndex = firstPageIndex + pageSize;
         setlastPage(lastPageIndex)
-        data === null ? setTempProductos(Productos.slice(firstPageIndex, lastPageIndex)) : setTempProductos(data.slice(firstPageIndex, lastPageIndex));
+        data === null ? setTempProductos(() => Productos.slice(firstPageIndex, lastPageIndex)) : setTempProductos(() => data.slice(firstPageIndex, lastPageIndex));
+        console.log(TempProductos)
         return Productos.slice(firstPageIndex, lastPageIndex);
     }
 
@@ -82,7 +83,7 @@ export default function Consultas() {
 
     const getProductos = async () => {
         setLoading(true);
-        await axios(`https://lehren-productos.vercel.app/api/productos/all`).then((res) => {
+        await axios(`${process.env.NEXT_PUBLIC_ENDPOINT}api/productos/all`).then((res) => {
             setProductos(res.data);
             setEditInformation(res.data);
             setTempProductos(res.data);
@@ -161,6 +162,7 @@ export default function Consultas() {
     const restoreFieldInfo = (id, index) => {
         setCurrentIndex(null);
         const inputs = document.getElementsByClassName(id);
+        console.log(inputs.length)
         for (let i = 0; i < inputs.length; i++) {
             inputs[i].value = TempProductos[index][inputs[i].name];
         }
@@ -180,7 +182,9 @@ export default function Consultas() {
         }
         const newModified = Productos;
         newModified[index] = product;
+        console.log(newModified);
         setProductos(newModified);
+        computePages(newModified)
         saveInformationToServer(newModified, index);
         setNotSaved(false);
     }
@@ -204,7 +208,7 @@ export default function Consultas() {
             }
         }
         const loadingId = toast.loading("Actualizando...");
-        await axios.put(`https://lehren-productos.vercel.app/api/productos/` + payload[index]._id, payload[index])
+        await axios.put(`${process.env.NEXT_PUBLIC_ENDPOINT}api/productos/` + payload[index]._id, payload[index])
             .then(() => {
                 toast.success("Datos guardados");
                 toast.dismiss(loadingId);
@@ -222,7 +226,7 @@ export default function Consultas() {
     }
 
     const deleteProduct = async () => {
-        await axios.delete(`https://lehren-productos.vercel.app/api/productos/` + Id)
+        await axios.delete(`${process.env.NEXT_PUBLIC_ENDPOINT}api/productos/` + Id)
             .then(() => {
                 toast.success("Producto eliminado");
                 getProductos();
@@ -240,7 +244,7 @@ export default function Consultas() {
         payload.modifiedBy = session.user.names;
         payload.lastUpdate = getTimeStamp();
         const loadingId = toast.loading("Aprobando...");
-        await axios.put(`https://lehren-productos.vercel.app/api/productos/` + id, payload)
+        await axios.put(`${process.env.NEXT_PUBLIC_ENDPOINT}api/productos/` + id, payload)
             .then(() => {
                 toast.success("Datos guardados");
                 toast.dismiss(loadingId);
@@ -424,7 +428,7 @@ export default function Consultas() {
                                                                     <button onClick={() => saveInformationLocally(index)} className="saveIcon">
                                                                         <AiOutlineSave />
                                                                     </button>
-                                                                    <button onClick={() => restoreFieldInfo(producto._id, index)} className="closeIcon">
+                                                                    <button onClick={() => (restoreFieldInfo(producto._id, index))} className="closeIcon">
                                                                         <AiOutlineClose />
                                                                     </button>
                                                                 </>
@@ -443,52 +447,70 @@ export default function Consultas() {
                                                             </td> : null}
                                                         {producto.tipo ?
                                                             <td className="short">
-                                                                <select name="tipo" className={producto._id} disabled={index !== CurrentIndex ? true : false} onChange={(e) => handleChange(e)}>
-                                                                    <option value="default">Tipo de oferta</option>
-                                                                    <option value="diplomado" selected={producto.tipo === "diplomado" ? true : false}>Diplomado</option>
-                                                                    <option value="especialidad" selected={producto.tipo === "especialidad" ? true : false} >Especialidad</option>
-                                                                    <option value="licenciatura" selected={producto.tipo === "licenciatura" ? true : false} >Licenciatura</option>
-                                                                    <option value="maestria" selected={producto.tipo === "maestria" ? true : false} >Maestría</option>
-                                                                    <option value="taller" selected={producto.tipo === "taller" ? true : false} >Taller</option>
-                                                                    <option value="curso" selected={producto.tipo === "curso" ? true : false}>Curso</option>
-                                                                </select>
+                                                                {
+                                                                    CurrentIndex === index ?
+                                                                        <select name="tipo" className={producto._id} defaultValue={producto.tipo} disabled={index !== CurrentIndex ? true : false} onChange={(e) => handleChange(e)}>
+                                                                            <option value="default">Tipo de oferta</option>
+                                                                            <option value={"Diplomado"}>Diplomado</option>
+                                                                            <option value={"Especialidad"}>Especialidad</option>
+                                                                            <option value={"Licenciatura"}>Licenciatura</option>
+                                                                            <option value={"Maestría"}>Maestría</option>
+                                                                            <option value={"Taller"}>Taller</option>
+                                                                            <option value={"Curso"}>Curso</option>
+                                                                        </select>
+                                                                        : producto.tipo
+                                                                }
                                                             </td> : null}
                                                         {producto.modalidad ?
-                                                            <td>
-                                                                <select name="modalidad" disabled={index !== CurrentIndex ? true : false} onChange={(e) => handleChange(e)}>
-                                                                    <option value="default">Modalidad de oferta</option>
-                                                                    <option value="presencial" selected={producto.modalidad === "presencial" ? true : false} >Presencial</option>
-                                                                    <option value="mixto" selected={producto.modalidad === "mixto" ? true : false} >Mixto</option>
-                                                                    <option value="lineaAsync" selected={producto.modalidad === "lineaAsync" ? true : false} >En línea asincrónico</option>
-                                                                    <option value="lineaSync" selected={producto.modalidad === "lineaSync" ? true : false} >En línea sincrónico</option>
-                                                                </select>
+                                                            <td className="medium">
+                                                                {
+                                                                    CurrentIndex === index ?
+                                                                        <select name="modalidad" className={producto._id} defaultValue={producto.modalidad} disabled={index !== CurrentIndex ? true : false} onChange={(e) => handleChange(e)}>
+                                                                            <option value="default">Modalidad de oferta</option>
+                                                                            <option value={"Presencial"}>Presencial</option>
+                                                                            <option value={"Mixto"}>Mixto</option>
+                                                                            <option value={"En línea asincrónico"}>En línea asincrónico</option>
+                                                                            <option value={"En línea sincrónico"}>En línea sincrónico</option>
+                                                                        </select> :
+                                                                        <textarea value={producto.modalidad} disabled></textarea>
+                                                                }
                                                             </td> : null}
                                                         {producto.areaV ?
-                                                            <td>
-                                                                <select name="areaV" disabled={index !== CurrentIndex ? true : false} onChange={(e) => handleChange(e)} style={producto.institucion === 'sae' ? { display: 'block' } : { display: 'none' }}>
-                                                                    <option value="default">Área a la que se víncula</option>
-                                                                    <option value="cinedigital" selected={producto.areaV === "cinedigital" ? true : false} >Cine digital</option>
-                                                                    <option value="animacionefectos" selected={producto.areaV === "animacionefectos" ? true : false} >Animación y efectos visuales</option>
-                                                                    <option value="comunicacion" selected={producto.areaV === "comunicacion" ? true : false} >Comunicación</option>
-                                                                    <option value="videojuegosD" selected={producto.areaV === "videojuegosD" ? true : false} >Diseño de videojuegos</option>
-                                                                    <option value="audio" selected={producto.areaV === "audio" ? true : false} >Ingeniería de audio</option>
-                                                                    <option value="musicB" selected={producto.areaV === "musicB" ? true : false} >Negocios de la música</option>
-                                                                    <option value="videojuegosP" selected={producto.areaV === "videojuegosP" ? true : false}>Programación de videojuegos</option>
-                                                                </select>
-                                                                <select name="areaV" disabled={index !== CurrentIndex ? true : false} onChange={(e) => handleChange(e)} style={producto.institucion === 'artek' ? { display: 'block' } : { display: 'none' }}>
-                                                                    <option value="default">Área a la que se víncula</option>
-                                                                    <option value="gestionTech" selected={producto.areaV === "gestionTech" ? true : false} >Gestión Tecnológica</option>
-                                                                    <option value="softwareDev" selected={producto.areaV === "softwareDev" ? true : false} >Desarrollo de Software</option>
-                                                                    <option value="dataScience" selected={producto.areaV === "dataScience" ? true : false} >Ciencia de Datos</option>
-                                                                    <option value="cyberSec" selected={producto.areaV === "cyberSec" ? true : false} >Ciberseguridad</option>
-                                                                    <option value="IA" selected={producto.areaV === "IA" ? true : false} >Inteligencia Artificial</option>
-                                                                </select>
+                                                            <td className="medium">
+                                                                {
+                                                                    CurrentIndex === index ? 
+                                                                    producto.institucion === 'sae' ?
+                                                                    <select name="areaV" className={producto._id} defaultValue={producto.areaV} disabled={index !== CurrentIndex ? true : false} onChange={(e) => handleChange(e)} style={producto.institucion === 'sae' ? { display: 'block' } : { display: 'none' }}>
+                                                                        <option value="default">Área a la que se víncula</option>
+                                                                        <option value={"Cine digital"}>Cine digital</option>
+                                                                        <option value={"Animación y efectos visuales"}>Animación y efectos visuales</option>
+                                                                        <option value={"Comunicación"}>Comunicación</option>
+                                                                        <option value={"Diseño de videojuegos"}>Diseño de videojuegos</option>
+                                                                        <option value={"Ingeniería de audio"}>Ingeniería de audio</option>
+                                                                        <option value={"Negocios de la música"}>Negocios de la música</option>
+                                                                        <option value={"Programación de videojuegos"}>Programación de videojuegos</option>
+                                                                    </select>
+                                                                    :
+                                                                    <select name="areaV" className={producto._id} defaultValue={producto.areaV} disabled={index !== CurrentIndex ? true : false} onChange={(e) => handleChange(e)} style={producto.institucion === 'artek' ? { display: 'block' } : { display: 'none' }}>
+                                                                        <option value="default">Área a la que se víncula</option>
+                                                                        <option value={"Gestión tecnológica"}>Gestión Tecnológica</option>
+                                                                        <option value={"Desarrollo de software"}>Desarrollo de Software</option>
+                                                                        <option value={"Ciencia de datos"}>Ciencia de Datos</option>
+                                                                        <option value={"Ciberseguridad"}>Ciberseguridad</option>
+                                                                        <option value={"Inteligencia artificial"}>Inteligencia Artificial</option>
+                                                                    </select>
+                                                                
+                                                                : <textarea value={producto.areaV} disabled></textarea>
+                                                                }
+
+
                                                             </td> : null}
                                                         {producto.quienPropone ?
                                                             <td className="medium">
                                                                 <input
                                                                     type="text"
                                                                     name="quienPropone"
+                                                                    className={producto._id}
                                                                     placeholder={producto.quienPropone}
                                                                     disabled={index !== CurrentIndex ? true : false}
                                                                     autoComplete="off"
@@ -498,7 +520,7 @@ export default function Consultas() {
                                                             <td className="long">
                                                                 <textarea
                                                                     name="razon"
-                                                                    className="scroll"
+                                                                    className={"scroll " + producto._id}
                                                                     placeholder={producto.razon}
                                                                     disabled={index !== CurrentIndex ? true : false}
                                                                     autoComplete="off"
@@ -506,19 +528,20 @@ export default function Consultas() {
                                                             </td> : null}
                                                         {producto.poblacionObj ?
                                                             <td className="long">
-                                                                <input
-                                                                    type="text"
+                                                                <textarea
                                                                     name="poblacionObj"
+                                                                    className={"scroll " + producto._id}
                                                                     placeholder={producto.poblacionObj}
                                                                     disabled={index !== CurrentIndex ? true : false}
                                                                     autoComplete="off"
-                                                                    onChange={(e) => handleChange(e)} />
+                                                                    onChange={(e) => handleChange(e)}>
+                                                                </textarea>
                                                             </td> : null}
                                                         {producto.descripcion ?
                                                             <td className="long">
                                                                 <textarea
                                                                     name="descripcion"
-                                                                    className="scroll"
+                                                                    className={"scroll " + producto._id}
                                                                     placeholder={producto.descripcion}
                                                                     disabled={index !== CurrentIndex ? true : false}
                                                                     autoComplete="off"
@@ -529,7 +552,7 @@ export default function Consultas() {
                                                                 {index !== CurrentIndex ?
                                                                     producto.RVOE === 'on' ? 'Tiene RVOE' : 'No tiene RVOE' :
                                                                     <>
-                                                                        <input type="checkbox" name="RVOE" defaultChecked={producto.RVOE === 'on' ? true : false} onChange={(e) => handleChange(e)} />
+                                                                        <input type="checkbox" name="RVOE" className={producto._id} defaultChecked={producto.RVOE === 'on' ? true : false} onChange={(e) => handleChange(e)} />
                                                                     </>
                                                                 }
                                                             </td> : null}
@@ -538,6 +561,7 @@ export default function Consultas() {
                                                                 <input
                                                                     type="text"
                                                                     name="institucion"
+                                                                    className={producto._id}
                                                                     placeholder={producto.institucion}
                                                                     disabled={index !== CurrentIndex ? true : false}
                                                                     autoComplete="off"
@@ -548,6 +572,7 @@ export default function Consultas() {
                                                                 <input
                                                                     type="text"
                                                                     name="creadoPor"
+                                                                    className={producto._id}
                                                                     placeholder={producto.creadoPor}
                                                                     disabled={true}
                                                                     autoComplete="off" />
