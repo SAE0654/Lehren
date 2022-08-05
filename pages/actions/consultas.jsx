@@ -180,9 +180,10 @@ export default function Consultas() {
                 product[j] = typeof EditInformation[j] === 'undefined' ? product[j] : EditInformation[j];
             }
         }
+        console.log("=== ", EditInformation)
         const newModified = Productos;
         newModified[index] = product;
-        console.log(newModified);
+        console.log("===", index);
         setProductos(newModified);
         computePages(newModified)
         saveInformationToServer(newModified, index);
@@ -223,6 +224,7 @@ export default function Consultas() {
             ...EditInformation,
             [e.target.name]: e.target.value
         });
+        console.log(e.target.value)
     }
 
     const deleteProduct = async () => {
@@ -425,7 +427,7 @@ export default function Consultas() {
                                                                 }
                                                             </div> :
                                                                 <>
-                                                                    <button onClick={() => saveInformationLocally(index)} className="saveIcon">
+                                                                    <button onClick={() => saveInformationLocally((lastPage - pageSize) + index)} className="saveIcon">
                                                                         <AiOutlineSave />
                                                                     </button>
                                                                     <button onClick={() => (restoreFieldInfo(producto._id, index))} className="closeIcon">
@@ -472,7 +474,7 @@ export default function Consultas() {
                                                                             <option value={"En línea asincrónico"}>En línea asincrónico</option>
                                                                             <option value={"En línea sincrónico"}>En línea sincrónico</option>
                                                                         </select> :
-                                                                        <textarea value={producto.modalidad} disabled></textarea>
+                                                                        producto.modalidad
                                                                 }
                                                             </td> : null}
                                                         {producto.areaV ?
@@ -500,7 +502,7 @@ export default function Consultas() {
                                                                         <option value={"Inteligencia artificial"}>Inteligencia Artificial</option>
                                                                     </select>
                                                                 
-                                                                : <textarea value={producto.areaV} disabled></textarea>
+                                                                : producto.areaV
                                                                 }
 
 
@@ -558,14 +560,7 @@ export default function Consultas() {
                                                             </td> : null}
                                                         {producto.institucion ?
                                                             <td>
-                                                                <input
-                                                                    type="text"
-                                                                    name="institucion"
-                                                                    className={producto._id}
-                                                                    placeholder={producto.institucion}
-                                                                    disabled={index !== CurrentIndex ? true : false}
-                                                                    autoComplete="off"
-                                                                    onChange={(e) => handleChange(e)} />
+                                                                {producto.institucion}
                                                             </td> : null}
                                                         {producto.creadoPor ?
                                                             <td className="long">
