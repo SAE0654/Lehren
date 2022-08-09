@@ -325,9 +325,9 @@ export default function Complete() {
                 placeholder="Enlace a ROI"
                 defaultValue={Producto.ROI}
                 onChange={(e) => setProductoItem(e)} />
-              
+              <input type="submit" style={{top: "60em", bottom: "inherit"}} value={Producto.objetivo !== null ? "Actualizar datos" : "Guardar formulario"} onClick={() => setNotSaved(false)} />
             </div>
-            <input type="submit" value={Producto.objetivo !== null ? "Actualizar datos" : "Guardar formulario"} onClick={() => setNotSaved(false)} />
+            
           </form>
           <button onClick={() => desaprobarProducto()}>Mandar producto a revisión (desaprobar)</button>
         </div>
