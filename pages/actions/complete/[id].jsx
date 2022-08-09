@@ -306,6 +306,8 @@ export default function Complete() {
                   <div className="control_indicator"></div>
                 </label>
               </div>
+              <br />
+              <textarea name="comentarios" maxLength="5000" placeholder='Comentarios' defaultValue={Producto.comentarios} onChange={(e) => setProductoItem(e)}></textarea>
             </div>
             <div className={styles.form_group}>
               <h2>Análisis de mercado</h2>
@@ -323,7 +325,7 @@ export default function Complete() {
                 placeholder="Enlace a ROI"
                 defaultValue={Producto.ROI}
                 onChange={(e) => setProductoItem(e)} />
-              <textarea name="comentarios" maxLength="5000" placeholder='Comentarios' defaultValue={Producto.comentarios} onChange={(e) => setProductoItem(e)}></textarea>
+              
             </div>
             <input type="submit" value={Producto.objetivo !== null ? "Actualizar datos" : "Guardar formulario"} onClick={() => setNotSaved(false)} />
           </form>

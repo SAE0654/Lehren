@@ -108,15 +108,16 @@ export default function ViewProduct() {
               <p className={styles.right_bottom_border}>{Producto.mercado}</p>
               <h2 className={styles.title4}>Herramientas de validación</h2>
               <p><b>Instrumentos de validación empleados:</b></p>
-              <p className={styles.right_border}>{Producto.instrumentoValidacion.length > 0
+              {Producto.instrumentoValidacion === null ? <p className={styles.right_border}>No se han seleccionado instrumentos de validación</p> : <p className={styles.right_border}>{Producto.instrumentoValidacion.length > 0
                 ? Producto.instrumentoValidacion.map((tool, index) => (Producto.instrumentoValidacion.length - 1) === index ? tool + ". " : tool + ", ")
                 : null}
-              </p>
+              </p>}
+              <p className={styles.last_row}><b>Comentarios:</b></p>
+              <p className={styles.right_bottom_border} style={{ minHeight: '60px' }}>{Producto.comentarios}</p>
               <h2 className={styles.title5}>Análisis financiero</h2>
               <p><b>Enlace a ROI:</b></p>
               <p className={styles.right_border} style={{ minHeight: '60px' }}>{Producto.ROI}</p>
-              <p className={styles.last_row}><b>Comentarios adicionales:</b></p>
-              <p className={styles.right_bottom_border} style={{ minHeight: '60px' }}>{Producto.comentarios}</p>
+
             </div>
           </div>
           <NavLink href="/actions/consultas" exact>
