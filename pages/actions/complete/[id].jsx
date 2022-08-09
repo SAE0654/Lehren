@@ -16,9 +16,24 @@ export default function Complete() {
   const [OnChangeRoute, setOnChangeRoute] = useState(false);
   const [NextRoute, setNextRoute] = useState(null);
   const [GoToNext, setGoToNext] = useState(false);
+  const [VTools, setVTools] = useState([]);
+  const [SelectedTools, setSelectedTools] = useState([]);
   const Route = useRouter();
   const { id } = router.query;
   const { data: session } = useSession();
+
+  let herramientas = [
+    "Focus Group con estudiantes y docentes",
+    "Encuestas de retroalimentación de estudiantes",
+    "Encuestas de ex alumnos",
+    "Piloto de un prototipo",
+    "Encuestas en redes sociales",
+    "Sesiones con expertos de la industria",
+    "Herramientas digitales (Google Trends)",
+    "Master research",
+    "Bitácora social",
+    "Estudio de mercado con un tercero",
+    "Consultor o asesor externo"]
 
   useEffect(() => {
     getId();
@@ -51,6 +66,19 @@ export default function Complete() {
     };
   }, [notSaved, GoToNext]);
 
+  const getToolsSelected = (data) => {
+    let indexes = '';
+    data.instrumentoValidacion.map(tool => {
+      const _indice = herramientas.indexOf(tool);
+      setVTools(data.instrumentoValidacion)
+      if (_indice >= 0) {
+        indexes += ' ' + _indice;
+      }
+    })
+    console.log(")))" + indexes.includes(10))
+    setSelectedTools(indexes);
+  }
+
 
   const getId = () => {
     if (typeof id === 'undefined') {
@@ -63,11 +91,26 @@ export default function Complete() {
     await axios.get(`${process.env.NEXT_PUBLIC_ENDPOINT}api/productos/` + id)
       .then((res) => {
         setProducto(res.data);
+        getToolsSelected(res.data);
       });
   }
 
   const setProductoItem = (e) => {
     if (!notSaved) setNotSaved(true);
+    const tools = VTools;
+    if (e.target.name === "instrumentoValidacion") {
+      if (e.target.checked) {
+        tools.push(e.target.value);
+        setProducto({
+          ...Producto,
+          [e.target.name]: tools
+        });
+      } else {
+        const _index = tools.indexOf(e.target.value)
+        tools.splice(_index, 1);
+      }
+      return;
+    }
     setProducto({
       ...Producto,
       [e.target.name]: e.target.value
@@ -150,10 +193,122 @@ export default function Complete() {
               <textarea name="experto" placeholder="Experto recomendado para el desarrollo (en caso de ser programa curricular, incluir posibles expertos por asignatura)" defaultValue={Producto.experto} onChange={(e) => setProductoItem(e)} maxLength="3000" required></textarea>
               <br />
               <textarea name="requerimientos" placeholder="Requerimientos especiales de instalaciones, equipo, software, etc" defaultValue={Producto.requerimientos} onChange={(e) => setProductoItem(e)} maxLength="6000" required></textarea>
+              <div className="radio_ck_section">
+                <h3>Herramientas de validación</h3>
+                <label className="control control-radio">
+                  Focus Group con estudiantes y docentes
+                  <input
+                    type="checkbox"
+                    name="instrumentoValidacion"
+                    value="Focus Group con estudiantes y docentes"
+                    onChange={(e) => setProductoItem(e)}
+                    defaultChecked={SelectedTools.includes(0) ? true : false} />
+                  <div className="control_indicator"></div>
+                </label>
+                <label className="control control-radio">
+                  Encuestas de retroalimentación de estudiantes
+                  <input
+                    type="checkbox"
+                    name="instrumentoValidacion"
+                    value="Encuestas de retroalimentación de estudiantes"
+                    onChange={(e) => setProductoItem(e)}
+                    defaultChecked={VTools.includes('Encuestas de retroalimentación de estudiantes') ? true : false} />
+                  <div className="control_indicator"></div>
+                </label>
+                <label className="control control-radio">
+                  Encuestas de ex alumnos
+                  <input
+                    type="checkbox"
+                    name="instrumentoValidacion"
+                    value="Encuestas de ex alumnos"
+                    onChange={(e) => setProductoItem(e)}
+                    defaultChecked={VTools.includes('Encuestas de ex alumnos') ? true : false} />
+                  <div className="control_indicator"></div>
+                </label>
+                <label className="control control-radio">
+                  Piloto de un prototipo
+                  <input
+                    type="checkbox"
+                    name="instrumentoValidacion"
+                    value="Piloto de un prototipo"
+                    onChange={(e) => setProductoItem(e)}
+                    defaultChecked={VTools.includes('Piloto de un prototipo') ? true : false} />
+                  <div className="control_indicator"></div>
+                </label>
+                <label className="control control-radio">
+                  Encuestas en redes sociales
+                  <input
+                    type="checkbox"
+                    name="instrumentoValidacion"
+                    value="Encuestas en redes sociales"
+                    onChange={(e) => setProductoItem(e)}
+                    defaultChecked={VTools.includes('Encuestas en redes sociales') ? true : false} />
+                  <div className="control_indicator"></div>
+                </label>
+                <label className="control control-radio">
+                  Sesiones con expertos de la industria
+                  <input
+                    type="checkbox"
+                    name="instrumentoValidacion"
+                    value="Sesiones con expertos de la industria"
+                    onChange={(e) => setProductoItem(e)}
+                    defaultChecked={VTools.includes('Sesiones con expertos de la industria') ? true : false} />
+                  <div className="control_indicator"></div>
+                </label>
+                <label className="control control-radio">
+                  Herramientas digitales (Google Trends)
+                  <input
+                    type="checkbox"
+                    name="instrumentoValidacion"
+                    value="Herramientas digitales (Google Trends)"
+                    onChange={(e) => setProductoItem(e)}
+                    defaultChecked={VTools.includes('Herramientas digitales (Google Trends)') ? true : false} />
+                  <div className="control_indicator"></div>
+                </label>
+                <label className="control control-radio">
+                  Master research
+                  <input
+                    type="checkbox"
+                    name="instrumentoValidacion"
+                    value="Master research"
+                    onChange={(e) => setProductoItem(e)}
+                    defaultChecked={VTools.includes('Master research') ? true : false} />
+                  <div className="control_indicator"></div>
+                </label>
+                <label className="control control-radio">
+                  Bitácora social
+                  <input
+                    type="checkbox"
+                    name="instrumentoValidacion"
+                    value="Bitácora social"
+                    onChange={(e) => setProductoItem(e)}
+                    defaultChecked={VTools.includes('Bitácora social') ? true : false} />
+                  <div className="control_indicator"></div>
+                </label>
+                <label className="control control-radio">
+                  Estudio de mercado con un tercero
+                  <input
+                    type="checkbox"
+                    name="instrumentoValidacion"
+                    value="Estudio de mercado con un tercero"
+                    onChange={(e) => setProductoItem(e)}
+                    defaultChecked={VTools.includes('Estudio de mercado con un tercero') ? true : false} />
+                  <div className="control_indicator"></div>
+                </label>
+                <label className="control control-radio">
+                  Consultor o asesor externo
+                  <input
+                    type="checkbox"
+                    name="instrumentoValidacion"
+                    value="Consultor o asesor externo"
+                    onChange={(e) => setProductoItem(e)}
+                    defaultChecked={VTools.includes('Consultor o asesor externo') ? true : false} />
+                  <div className="control_indicator"></div>
+                </label>
+              </div>
             </div>
             <div className={styles.form_group}>
               <h2>Análisis de mercado</h2>
-              <textarea name="instrumentoValidacion" placeholder="Instrumentos de validación empleados" defaultValue={Producto.instrumentoValidacion} onChange={(e) => setProductoItem(e)} maxLength="6000" required></textarea>
               <br />
               <textarea name="datosSustentan" placeholder="Datos que sustentan la propuesta" defaultValue={Producto.datosSustentan} onChange={(e) => setProductoItem(e)} maxLength="6000" required></textarea>
               <br />
@@ -168,11 +323,7 @@ export default function Complete() {
                 placeholder="Enlace a ROI"
                 defaultValue={Producto.ROI}
                 onChange={(e) => setProductoItem(e)} />
-              <textarea
-                name="comentarios"
-                placeholder="Comentarios adicionales"
-                defaultValue={Producto.comentarios}
-                onChange={(e) => setProductoItem(e)}></textarea>
+              <textarea name="comentarios" maxLength="5000" placeholder='Comentarios' defaultValue={Producto.comentarios} onChange={(e) => setProductoItem(e)}></textarea>
             </div>
             <input type="submit" value={Producto.objetivo !== null ? "Actualizar datos" : "Guardar formulario"} onClick={() => setNotSaved(false)} />
           </form>

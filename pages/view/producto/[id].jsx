@@ -21,8 +21,8 @@ export default function ViewProduct() {
       getProductoById();
     }
     document.querySelector("body").className = '';
-        document.querySelector("body").classList.add("consultas_bg");
-        sessionHasExpired();
+    document.querySelector("body").classList.add("consultas_bg");
+    sessionHasExpired();
   }, []);
 
   const getId = () => {
@@ -36,6 +36,7 @@ export default function ViewProduct() {
     await axios.get(`${process.env.NEXT_PUBLIC_ENDPOINT}api/productos/` + id)
       .then((res) => {
         setProducto(res.data);
+        console.log(res.data)
       });
   }
 
@@ -50,76 +51,78 @@ export default function ViewProduct() {
       <link rel="icon" href="/favicon.ico" />
     </Head>
     <Layout>
-      <div className={styles.main_content} style={{transform: 'translate(0%, -40%)', maxHeight: '200vh'}}>
+      <div className={styles.main_content} style={{ transform: 'translate(0%, -40%)', maxHeight: '200vh' }}>
         <div className={styles.box_container}>
           <h1 className={styles.t_container}>Datos completos del producto</h1>
           <img src="/img/LOGO2.png" alt="" />
           <div className={styles.info_container}>
             <div className={styles.info_box}>
-                <h2 className={styles.title}>Datos generales</h2>
-                <p><b>Nombre del producto</b></p>
-                <p className={styles.right_border}>{Producto.nombre}</p>
-                <p><b>Tipo de oferta</b></p>
-                <p className={styles.right_border}>{Producto.tipo}</p>
-                <p><b>Modalidad</b></p>
-                <p className={styles.right_border}>{Producto.modalidad}</p>
-                <p><b>Área a la que se víncula</b></p>
-                <p className={styles.right_border}>{Producto.areaV}</p>
-                <p className={styles.last_row}><b>Persona que propone el producto:</b></p>
-                <p className={styles.right_bottom_border}>{Producto.quienPropone}</p>
-                <h2 className={styles.title2}>Análisis académico</h2>
-                <p><b>Razón y necesidad de la propuesta:</b></p>
-                <p className={styles.right_border}>{Producto.razon}</p>
-                <p><b>A quién va dirigido:</b></p>
-                <p className={styles.right_border}>{Producto.poblacionObj}</p>
-                <p><b>Descripción general:</b></p>
-                <p className={styles.right_border}>{Producto.descripcion}</p>
-                <p><b>Tiene RVOE:</b></p>
-                <p className={styles.right_border}>{Producto.RVOE === 'on' ? 'Sí' : 'No'}</p>
-                <p><b>Institución:</b></p>
-                <p className={styles.right_border}>{Producto.institucion.toUpperCase()}</p>
-                <p><b>Aprobado:</b></p>
-                <p className={styles.right_border}>{Producto.aprobado === 'on' ? 'Sí' : 'No'}</p>
-                {
-                    Producto.aprobadoPor === 'NP' ? null : 
-                    <>
+              <h2 className={styles.title}>Datos generales</h2>
+              <p><b>Nombre del producto</b></p>
+              <p className={styles.right_border}>{Producto.nombre}</p>
+              <p><b>Tipo de oferta</b></p>
+              <p className={styles.right_border}>{Producto.tipo}</p>
+              <p><b>Modalidad</b></p>
+              <p className={styles.right_border}>{Producto.modalidad}</p>
+              <p><b>Área a la que se víncula</b></p>
+              <p className={styles.right_border}>{Producto.areaV}</p>
+              <p className={styles.last_row}><b>Persona que propone el producto:</b></p>
+              <p className={styles.right_bottom_border}>{Producto.quienPropone}</p>
+              <h2 className={styles.title2}>Análisis académico</h2>
+              <p><b>Razón y necesidad de la propuesta:</b></p>
+              <p className={styles.right_border}>{Producto.razon}</p>
+              <p><b>A quién va dirigido:</b></p>
+              <p className={styles.right_border}>{Producto.poblacionObj}</p>
+              <p><b>Descripción general:</b></p>
+              <p className={styles.right_border}>{Producto.descripcion}</p>
+              <p><b>Tiene RVOE:</b></p>
+              <p className={styles.right_border}>{Producto.RVOE === 'on' ? 'Sí' : 'No'}</p>
+              <p><b>Institución:</b></p>
+              <p className={styles.right_border}>{Producto.institucion.toUpperCase()}</p>
+              <p><b>Aprobado:</b></p>
+              <p className={styles.right_border}>{Producto.aprobado === 'on' ? 'Sí' : 'No'}</p>
+              {
+                Producto.aprobadoPor === 'NP' ? null :
+                  <>
                     <p><b>Aprobado por:</b> </p>
                     <p className={styles.right_border}>{Producto.aprobadoPor}</p>
-                    </>
-                }
-                <p><b>Objetivo del producto:</b></p>
-                <p className={styles.right_border}>{Producto.objetivo}</p>
-                <p><b>Propuesta temas:</b></p>
-                <p className={styles.right_border}>{Producto.temas}</p>
-                <p><b>Forma de titulación o producto final integrador:</b></p>
-                <p className={styles.right_border}>{Producto.titulacion}</p>
-                <p><b>Experto recomendado para el desarrollo:</b></p>
-                <p className={styles.right_border}>{Producto.experto}</p>
-                <p className={styles.last_row}><b>Requerimientos:</b></p>
-                <p className={styles.right_bottom_border}>{Producto.requerimientos}</p>
-                <h2 className={styles.title3}>Análisis de mercado</h2>
-                <p><b>Instrumentos de validación empleados:</b></p>
-                <p className={styles.right_border}>{Producto.instrumentoValidacion}</p>
-                <p><b>Datos que sustentan la propuesta:</b></p>
-                <p className={styles.right_border}>{Producto.datosSustentan}</p>
-                <p><b>Oferta frente a la que compite:</b></p>
-                <p className={styles.right_border}>{Producto.competencia}</p>
-                <p className={styles.last_row}><b>Mercado en el que incide:</b></p>
-                <p className={styles.right_bottom_border}>{Producto.mercado}</p>
-                <h2 className={styles.title4}>Herramientas de validación</h2>
-                <p className={styles.right_bottom_border}><b>Prueba de datos: </b></p>
-                <p className={styles.last_row}>Prueba</p>
-                <h2 className={styles.title5}>Análisis financiero</h2>
-                <p><b>Enlace a ROI:</b></p>
-                <p className={styles.right_border} style={{minHeight: '60px'}}>{Producto.ROI}</p>
-                <p className={styles.last_row}><b>Comentarios adicionales:</b></p>
-                <p className={styles.right_bottom_border} style={{minHeight: '60px'}}>{Producto.comentarios}</p>
+                  </>
+              }
+              <p><b>Objetivo del producto:</b></p>
+              <p className={styles.right_border}>{Producto.objetivo}</p>
+              <p><b>Propuesta temas:</b></p>
+              <p className={styles.right_border}>{Producto.temas}</p>
+              <p><b>Forma de titulación o producto final integrador:</b></p>
+              <p className={styles.right_border}>{Producto.titulacion}</p>
+              <p><b>Experto recomendado para el desarrollo:</b></p>
+              <p className={styles.right_border}>{Producto.experto}</p>
+              <p className={styles.last_row}><b>Requerimientos:</b></p>
+              <p className={styles.right_bottom_border}>{Producto.requerimientos}</p>
+              <h2 className={styles.title3}>Análisis de mercado</h2>
+
+              <p><b>Datos que sustentan la propuesta:</b></p>
+              <p className={styles.right_border}>{Producto.datosSustentan}</p>
+              <p><b>Oferta frente a la que compite:</b></p>
+              <p className={styles.right_border}>{Producto.competencia}</p>
+              <p className={styles.last_row}><b>Mercado en el que incide:</b></p>
+              <p className={styles.right_bottom_border}>{Producto.mercado}</p>
+              <h2 className={styles.title4}>Herramientas de validación</h2>
+              <p><b>Instrumentos de validación empleados:</b></p>
+              <p className={styles.right_border}>{Producto.instrumentoValidacion.length > 0
+                ? Producto.instrumentoValidacion.map((tool, index) => (Producto.instrumentoValidacion.length - 1) === index ? tool + ". " : tool + ", ")
+                : null}
+              </p>
+              <h2 className={styles.title5}>Análisis financiero</h2>
+              <p><b>Enlace a ROI:</b></p>
+              <p className={styles.right_border} style={{ minHeight: '60px' }}>{Producto.ROI}</p>
+              <p className={styles.last_row}><b>Comentarios adicionales:</b></p>
+              <p className={styles.right_bottom_border} style={{ minHeight: '60px' }}>{Producto.comentarios}</p>
             </div>
           </div>
           <NavLink href="/actions/consultas" exact>
-          <button>
-            Regresar a Consultas
-          </button>
+            <button>
+              Regresar a Consultas
+            </button>
           </NavLink>
         </div>
       </div>

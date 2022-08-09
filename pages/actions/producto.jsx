@@ -16,7 +16,7 @@ export default function Producto() {
     const [OnChangeRoute, setOnChangeRoute] = useState(false);
     const [NextRoute, setNextRoute] = useState(null);
     const [GoToNext, setGoToNext] = useState(false);
-    // Función de institución para opciones
+    // Función de institución para opciones y validacion tools
     const [Institucion, setInstitucion] = useState(undefined);
     const Route = useRouter();
     const { data: session } = useSession();
@@ -62,9 +62,6 @@ export default function Producto() {
             toast.error("Rellena todos los campos");
             return;
         }
-
-        console.log(`${process.env.NEXT_PUBLIC_ENDPOINT}`)
-
         await axios.post(`${process.env.NEXT_PUBLIC_ENDPOINT}api/productos/all`, producto,
             {
                 headers: {
@@ -87,10 +84,11 @@ export default function Producto() {
 
     const setProductoItem = (e) => {
         if (!notSaved) setNotSaved(true);
-        if(e.target.name === 'institucion') {
+        if (e.target.name === 'institucion') {
             setInstitucion(e.target.value);
             Producto.areaV = undefined;
         }
+
         setProducto({
             ...Producto,
             [e.target.name]: e.target.value
@@ -185,7 +183,7 @@ export default function Producto() {
                                 <option value="artek">Artek</option>
                             </select>
                             {
-                               Institucion === 'default' || typeof Institucion === 'undefined' ? null :
+                                Institucion === 'default' || typeof Institucion === 'undefined' ? null :
                                     <>
                                         <div className="radio_ck_section" style={Institucion === 'sae' ? { display: 'block' } : { display: 'none' }}>
                                             <h3>Área a la que se víncula</h3>

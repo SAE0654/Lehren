@@ -24,13 +24,13 @@ const productoSchema = new Schema({
     experto: { type: String, default: null },
     requerimientos: { type: String, default: null },
     // Análisis de mercado
-    instrumentoValidacion: { type: String, default: null},
+    instrumentoValidacion: [],
     datosSustentan: { type: String, default: null },
     competencia: { type: String, default: null },
     mercado: { type: String, default: null },
     // Análisis financiero
     ROI: { type: String, default: null },
-    comentarios: { type: String, default: null }
+    comentarios: { type: String, default: null },
 })
 
 const Producto = models.Producto || model('Producto', productoSchema);
