@@ -7,7 +7,7 @@ export const ADMIN = [
     {
         icono: '',
         texto: "Consultar",
-        link: "/actions/consultas"
+        link: "/actions/consultas/"
     },
     {
         icono: '',
@@ -20,7 +20,7 @@ export const STAFF = [
     {
         icono: '',
         texto: "Consultar",
-        link: "/actions/consultas"
+        link: "/actions/consultas/"
     },
     {
         icono: '',

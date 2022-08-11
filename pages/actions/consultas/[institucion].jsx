@@ -1,16 +1,16 @@
 import Head from 'next/head';
-import styles from "../../styles/pages/ventas.module.scss";
+import styles from "../../../styles/pages/ventas.module.scss";
 import { getSession, useSession } from "next-auth/react";
-import Layout from '../../components/Layout';
+import Layout from '../../../components/Layout';
 import { useEffect, useMemo, useState } from 'react';
 import axios from 'axios';
 import { AiOutlineClose, AiTwotoneEdit, AiOutlineEye, AiFillDelete, AiOutlineSave } from 'react-icons/ai';
 import { BsSearch } from "react-icons/bs";
 import { toast } from 'react-toastify';
-import { getTimeStamp, sessionHasExpired } from '../../utils/forms';
-import { NavLink } from '../../components/NavLink';
+import { getTimeStamp, sessionHasExpired } from '../../../utils/forms';
+import { NavLink } from '../../../components/NavLink';
 import { Router, useRouter } from 'next/router';
-import Pagination from '../../components/Pagination';
+import Pagination from '../../../components/Pagination';
 
 let pageSize = 4;
 
@@ -36,6 +36,8 @@ export default function Consultas() {
     const [currentPage, setCurrentPage] = useState(1);
     const [lastPage, setlastPage] = useState(1);
     const Route = useRouter();
+
+    const { institucion } = Route.query;
 
     const { data: session } = useSession();
 
@@ -68,6 +70,11 @@ export default function Consultas() {
         };
     }, [notSaved, GoToNext]);
 
+    useEffect(() => {
+        getProductos();
+    }, [institucion])
+    
+
     const computePages = (data) => {
         const firstPageIndex = (currentPage - 1) * pageSize;
         let lastPageIndex = firstPageIndex + pageSize;
@@ -83,7 +90,7 @@ export default function Consultas() {
 
     const getProductos = async () => {
         setLoading(true);
-        await axios(`${process.env.NEXT_PUBLIC_ENDPOINT}api/productos/all`).then((res) => {
+        await axios(`${process.env.NEXT_PUBLIC_ENDPOINT}api/productos/` + institucion).then((res) => {
             setProductos(res.data);
             setEditInformation(res.data);
             setTempProductos(res.data);

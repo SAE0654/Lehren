@@ -10,6 +10,7 @@ import { useEffect, useState } from "react";
 
 function Nav() {
     const [Interface, setInterface] = useState([]);
+    const [ShowConsultasSubMenu, setShowConsultasSubMenu] = useState(false)
     const { data } = useSession();
 
     useEffect(() => {
@@ -45,9 +46,32 @@ function Nav() {
                         </NavLink>
                         {
                             Interface.map((item, index) => (
-                                <NavLink href={item.link} exact key={index}>
-                                    {item.texto}
-                                </NavLink>
+                                <div key={index}>
+                                    {
+                                        item.texto === "Consultar" ?
+                                            <button className={styles.btn_sub} href="#" onClick={() => setShowConsultasSubMenu(!ShowConsultasSubMenu)}>
+                                                Consultar
+                                                <ul className={styles.submenu_consultas} style={ShowConsultasSubMenu ? { display: "flex" } : { display: "none"}}>
+                                                    <li>
+                                                        <NavLink href={item.link + "sae"} exact>
+                                                            {item.texto} SAE
+                                                        </NavLink>
+                                                    </li>
+                                                    <li>
+                                                        <NavLink href={item.link + "artek"} exact>
+                                                            {item.texto} ARTEK
+                                                        </NavLink>
+                                                    </li>
+                                                </ul>
+                                            </button>
+                                            :
+                                            <NavLink href={item.link} exact key={index}>
+                                                {item.texto}
+                                            </NavLink>
+                                    }
+
+                                </div>
+
                             ))
                         }
                     </li>

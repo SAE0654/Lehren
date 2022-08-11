@@ -58,11 +58,24 @@ export default function Home() {
           <div className={styles.options}>
             {
               Interface.map((item, index) => (
-                <NavLink href={item.link} key={index}>
-                  {item.icono}
-                  <span>{item.texto}</span>
-                </NavLink>
-
+                <div key={index}>
+                  {
+                    item.texto === "Consultar" ? <>
+                      <NavLink href={item.link + "sae"}>
+                        {item.icono}
+                        <span>{item.texto} SAE</span>
+                      </NavLink>
+                      <NavLink href={item.link + "artek"}>
+                        {item.icono}
+                        <span>{item.texto} ARTEK</span>
+                      </NavLink>
+                    </> :
+                      <NavLink href={item.link}>
+                        {item.icono}
+                        <span>{item.texto}</span>
+                      </NavLink>
+                  }
+                </div>
               ))
             }
           </div>

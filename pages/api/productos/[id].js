@@ -15,8 +15,8 @@ const handler = async (req, res) => {
                     console.log("Error: ", error);
                 }
             } else {
-                try {
-                    const producto = await Producto.find();
+                try { // El id aquí representa en realidad la institución
+                    const producto = await Producto.find({institucion: id});
                     return res.status(200).json(producto);
                 } catch (error) {
                     console.log("Error: ", error);

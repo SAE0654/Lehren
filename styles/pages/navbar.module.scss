@@ -23,16 +23,50 @@
             @include mix.flexBox(row, center, flex-end);
             width: 100%;
             position: relative;
+            div {
+                border-left: 1px solid rgba(255, 255, 255, 0.363);
+                .btn_sub {
+                    display: block;
+                    padding: 1em;
+                    color: rgb(255, 255, 255);
+                    position: relative;
+                    font-family: "Quicksand", sans-serif !important;
+                    border-left: 1px solid rgba(255, 255, 255, 0.363);
+                    text-transform: uppercase;
+                    font-size: 1rem;
+                    min-width: 120px;
+                    border: none;
+                    .submenu_consultas {
+                        @include mix.flexBox(column, center, center);
+                        background-color: #22191991;
+                        right: -1px;
+                        top: 99%;
+                        border: 1px solid rgba(255, 255, 255, 0.363);
+                        border-top: none;
+                        li {
+                            display: block;
+                            a {
+                                font-size: 0.8rem;
+                                text-transform: capitalize;
+                                text-align: center;
+                            }
+                        }
+                    }
+                }
+            }
             a {
                 display: block;
                 padding: 1em;
                 color: rgb(255, 255, 255);
                 position: relative;
                 font-family: "Quicksand", sans-serif !important;
-                border-left: 1px solid rgba(255, 255, 255, 0.363);
+                
                 text-transform: uppercase;
                 &:first-child {
                     border-left: none;
+                }
+                &:nth-child(3)::before {
+                    background: none;
                 }
                 &::before {
                     content: '';
@@ -50,6 +84,7 @@
                   &:hover::before {
                     transform: scaleX(1);
                   }
+
             }
             button {
                 display: flex;
