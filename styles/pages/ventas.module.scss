@@ -100,6 +100,7 @@
                     color: rgb(255, 255, 255);
                     border-radius: 5px;
                     border: 1px solid gray;
+
                     &::placeholder {
                         color: rgb(228, 210, 210);
                     }
@@ -123,7 +124,7 @@
                     margin-top: 1em;
                     margin-bottom: 1em;
                 }
-                
+
                 textarea {
                     display: block;
                     width: 90%;
@@ -141,12 +142,13 @@
                     border: none;
                     color: #fff;
                     border: 1px solid gray
-
                 }
+
                 .container_footer {
                     @include mix.flexBox(row, center, center);
                     width: 100%;
                     margin-top: 1em;
+
                     input[type="submit"] {
                         text-transform: uppercase;
                         font-weight: bold;
@@ -154,18 +156,18 @@
                         color: #fff;
                         border: none;
                         position: inherit;
-    
+
                         &:hover {
                             background-color: #000
                         }
                     }
-    
+
                     select {
                         width: 30% !important;
                         text-transform: uppercase;
                         font-weight: bold;
                     }
-    
+
                     .form_control {
                         display: flex;
                         align-items: center;
@@ -181,7 +183,7 @@
                         background-color: color.$bg_input;
                         color: #fff;
                         cursor: pointer;
-    
+
                         input[type="checkbox"] {
                             -webkit-appearance: none;
                             appearance: none;
@@ -196,7 +198,7 @@
                             display: grid;
                             place-content: center;
                             font-weight: bold;
-    
+
                             &::before {
                                 content: "";
                                 width: 0.65em;
@@ -209,11 +211,11 @@
                                 /* Windows High Contrast Mode */
                                 background-color: CanvasText;
                             }
-    
+
                             &:checked::before {
                                 transform: scale(1);
                             }
-    
+
                             &:focus {
                                 outline: max(2px, 0.15em) solid currentColor;
                                 outline-offset: max(2px, 0.15em);
@@ -221,11 +223,69 @@
                         }
                     }
                 }
+
+                .files_zone {
+                    display: flex;
+                    flex-direction: column;
+                    width: 90%;
+                    margin-top: 3em;
+
+                    .form_files {
+                        display: flex;
+                        padding: 1em;
+                        color: #fff;
+                        border: 1px solid gray;
+                        width: 40%;
+                        margin: auto;
+
+                        input[type="file"] {
+                            display: none;
+                        }
+
+                        &:hover {
+                            background-color: #1a2225;
+                        }
+                    }
+
+                    label {
+                        cursor: pointer;
+                    }
+
+                    .zoner {
+                        display: block;
+                        width: 80%;
+                        margin: auto;
+                        margin-top: 1em;
+                        
+
+                        .zoner_box {
+                            display: flex;
+                            flex-direction: column;
+                            width: 90%;
+                            margin: auto;
+                            border: 1px solid rgb(201, 192, 192);
+
+                            p {
+                                display: block;
+                                margin: 1em;
+                                position: relative;
+                                color: white;
+
+                                span {
+                                    right: 0;
+                                    position: absolute;
+
+                                }
+                            }
+                        }
+                    }
+                }
+
             }
         }
-
+        
         // Termina el componente de producto.jsx
-
+        
         .t_container {
             margin-top: 20em;
         }
@@ -274,6 +334,7 @@
                     ". ."
                     "title5 title5"
                     ". .";
+
                 p {
                     display: flex;
                     align-items: center;
@@ -324,6 +385,7 @@
             .title4 {
                 grid-area: title4;
             }
+
             .title5 {
                 grid-area: title5
             }
@@ -554,7 +616,7 @@
 
     table tbody tr td {
         position: relative;
-        
+
         input,
         textarea {
             display: inline-block;
@@ -681,6 +743,7 @@
     width: 95%;
     max-width: 1000px;
     margin: auto;
+
     button {
         display: block;
         padding: 1em;

@@ -5,7 +5,7 @@ import Layout from '../../components/Layout';
 import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
-import { isAnyFieldEmpty, sessionHasExpired } from '../../utils/forms';
+import { acceptedFiles, isAnyFieldEmpty, sessionHasExpired } from '../../utils/forms';
 import { Router, useRouter } from 'next/router';
 
 export default function Producto() {
@@ -18,6 +18,8 @@ export default function Producto() {
     const [GoToNext, setGoToNext] = useState(false);
     // Función de institución para opciones y validacion tools
     const [Institucion, setInstitucion] = useState(undefined);
+    const [Files, setFiles] = useState([]);
+
     const Route = useRouter();
     const { data: session } = useSession();
 
@@ -52,6 +54,26 @@ export default function Producto() {
 
     const registerCourse = async (e) => {
         e.preventDefault();
+        console.log(Files);
+        let { data } = await axios.post("/api/s3/uploadFile", {
+            name: Files[0].name,
+            type: Files[0].type
+        }, {
+            headers: {
+                "Access-Control-Allow-Origin": "*",
+            },
+        });
+
+        console.log(data)
+
+        const url = data.url;
+        let { data: newData } = await axios.put(url, Files[0], {
+            headers: {
+                "Content-type": Files[0].type,
+                "Access-Control-Allow-Origin": "*",
+            },
+        });
+        setFiles([]);
         const producto = Producto;
         producto = { ...producto, creadoPor: session.user.names };
         producto = { ...producto, RVOE: producto.RVOE ? producto.RVOE : 'off' };
@@ -93,6 +115,14 @@ export default function Producto() {
             ...Producto,
             [e.target.name]: e.target.value
         });
+    }
+
+    const verifyFiles = (e) => {
+        if (!acceptedFiles(e)) {
+            toast.error("Extensión de archivo no admitida");
+            return;
+        }
+        setFiles([...Files, e.target.files[0]])
     }
 
     return <>
@@ -253,6 +283,28 @@ export default function Producto() {
                                         </div>
                                     </>
                             }
+                            {/* <div className={styles.files_zone}>
+                                <label className={styles.form_files}>
+                                    <input type="file" name="files_att" onChange={(e) => verifyFiles(e)} />
+                                    Subir archivos
+                                </label>
+                                <div className={styles.zoner}>
+                                    <div className={styles.zoner_box}>
+                                        <p>
+                                            File
+                                            <span>JPG</span>
+                                        </p>
+                                    </div>
+                                </div>
+                                <div className={styles.zoner}>
+                                    <div className={styles.zoner_box}>
+                                        <p>
+                                            File
+                                            <span>PNG</span>
+                                        </p>
+                                    </div>
+                                </div>
+                            </div> */}
                         </div>
                         <div className={styles.form_group}>
                             <h2>Descripción general</h2>
@@ -271,6 +323,7 @@ export default function Producto() {
                                 </label>
                                 <input type="submit" value="Registrar producto" />
                             </div>
+
                         </div>
                     </form>
                 </div>
