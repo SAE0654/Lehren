@@ -35,9 +35,14 @@ export const sessionHasExpired = () => {
 
 export const acceptedFiles = (e) => {
   // PDF, WORD, PNG, JPG
-  if(e.target.files[0].type !== "image/png" && e.target.files[0].type !== "image/jpg") {
-    return false;
+  let files = e.target.files;
+  for(let i = 0; i < files.length; i++) {
+    console.log(e.target.files[i].type)
+    if(e.target.files[i].type !== "image/png" && e.target.files[i].type !== "image/jpg" && e.target.files[i].type !== "image/jpeg") {
+      return false;
+    }
   }
+
   return true;
 
 }

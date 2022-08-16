@@ -117,12 +117,34 @@ export default function Producto() {
         });
     }
 
+    useEffect(() => {
+    }, [Files])
+
+
     const verifyFiles = (e) => {
+        let files = e.target.files;
+        let file = [];
+        let hasTheSameName = false;
         if (!acceptedFiles(e)) {
             toast.error("Extensión de archivo no admitida");
             return;
         }
-        setFiles([...Files, e.target.files[0]])
+        if (files.length >= 5 || file.length >= 5 || Files.length >= 5) {
+            toast.info("Máximo de archivos admitido: 5");
+            return;
+        }
+        Array.from(files).map((_file) => {
+            for(let i = 0; i < Files.length; i++ ) {
+                if(Files[i].name === _file.name) {
+                    toast.info("No puedes subir 2 veces el mismo archivo");
+                    hasTheSameName = true;
+                    break;
+                }
+            }
+            if(hasTheSameName) return;
+            file.push(_file);     
+        });
+        setFiles([...Files, ...file]);
     }
 
     return <>
@@ -285,25 +307,22 @@ export default function Producto() {
                             }
                             {/* <div className={styles.files_zone}>
                                 <label className={styles.form_files}>
-                                    <input type="file" name="files_att" onChange={(e) => verifyFiles(e)} />
+                                    <input type="file" name="files_att" onChange={(e) => verifyFiles(e)} multiple />
                                     Subir archivos
                                 </label>
-                                <div className={styles.zoner}>
-                                    <div className={styles.zoner_box}>
-                                        <p>
-                                            File
-                                            <span>JPG</span>
-                                        </p>
-                                    </div>
-                                </div>
-                                <div className={styles.zoner}>
-                                    <div className={styles.zoner_box}>
-                                        <p>
-                                            File
-                                            <span>PNG</span>
-                                        </p>
-                                    </div>
-                                </div>
+                                {
+                                    Files.length <= 0 ? null :
+                                        Files.map((file, index) => (
+                                            <div className={styles.zoner} key={index}>
+                                                <div className={styles.zoner_box}>
+                                                    <p>
+                                                        {file.name}
+                                                        <span>{file.type.split("/")[1]}</span>
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        ))
+                                }
                             </div> */}
                         </div>
                         <div className={styles.form_group}>
