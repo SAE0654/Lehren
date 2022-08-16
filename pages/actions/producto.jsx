@@ -7,6 +7,7 @@ import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import { acceptedFiles, isAnyFieldEmpty, sessionHasExpired } from '../../utils/forms';
 import { Router, useRouter } from 'next/router';
+import { IoMdClose } from "react-icons/io"
 
 export default function Producto() {
     const [Cursos, setCursos] = useState([]);
@@ -122,6 +123,7 @@ export default function Producto() {
 
 
     const verifyFiles = (e) => {
+        console.log(e.target.files)
         let files = e.target.files;
         let file = [];
         let hasTheSameName = false;
@@ -134,15 +136,15 @@ export default function Producto() {
             return;
         }
         Array.from(files).map((_file) => {
-            for(let i = 0; i < Files.length; i++ ) {
-                if(Files[i].name === _file.name) {
+            for (let i = 0; i < Files.length; i++) {
+                if (Files[i].name === _file.name) {
                     toast.info("No puedes subir 2 veces el mismo archivo");
                     hasTheSameName = true;
                     break;
                 }
             }
-            if(hasTheSameName) return;
-            file.push(_file);     
+            if (hasTheSameName) return;
+            file.push(_file);
         });
         setFiles([...Files, ...file]);
     }
@@ -316,8 +318,31 @@ export default function Producto() {
                                             <div className={styles.zoner} key={index}>
                                                 <div className={styles.zoner_box}>
                                                     <p>
+                                                    <IoMdClose className={styles.zoner_delete} onClick={() => console.log(index)} />
                                                         {file.name}
-                                                        <span>{file.type.split("/")[1]}</span>
+                                                        <span className={
+                                                            file.type.split("/")[1] === "vnd.openxmlformats-officedocument.wordprocessingml.document" ||
+                                                                file.type.split("/")[1] === "vnd.openxmlformats-officedocument.presentationml.presentation" ||
+                                                                file.type.split("/")[1] === "vnd.openxmlformats-officedocument.spreadsheetml.sheet" ?
+                                                                (
+                                                                    file.type.split("/")[1].split(".")[3] === "presentation" ? "powerpoint" :
+                                                                        file.type.split("/")[1].split(".")[3] === "document" ? "word" :
+                                                                            file.type.split("/")[1].split(".")[3] === "sheet" ? "excel" : null
+                                                                )
+                                                                : file.type.split("/")[1]
+                                                        }>
+                                                            {
+                                                                file.type.split("/")[1] === "vnd.openxmlformats-officedocument.wordprocessingml.document" ||
+                                                                    file.type.split("/")[1] === "vnd.openxmlformats-officedocument.presentationml.presentation" ||
+                                                                    file.type.split("/")[1] === "vnd.openxmlformats-officedocument.spreadsheetml.sheet" ?
+                                                                    (
+                                                                        file.type.split("/")[1].split(".")[3] === "presentation" ? "powerpoint" :
+                                                                            file.type.split("/")[1].split(".")[3] === "document" ? "word" :
+                                                                                file.type.split("/")[1].split(".")[3] === "sheet" ? "excel" : null
+                                                                    )
+                                                                    : file.type.split("/")[1]
+                                                            }
+                                                        </span>
                                                     </p>
                                                 </div>
                                             </div>

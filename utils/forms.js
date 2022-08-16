@@ -38,7 +38,13 @@ export const acceptedFiles = (e) => {
   let files = e.target.files;
   for(let i = 0; i < files.length; i++) {
     console.log(e.target.files[i].type)
-    if(e.target.files[i].type !== "image/png" && e.target.files[i].type !== "image/jpg" && e.target.files[i].type !== "image/jpeg") {
+    if(e.target.files[i].type !== "image/png" 
+    && e.target.files[i].type !== "image/jpg" 
+    && e.target.files[i].type !== "image/jpeg"
+    && e.target.files[i].type !== "application/pdf"
+    && e.target.files[i].type !== "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+    && e.target.files[i].type !== "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+    && e.target.files[i].type !== "application/vnd.openxmlformats-officedocument.presentationml.presentation") {
       return false;
     }
   }

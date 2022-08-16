@@ -231,12 +231,14 @@
                     margin-top: 3em;
 
                     .form_files {
-                        display: flex;
+                        display: block;
+                        text-align: center;
                         padding: 1em;
                         color: #fff;
                         border: 1px solid gray;
                         width: 40%;
                         margin: auto;
+                        font-weight: bold;
 
                         input[type="file"] {
                             display: none;
@@ -262,19 +264,29 @@
                             display: flex;
                             flex-direction: column;
                             width: 90%;
-                            margin: auto;
-                            border: 1px solid rgb(201, 192, 192);
+                            
+                           
+                            background-color: #000;
+                            border-radius: 10px;
 
                             p {
-                                display: block;
+                                display: flex;
+                                align-items: center;
+                                justify-content: flex-start;
+                                gap: 1em;
                                 margin: 1em;
                                 position: relative;
                                 color: white;
+                                .zoner_delete {
+                                    cursor: pointer;
+                                }
 
                                 span {
                                     right: 0;
                                     position: absolute;
-
+                                    padding: 0.3em 0.8em;
+                                    font-size: 0.6rem;
+                                    border-radius: 150px;
                                 }
                             }
                         }

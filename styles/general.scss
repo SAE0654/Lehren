@@ -53,6 +53,36 @@ body {
     }
 }
 
+.png {
+    background-color: yellow;
+    color: #000;
+}
+
+.jpg, .jpeg {
+    background-color: blue;
+    color: #fff;
+}
+
+.pdf {
+    background-color: red;
+    color: #fff;
+}
+
+.word {
+    background-color: #0074d9;
+    color: #fff;
+}
+
+.powerpoint {
+    background-color: rgb(28, 230, 28);
+    color: rgb(0, 0, 0);
+}
+
+.excel {
+    background-color: green;
+    color: #fff;
+}
+
 .mini {
     font-size: 1rem !important;
     text-align: center;
