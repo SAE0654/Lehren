@@ -60,7 +60,6 @@ export default function Complete() {
     } else {
       Router.events.off('routeChangeStart', beforeRouteHandler);
     }
-    console.log("RECARGA")
     return () => {
       Router.events.off('routeChangeStart', beforeRouteHandler);
     };
@@ -75,7 +74,6 @@ export default function Complete() {
         indexes += ' ' + _indice;
       }
     })
-    console.log(")))" + indexes.includes(10))
     setSelectedTools(indexes);
   }
 
@@ -120,7 +118,6 @@ export default function Complete() {
   const updateCourse = async (e) => {
     e.preventDefault();
     const producto = Producto;
-    console.log(producto)
     if (isAnyFieldEmpty(e.target)) { // Si true, campos vacíos
       toast.error("Rellena todos los campos");
       return;
@@ -134,7 +131,7 @@ export default function Complete() {
       }).then((res) => {
         toast.info(res.data.message);
         e.target.reset();
-        router.push(`${process.env.NEXT_PUBLIC_ENDPOINT}actions/consultas`)
+        router.push(`${process.env.NEXT_PUBLIC_ENDPOINT}`)
       }).catch((err) => {
         toast.error("Error al completar")
       })
@@ -153,7 +150,7 @@ export default function Complete() {
       }
     }).then(() => {
       toast.info("Producto mandado a revisión");
-      router.push("/actions/consultas")
+      router.push("/")
     }).catch(() => {
       toast.error("Ocurrió un error inesperado, inténtalo de nuevo")
     });

@@ -36,7 +36,6 @@ export default function ViewProduct() {
     await axios.get(`${process.env.NEXT_PUBLIC_ENDPOINT}api/productos/` + id)
       .then((res) => {
         setProducto(res.data);
-        console.log(res.data)
       });
   }
 
@@ -120,9 +119,9 @@ export default function ViewProduct() {
 
             </div>
           </div>
-          <NavLink href="/actions/consultas" exact>
+          <NavLink href="/" exact>
             <button>
-              Regresar a Consultas
+              Regresar a Inicio
             </button>
           </NavLink>
         </div>
