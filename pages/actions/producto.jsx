@@ -55,26 +55,26 @@ export default function Producto() {
 
     const registerCourse = async (e) => {
         e.preventDefault();
-        console.log(Files);
-        let { data } = await axios.post("/api/s3/uploadFile", {
-            name: Files[0].name,
-            type: Files[0].type
-        }, {
-            headers: {
-                "Access-Control-Allow-Origin": "*",
-            },
-        });
+        // console.log(Files);
+        // let { data } = await axios.post("/api/s3/uploadFile", {
+        //     name: Files[0].name,
+        //     type: Files[0].type
+        // }, {
+        //     headers: {
+        //         "Access-Control-Allow-Origin": "*",
+        //     },
+        // });
 
-        console.log(data)
+        // console.log(data)
 
-        const url = data.url;
-        let { data: newData } = await axios.put(url, Files[0], {
-            headers: {
-                "Content-type": Files[0].type,
-                "Access-Control-Allow-Origin": "*",
-            },
-        });
-        setFiles([]);
+        // const url = data.url;
+        // let { data: newData } = await axios.put(url, Files[0], {
+        //     headers: {
+        //         "Content-type": Files[0].type,
+        //         "Access-Control-Allow-Origin": "*",
+        //     },
+        // });
+        // setFiles([]);
         const producto = Producto;
         producto = { ...producto, creadoPor: session.user.names };
         producto = { ...producto, RVOE: producto.RVOE ? producto.RVOE : 'off' };
@@ -118,8 +118,8 @@ export default function Producto() {
         });
     }
 
-    useEffect(() => {
-    }, [Files])
+    // useEffect(() => {
+    // }, [Files])
 
 
     const verifyFiles = (e) => {
