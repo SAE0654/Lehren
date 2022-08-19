@@ -80,7 +80,6 @@ export default function Consultas() {
         let lastPageIndex = firstPageIndex + pageSize;
         setlastPage(lastPageIndex)
         data === null ? setTempProductos(() => Productos.slice(firstPageIndex, lastPageIndex)) : setTempProductos(() => data.slice(firstPageIndex, lastPageIndex));
-        console.log(TempProductos)
         return Productos.slice(firstPageIndex, lastPageIndex);
     }
 

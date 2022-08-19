@@ -31,6 +31,8 @@ const productoSchema = new Schema({
     // Análisis financiero
     ROI: { type: String, default: null },
     comentarios: { type: String, default: null },
+    archivosETP1: [],
+    archivosETP2: []
 })
 
 const Producto = models.Producto || model('Producto', productoSchema);

@@ -7,7 +7,9 @@ import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import { acceptedFiles, isAnyFieldEmpty, sessionHasExpired } from '../../utils/forms';
 import { Router, useRouter } from 'next/router';
-import { IoMdClose } from "react-icons/io"
+import { IoMdClose } from "react-icons/io";
+
+const BUCKET_URI = "https://sae-files.s3.amazonaws.com/"
 
 export default function Producto() {
     const [Cursos, setCursos] = useState([]);
@@ -23,6 +25,8 @@ export default function Producto() {
 
     const Route = useRouter();
     const { data: session } = useSession();
+
+    let url_files = [];
 
     useEffect(() => {
         document.querySelector("body").className = '';
@@ -55,29 +59,13 @@ export default function Producto() {
 
     const registerCourse = async (e) => {
         e.preventDefault();
-        // console.log(Files);
-        // let { data } = await axios.post("/api/s3/uploadFile", {
-        //     name: Files[0].name,
-        //     type: Files[0].type
-        // }, {
-        //     headers: {
-        //         "Access-Control-Allow-Origin": "*",
-        //     },
-        // });
 
-        // console.log(data)
+        // await saveFilesToAWS();
 
-        // const url = data.url;
-        // let { data: newData } = await axios.put(url, Files[0], {
-        //     headers: {
-        //         "Content-type": Files[0].type,
-        //         "Access-Control-Allow-Origin": "*",
-        //     },
-        // });
-        // setFiles([]);
         const producto = Producto;
         producto = { ...producto, creadoPor: session.user.names };
         producto = { ...producto, RVOE: producto.RVOE ? producto.RVOE : 'off' };
+        producto = { ...producto, archivosETP1: url_files }
         if (isAnyFieldEmpty(e.target)
             || producto.institucion === 'default'
             || typeof producto.institucion === 'undefined'
@@ -118,12 +106,8 @@ export default function Producto() {
         });
     }
 
-    // useEffect(() => {
-    // }, [Files])
-
-
     const verifyFiles = (e) => {
-        console.log(e.target.files)
+        console.log(e.target.files[0].size / 1024 / 1024 + "MiB")
         let files = e.target.files;
         let file = [];
         let hasTheSameName = false;
@@ -134,6 +118,12 @@ export default function Producto() {
         if (files.length >= 5 || file.length >= 5 || Files.length >= 5) {
             toast.info("Máximo de archivos admitido: 5");
             return;
+        }
+        for(let i = 0; i < files.length; i++) {
+            if((files[i].size / 1024 / 1024).toFixed(2) >= 8) {
+                toast.error("No puedes subir un archivo mayor a 8MB");
+                return;
+            }
         }
         Array.from(files).map((_file) => {
             for (let i = 0; i < Files.length; i++) {
@@ -147,6 +137,42 @@ export default function Producto() {
             file.push(_file);
         });
         setFiles([...Files, ...file]);
+    }
+
+    const deleteFiles = (index) => {
+        let file = Files.filter((item, _Lindex) => _Lindex !== index);
+        if(file.length <= 0) {
+            document.querySelector("#fileUpload").value = '';
+        }
+        setFiles(file);
+    }
+
+    const saveFilesToAWS = async () => {
+        if(Files.length <= 0) return;
+        for (let i = 0; i < Files.length; i++) {
+            let { data } = await axios.post("/api/s3/uploadFile", {
+                name: Files[i].name,
+                type: Files[i].type
+            }, {
+                headers: {
+                    "Access-Control-Allow-Origin": "*",
+                },
+            });
+
+            const url = data.url;
+            /*let { data: newData } = */ await axios.put(url, Files[i], {
+                headers: {
+                    "Content-type": Files[i].type,
+                    "Access-Control-Allow-Origin": "*",
+                },
+            }).then(() => {
+                toast.success("Archivo subido con éxito: " + Files[i].name, {
+                    autoClose: 3000
+                })
+            });
+            url_files.push(BUCKET_URI + Files[i].name);
+        }
+        setFiles([]);
     }
 
     return <>
@@ -309,7 +335,7 @@ export default function Producto() {
                             }
                             {/* <div className={styles.files_zone}>
                                 <label className={styles.form_files}>
-                                    <input type="file" name="files_att" onChange={(e) => verifyFiles(e)} multiple />
+                                    <input type="file" name="files_att" id="fileUpload" onChange={(e) => verifyFiles(e)} multiple />
                                     Subir archivos
                                 </label>
                                 {
@@ -318,8 +344,8 @@ export default function Producto() {
                                             <div className={styles.zoner} key={index}>
                                                 <div className={styles.zoner_box}>
                                                     <p>
-                                                    <IoMdClose className={styles.zoner_delete} onClick={() => console.log(index)} />
-                                                        {file.name}
+                                                        <IoMdClose className={styles.zoner_delete} onClick={() => deleteFiles(index)} />
+                                                        <span className={styles.fileName}>{file.name}</span>
                                                         <span className={
                                                             file.type.split("/")[1] === "vnd.openxmlformats-officedocument.wordprocessingml.document" ||
                                                                 file.type.split("/")[1] === "vnd.openxmlformats-officedocument.presentationml.presentation" ||

@@ -25,6 +25,7 @@ const handler = async (req, res) => {
             return res.status(404).json({ message: "Not found" });
         case 'POST':
             const newProduct = new Producto(body);
+            console.log(body)
             const productExists = await Producto.find({ nombre: body.nombre });
             if (productExists.length >= 1) {
                 return res.status(200).json({ message: 'Producto ya existente' })

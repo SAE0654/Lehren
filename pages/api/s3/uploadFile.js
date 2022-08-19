@@ -14,8 +14,6 @@ export default async (req, res) => {
   
     try {
       let { name, type } = req.body;
-
-      console.log(name, type)
   
       const fileParams = {
         Bucket: process.env.BUCKET_NAME,
@@ -25,10 +23,10 @@ export default async (req, res) => {
       };
   
       const url = await s3.getSignedUrlPromise("putObject", fileParams);
+      // await s3.deleteObjects()
   
       res.status(200).json({ url });
     } catch (err) {
-      console.log(err);
       res.status(400).json({ message: err });
     }
   };
