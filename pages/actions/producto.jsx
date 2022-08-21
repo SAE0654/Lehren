@@ -60,7 +60,7 @@ export default function Producto() {
     const registerCourse = async (e) => {
         e.preventDefault();
 
-        // await saveFilesToAWS();
+        await saveFilesToAWS();
 
         const producto = Producto;
         producto = { ...producto, creadoPor: session.user.names };
@@ -119,8 +119,8 @@ export default function Producto() {
             toast.info("Máximo de archivos admitido: 5");
             return;
         }
-        for(let i = 0; i < files.length; i++) {
-            if((files[i].size / 1024 / 1024).toFixed(2) >= 8) {
+        for (let i = 0; i < files.length; i++) {
+            if ((files[i].size / 1024 / 1024).toFixed(2) >= 8) {
                 toast.error("No puedes subir un archivo mayor a 8MB");
                 return;
             }
@@ -141,14 +141,14 @@ export default function Producto() {
 
     const deleteFiles = (index) => {
         let file = Files.filter((item, _Lindex) => _Lindex !== index);
-        if(file.length <= 0) {
+        if (file.length <= 0) {
             document.querySelector("#fileUpload").value = '';
         }
         setFiles(file);
     }
 
     const saveFilesToAWS = async () => {
-        if(Files.length <= 0) return;
+        if (Files.length <= 0) return;
         for (let i = 0; i < Files.length; i++) {
             let { data } = await axios.post("/api/s3/uploadFile", {
                 name: Files[i].name,

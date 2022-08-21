@@ -114,9 +114,28 @@ export default function ViewProduct() {
               <p className={styles.last_row}><b>Comentarios:</b></p>
               <p className={styles.right_bottom_border} style={{ minHeight: '60px' }}>{Producto.comentarios}</p>
               <h2 className={styles.title5}>Análisis financiero</h2>
-              <p><b>Enlace a ROI:</b></p>
-              <p className={styles.right_border} style={{ minHeight: '60px' }}>{Producto.ROI}</p>
-
+              <p className={styles.last_row}><b>Enlace a ROI:</b></p>
+              <p className={styles.right_bottom_border} style={{ minHeight: '60px' }}>{Producto.ROI}</p>
+              <h2 className={styles.title6}>Archivos cargados</h2>
+              <p className={styles.right_border}>Etapa 1: </p>
+              <p className={styles.right_border}>
+                {
+                  Producto.archivosETP1 && Producto.archivosETP1.length > 0 ?
+                    Producto.archivosETP1.map((item, index) => (
+                      <a href={item} target="_blank" key={index}>{item.split("https://sae-files.s3.amazonaws.com/")}</a>
+                    )) : "Ningún archivo fue cargado"
+                }
+                {console.log(Producto.archivosETP1)}
+              </p>
+              <p className={styles.last_row}>Etapa 2: </p>
+              <p className={styles.right_bottom_border}>
+                {
+                  Producto.archivosETP2 && Producto.archivosETP2.length > 0 ?
+                    Producto.archivosETP2.map((item, index) => (
+                      <a href={item} target="_blank" key={index}>{item.split("https://sae-files.s3.amazonaws.com/")}</a>
+                    )) : "Ningún archivo fue cargado"
+                }
+              </p>
             </div>
           </div>
           <NavLink href="/" exact>

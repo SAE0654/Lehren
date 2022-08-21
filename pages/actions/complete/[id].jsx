@@ -5,8 +5,11 @@ import axios from 'axios'
 import Head from 'next/head';
 import Layout from '../../../components/Layout';
 import styles from "../../../styles/pages/ventas.module.scss";
-import { isAnyFieldEmpty, sessionHasExpired } from '../../../utils/forms';
+import { acceptedFiles, isAnyFieldEmpty, sessionHasExpired } from '../../../utils/forms';
 import { toast } from 'react-toastify';
+import { IoMdClose } from "react-icons/io";
+
+const BUCKET_URI = "https://sae-files.s3.amazonaws.com/"
 
 export default function Complete() {
   const router = useRouter();
@@ -18,9 +21,13 @@ export default function Complete() {
   const [GoToNext, setGoToNext] = useState(false);
   const [VTools, setVTools] = useState([]);
   const [SelectedTools, setSelectedTools] = useState([]);
+  const [Files, setFiles] = useState([]);
+
   const Route = useRouter();
   const { id } = router.query;
   const { data: session } = useSession();
+
+  let url_files = [];
 
   let herramientas = [
     "Focus Group con estudiantes y docentes",
@@ -90,6 +97,7 @@ export default function Complete() {
       .then((res) => {
         setProducto(res.data);
         getToolsSelected(res.data);
+        console.log(res.data)
       });
   }
 
@@ -117,7 +125,9 @@ export default function Complete() {
 
   const updateCourse = async (e) => {
     e.preventDefault();
+    await saveFilesToAWS();
     const producto = Producto;
+    producto.archivosETP2 = url_files;
     if (isAnyFieldEmpty(e.target)) { // Si true, campos vacíos
       toast.error("Rellena todos los campos");
       return;
@@ -154,6 +164,76 @@ export default function Complete() {
     }).catch(() => {
       toast.error("Ocurrió un error inesperado, inténtalo de nuevo")
     });
+  }
+
+  const verifyFiles = (e) => {
+    console.log(e.target.files[0].size / 1024 / 1024 + "MiB")
+    let files = e.target.files;
+    let file = [];
+    let hasTheSameName = false;
+    if (!acceptedFiles(e)) {
+      toast.error("Extensión de archivo no admitida");
+      return;
+    }
+    if (files.length >= 5 || file.length >= 5 || Files.length >= 5) {
+      toast.info("Máximo de archivos admitido: 5");
+      return;
+    }
+    for (let i = 0; i < files.length; i++) {
+      if ((files[i].size / 1024 / 1024).toFixed(2) >= 8) {
+        toast.error("No puedes subir un archivo mayor a 8MB");
+        return;
+      }
+    }
+    Array.from(files).map((_file) => {
+      for (let i = 0; i < Files.length; i++) {
+        if (Files[i].name === _file.name) {
+          toast.info("No puedes subir 2 veces el mismo archivo");
+          hasTheSameName = true;
+          break;
+        }
+      }
+      if (hasTheSameName) return;
+      file.push(_file);
+    });
+    setFiles([...Files, ...file]);
+  }
+
+
+  const deleteFiles = (index) => {
+    let file = Files.filter((item, _Lindex) => _Lindex !== index);
+    if (file.length <= 0) {
+      document.querySelector("#fileUpload").value = '';
+    }
+    setFiles(file);
+  }
+
+  const saveFilesToAWS = async () => {
+    if (Files.length <= 0) return;
+    for (let i = 0; i < Files.length; i++) {
+      let { data } = await axios.post("/api/s3/uploadFile", {
+        name: Files[i].name,
+        type: Files[i].type
+      }, {
+        headers: {
+          "Access-Control-Allow-Origin": "*",
+        },
+      });
+
+      const url = data.url;
+      /*let { data: newData } = */ await axios.put(url, Files[i], {
+        headers: {
+          "Content-type": Files[i].type,
+          "Access-Control-Allow-Origin": "*",
+        },
+      }).then(() => {
+        toast.success("Archivo subido con éxito: " + Files[i].name, {
+          autoClose: 3000
+        })
+      });
+      url_files.push(BUCKET_URI + Files[i].name);
+    }
+    setFiles([]);
   }
 
   if (!Producto) {
@@ -322,9 +402,51 @@ export default function Complete() {
                 placeholder="Enlace a ROI"
                 defaultValue={Producto.ROI}
                 onChange={(e) => setProductoItem(e)} />
-              <input type="submit" style={{top: "60em", bottom: "inherit"}} value={Producto.objetivo !== null ? "Actualizar datos" : "Guardar formulario"} onClick={() => setNotSaved(false)} />
+              {/* <div className={styles.files_zone}>
+                <label className={styles.form_files}>
+                  <input type="file" name="files_att" id="fileUpload" onChange={(e) => verifyFiles(e)} multiple />
+                  Subir archivos
+                </label>
+                {
+                  Files.length <= 0 ? null :
+                    Files.map((file, index) => (
+                      <div className={styles.zoner} key={index}>
+                        <div className={styles.zoner_box}>
+                          <p>
+                            <IoMdClose className={styles.zoner_delete} onClick={() => deleteFiles(index)} />
+                            <span className={styles.fileName}>{file.name}</span>
+                            <span className={
+                              file.type.split("/")[1] === "vnd.openxmlformats-officedocument.wordprocessingml.document" ||
+                                file.type.split("/")[1] === "vnd.openxmlformats-officedocument.presentationml.presentation" ||
+                                file.type.split("/")[1] === "vnd.openxmlformats-officedocument.spreadsheetml.sheet" ?
+                                (
+                                  file.type.split("/")[1].split(".")[3] === "presentation" ? "powerpoint" :
+                                    file.type.split("/")[1].split(".")[3] === "document" ? "word" :
+                                      file.type.split("/")[1].split(".")[3] === "sheet" ? "excel" : null
+                                )
+                                : file.type.split("/")[1]
+                            }>
+                              {
+                                file.type.split("/")[1] === "vnd.openxmlformats-officedocument.wordprocessingml.document" ||
+                                  file.type.split("/")[1] === "vnd.openxmlformats-officedocument.presentationml.presentation" ||
+                                  file.type.split("/")[1] === "vnd.openxmlformats-officedocument.spreadsheetml.sheet" ?
+                                  (
+                                    file.type.split("/")[1].split(".")[3] === "presentation" ? "powerpoint" :
+                                      file.type.split("/")[1].split(".")[3] === "document" ? "word" :
+                                        file.type.split("/")[1].split(".")[3] === "sheet" ? "excel" : null
+                                  )
+                                  : file.type.split("/")[1]
+                              }
+                            </span>
+                          </p>
+                        </div>
+                      </div>
+                    ))
+                }
+              </div> */}
+              <input type="submit" style={{ top: "100em", bottom: "inherit", left: "5em" }} value={Producto.objetivo !== null ? "Actualizar datos" : "Guardar formulario"} onClick={() => setNotSaved(false)} />
             </div>
-            
+
           </form>
           <button onClick={() => desaprobarProducto()}>Mandar producto a revisión (desaprobar)</button>
         </div>

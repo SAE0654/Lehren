@@ -323,7 +323,7 @@
                 display: grid;
                 width: 90%;
                 grid-template-columns: 0.5fr 1.5fr;
-                grid-template-rows: 0.5fr 0.5fr 0.5fr 0.5fr 0.5fr 0.5fr 0.5fr 0.5fr 0.5fr 0.5fr 0.5fr 0.5fr 0.5fr 0.5fr 0.5fr 0.5fr 0.5fr 0.5fr 0.5fr 0.5fr 0.5fr 0.5fr 0.5fr 0.5fr 0.5fr 0.5fr 0.5fr;
+                grid-template-rows: 0.5fr 0.5fr 0.5fr 0.5fr 0.5fr 0.5fr 0.5fr 0.5fr 0.5fr 0.5fr 0.5fr 0.5fr 0.5fr 0.5fr 0.5fr 0.5fr 0.5fr 0.5fr 0.5fr 0.5fr 0.5fr 0.5fr 0.5fr 0.5fr 0.5fr 0.5fr 0.5fr 0.5fr 0.5fr 0.5fr 0.5fr;
                 grid-auto-flow: row;
                 grid-template-areas:
                     "title title"
@@ -353,6 +353,9 @@
                     ". ."
                     ". ."
                     "title5 title5"
+                    ". ."
+                    "title6 title6"
+                    ". ."
                     ". .";
 
                 p {
@@ -377,6 +380,16 @@
                         border-right: 1px solid gray;
                         border-bottom: 1px solid gray;
                     }
+                    a {
+                        display: inline-block;
+                        color: yellow;
+                        text-transform: lowercase;
+                        padding-right: 1em;
+                        overflow: hidden;
+                        text-overflow: ellipsis;
+                        white-space: nowrap;
+                        max-width: 130px;
+                    }
                 }
             }
 
@@ -384,7 +397,8 @@
             .title2,
             .title3,
             .title4,
-            .title5 {
+            .title5,
+            .title6 {
                 background-color: #080808;
                 color: #fff;
                 padding: 0.5em;
@@ -407,7 +421,10 @@
             }
 
             .title5 {
-                grid-area: title5
+                grid-area: title5;
+            }
+            .title6 {
+                grid-area: title6;
             }
         }
     }
