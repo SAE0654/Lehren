@@ -3,7 +3,12 @@ import { signOut } from "next-auth/react";
 export const isAnyFieldEmpty = (form) => {
   let isEmpty = false;
   for (let i = 0; i < form.length; i++) {
-    form[i].value.trim().length <= 0 ? isEmpty = true : null;
+    console.log();
+    if(form[i].name === "files_att") {
+      console.log("Archivo")
+    } else {
+      form[i].value.trim().length <= 0 ? isEmpty = true : null;
+    }
   }
   return isEmpty;
 }
