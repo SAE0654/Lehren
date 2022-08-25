@@ -150,7 +150,7 @@ export default function Producto() {
     const saveFilesToAWS = async () => {
         if (Files.length <= 0) return;
         for (let i = 0; i < Files.length; i++) {
-            let { data } = await axios.post(`${process.env.NEXT_PUBLIC_ENDPOINT}/api/s3/uploadFile`, {
+            let { data } = await axios.post(`${process.env.NEXT_PUBLIC_ENDPOINT}api/s3/uploadFile`, {
                 name: Files[i].name,
                 type: Files[i].type
             }, {
