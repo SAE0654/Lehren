@@ -152,7 +152,7 @@ export default function ViewProduct() {
                     FilesETP1.map((item, index) => (
                       <div className={styles.container_file} key={index}>
                         <AiTwotoneDelete className={styles.btn_delete} onClick={() => deleteFile(item, "archivosETP1")} />
-                        <a href={item} target="_blank">
+                        <a href={item} target="_blank" rel="noopener noreferrer">
                           {item.split("https://sae-files.s3.amazonaws.com/")}
                         </a>
                       </div>
@@ -166,7 +166,7 @@ export default function ViewProduct() {
                     FilesETP2.map((item, index) => (
                       <div className={styles.container_file} key={index}>
                         <AiTwotoneDelete className={styles.btn_delete} onClick={() => deleteFile(item, "archivosETP2")} />
-                        <a href={item} target="_blank">
+                        <a href={item} target="_blank" rel="noopener noreferrer">
                           {item.split("https://sae-files.s3.amazonaws.com/")}
                         </a>
                       </div>
