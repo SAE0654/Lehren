@@ -35,7 +35,7 @@ export default function Login() {
       {
         email,
         password,
-        callbackUrl: `https://lehren-productos.vercel.app`
+        callbackUrl: `https://www.productoslehren.com/`
       }
     ).then(() => {
       toast.dismiss(toastId);

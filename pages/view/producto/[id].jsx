@@ -7,10 +7,14 @@ import Layout from '../../../components/Layout';
 import styles from "../../../styles/pages/ventas.module.scss";
 import { NavLink } from '../../../components/NavLink';
 import { sessionHasExpired } from '../../../utils/forms';
+import { AiTwotoneDelete } from 'react-icons/ai';
+import { toast } from 'react-toastify';
 
 export default function ViewProduct() {
   const router = useRouter();
   const [Producto, setProducto] = useState(null);
+  const [FilesETP1, setFilesETP1] = useState([]);
+  const [FilesETP2, setFilesETP2] = useState([]);
 
   const { id } = router.query;
   const { data: session } = useSession();
@@ -36,6 +40,30 @@ export default function ViewProduct() {
     await axios.get(`${process.env.NEXT_PUBLIC_ENDPOINT}api/productos/` + id)
       .then((res) => {
         setProducto(res.data);
+        setFilesETP1(res.data.archivosETP1);
+        setFilesETP2(res.data.archivosETP2);
+      });
+  }
+
+  const deleteFile = async (fileName, etapa) => {
+    await axios.delete(`${process.env.NEXT_PUBLIC_ENDPOINT}api/s3/delete/${fileName.split("https://sae-files.s3.amazonaws.com/")[1]}`, {
+      headers: {
+        "Access-Control-Allow-Origin": "*",
+      },
+    }).then(() => {
+      deleteDBRecord(fileName, etapa)
+    }).catch((err) => {
+      console.log(err)
+    })
+  }
+
+  const deleteDBRecord = async (fileName, etapa) => { // Borrar el link del archivo de la BD
+    const productoArr = etapa === "archivosETP1" ? FilesETP1.filter((item) => item !== fileName) : FilesETP2.filter((item) => item !== fileName);
+    etapa === "archivosETP1" ? setFilesETP1(productoArr) : setFilesETP2(productoArr);
+    Producto[etapa] = productoArr;
+    await axios.put(`${process.env.NEXT_PUBLIC_ENDPOINT}api/productos/${id}`, Producto)
+      .then((res) => {
+        toast.success("Archivo eliminado")
       });
   }
 
@@ -120,19 +148,28 @@ export default function ViewProduct() {
               <p className={styles.right_border}>Etapa 1: </p>
               <p className={styles.right_border}>
                 {
-                  Producto.archivosETP1 && Producto.archivosETP1.length > 0 ?
-                    Producto.archivosETP1.map((item, index) => (
-                      <a href={item} target="_blank" key={index}>{item.split("https://sae-files.s3.amazonaws.com/")}</a>
+                  Producto.archivosETP1 && FilesETP1.length > 0 ?
+                    FilesETP1.map((item, index) => (
+                      <div className={styles.container_file} key={index}>
+                        <AiTwotoneDelete className={styles.btn_delete} onClick={() => deleteFile(item, "archivosETP1")} />
+                        <a href={item} target="_blank">
+                          {item.split("https://sae-files.s3.amazonaws.com/")}
+                        </a>
+                      </div>
                     )) : "Ningún archivo fue cargado"
                 }
-                {console.log(Producto.archivosETP1)}
               </p>
               <p className={styles.last_row}>Etapa 2: </p>
               <p className={styles.right_bottom_border}>
                 {
-                  Producto.archivosETP2 && Producto.archivosETP2.length > 0 ?
-                    Producto.archivosETP2.map((item, index) => (
-                      <a href={item} target="_blank" key={index}>{item.split("https://sae-files.s3.amazonaws.com/")}</a>
+                  Producto.archivosETP2 && FilesETP2.length > 0 ?
+                    FilesETP2.map((item, index) => (
+                      <div className={styles.container_file} key={index}>
+                        <AiTwotoneDelete className={styles.btn_delete} onClick={() => deleteFile(item, "archivosETP2")} />
+                        <a href={item} target="_blank">
+                          {item.split("https://sae-files.s3.amazonaws.com/")}
+                        </a>
+                      </div>
                     )) : "Ningún archivo fue cargado"
                 }
               </p>

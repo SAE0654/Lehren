@@ -333,7 +333,7 @@ export default function Producto() {
                                         </div>
                                     </>
                             }
-                            {/* <div className={styles.files_zone}>
+                            <div className={styles.files_zone}>
                                 <label className={styles.form_files}>
                                     <input type="file" name="files_att" id="fileUpload" onChange={(e) => verifyFiles(e)} multiple />
                                     Subir archivos
@@ -374,7 +374,7 @@ export default function Producto() {
                                             </div>
                                         ))
                                 }
-                            </div> */}
+                            </div>
                         </div>
                         <div className={styles.form_group}>
                             <h2>Descripción general</h2>

@@ -390,6 +390,22 @@
                         white-space: nowrap;
                         max-width: 130px;
                     }
+                    .container_file {
+                        display: flex;
+                        flex-direction: row;
+                        gap: 0.5em;
+                        border-right: 1px solid gray;
+                        padding-left: 1em;
+                        .btn_delete {
+                            cursor: pointer;
+                            &:hover {
+                                color: red;
+                            }
+                        }
+                        &:last-child {
+                            border-right: none;
+                        }
+                    }
                 }
             }
 

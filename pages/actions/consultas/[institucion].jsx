@@ -73,7 +73,7 @@ export default function Consultas() {
     useEffect(() => {
         getProductos();
     }, [institucion])
-    
+
 
     const computePages = (data) => {
         const firstPageIndex = (currentPage - 1) * pageSize;
@@ -397,17 +397,11 @@ export default function Consultas() {
                                                         <td>{(lastPage - pageSize) + index + 1}</td>
                                                         <td>
                                                             {index !== CurrentIndex ? <div className={styles.action_by_id + " action_edit"}>
-                                                                {
-                                                                    producto.aprobado === 'on' ? <NavLink href={"/view/producto/" + producto._id} exact>
-                                                                        <button>
-                                                                            <AiOutlineEye />
-                                                                        </button>
-                                                                    </NavLink> :
-                                                                        <button disabled>
-                                                                            <AiOutlineEye />
-                                                                        </button>
-                                                                }
-
+                                                                <NavLink href={"/view/producto/" + producto._id} exact>
+                                                                    <button>
+                                                                        <AiOutlineEye />
+                                                                    </button>
+                                                                </NavLink>
                                                                 <button onClick={() => editFieldById(index)}>
                                                                     <AiTwotoneEdit />
                                                                 </button>
@@ -486,29 +480,29 @@ export default function Consultas() {
                                                         {producto.areaV ?
                                                             <td className="medium">
                                                                 {
-                                                                    CurrentIndex === index ? 
-                                                                    producto.institucion === 'sae' ?
-                                                                    <select name="areaV" className={producto._id} defaultValue={producto.areaV} disabled={index !== CurrentIndex ? true : false} onChange={(e) => handleChange(e)} style={producto.institucion === 'sae' ? { display: 'block' } : { display: 'none' }}>
-                                                                        <option value="default">Área a la que se víncula</option>
-                                                                        <option value={"Cine digital"}>Cine digital</option>
-                                                                        <option value={"Animación y efectos visuales"}>Animación y efectos visuales</option>
-                                                                        <option value={"Comunicación"}>Comunicación</option>
-                                                                        <option value={"Diseño de videojuegos"}>Diseño de videojuegos</option>
-                                                                        <option value={"Ingeniería de audio"}>Ingeniería de audio</option>
-                                                                        <option value={"Negocios de la música"}>Negocios de la música</option>
-                                                                        <option value={"Programación de videojuegos"}>Programación de videojuegos</option>
-                                                                    </select>
-                                                                    :
-                                                                    <select name="areaV" className={producto._id} defaultValue={producto.areaV} disabled={index !== CurrentIndex ? true : false} onChange={(e) => handleChange(e)} style={producto.institucion === 'artek' ? { display: 'block' } : { display: 'none' }}>
-                                                                        <option value="default">Área a la que se víncula</option>
-                                                                        <option value={"Gestión tecnológica"}>Gestión Tecnológica</option>
-                                                                        <option value={"Desarrollo de software"}>Desarrollo de Software</option>
-                                                                        <option value={"Ciencia de datos"}>Ciencia de Datos</option>
-                                                                        <option value={"Ciberseguridad"}>Ciberseguridad</option>
-                                                                        <option value={"Inteligencia artificial"}>Inteligencia Artificial</option>
-                                                                    </select>
-                                                                
-                                                                : producto.areaV
+                                                                    CurrentIndex === index ?
+                                                                        producto.institucion === 'sae' ?
+                                                                            <select name="areaV" className={producto._id} defaultValue={producto.areaV} disabled={index !== CurrentIndex ? true : false} onChange={(e) => handleChange(e)} style={producto.institucion === 'sae' ? { display: 'block' } : { display: 'none' }}>
+                                                                                <option value="default">Área a la que se víncula</option>
+                                                                                <option value={"Cine digital"}>Cine digital</option>
+                                                                                <option value={"Animación y efectos visuales"}>Animación y efectos visuales</option>
+                                                                                <option value={"Comunicación"}>Comunicación</option>
+                                                                                <option value={"Diseño de videojuegos"}>Diseño de videojuegos</option>
+                                                                                <option value={"Ingeniería de audio"}>Ingeniería de audio</option>
+                                                                                <option value={"Negocios de la música"}>Negocios de la música</option>
+                                                                                <option value={"Programación de videojuegos"}>Programación de videojuegos</option>
+                                                                            </select>
+                                                                            :
+                                                                            <select name="areaV" className={producto._id} defaultValue={producto.areaV} disabled={index !== CurrentIndex ? true : false} onChange={(e) => handleChange(e)} style={producto.institucion === 'artek' ? { display: 'block' } : { display: 'none' }}>
+                                                                                <option value="default">Área a la que se víncula</option>
+                                                                                <option value={"Gestión tecnológica"}>Gestión Tecnológica</option>
+                                                                                <option value={"Desarrollo de software"}>Desarrollo de Software</option>
+                                                                                <option value={"Ciencia de datos"}>Ciencia de Datos</option>
+                                                                                <option value={"Ciberseguridad"}>Ciberseguridad</option>
+                                                                                <option value={"Inteligencia artificial"}>Inteligencia Artificial</option>
+                                                                            </select>
+
+                                                                        : producto.areaV
                                                                 }
 
 

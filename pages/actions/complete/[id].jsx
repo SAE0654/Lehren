@@ -402,7 +402,7 @@ export default function Complete() {
                 placeholder="Enlace a ROI"
                 defaultValue={Producto.ROI}
                 onChange={(e) => setProductoItem(e)} />
-              {/* <div className={styles.files_zone}>
+              <div className={styles.files_zone}>
                 <label className={styles.form_files}>
                   <input type="file" name="files_att" id="fileUpload" onChange={(e) => verifyFiles(e)} multiple />
                   Subir archivos
@@ -443,7 +443,7 @@ export default function Complete() {
                       </div>
                     ))
                 }
-              </div> */}
+              </div>
               <input type="submit" style={{ top: "100em", bottom: "inherit", left: "5em" }} value={Producto.objetivo !== null ? "Actualizar datos" : "Guardar formulario"} onClick={() => setNotSaved(false)} />
             </div>
 

@@ -9,49 +9,28 @@ const s3 = new S3({
 
 export default async (req, res) => {
   if (req.method === "DELETE") {
-    let { name, type } = req.body;
+    let { file } = req.query;
     const params = {
       Bucket: "sae-files",
-      Key: name
+      Key: file
     }
 
     try {
-      await s3.headObject(params).promise()
-      
-      console.log("File Found in S3")
+      await s3.headObject(params).promise(); // Busca y encuentra el archivo
       try {
         await s3.deleteObject(params).promise()
-        console.log("file deleted Successfully")
+        return res.status(200).json({message: "Archivo borrado con éxito"});
       }
       catch (err) {
-        console.log("ERROR in file Deleting : " + JSON.stringify(err))
+        return res.status(500).json({ message: "Error al borrar este archivo" });
       }
     } catch (err) {
-      console.log(req.body)
       console.log("File not Found ERROR : " + err.code)
     }
     return res.status(500).json({ message: "Internal server error" });
   }
-
   if (req.method !== "POST") {
     return res.status(405).json({ message: "Method not allowed" });
-  }
-
-  try {
-    let { name, type } = req.body;
-
-    const fileParams = {
-      Bucket: process.env.BUCKET_NAME,
-      Key: name,
-      Expires: 600,
-      ContentType: type,
-    };
-
-    const url = await s3.getSignedUrlPromise("putObject", fileParams);
-
-    res.status(200).json({ url });
-  } catch (err) {
-    res.status(400).json({ message: err });
   }
 };
 
