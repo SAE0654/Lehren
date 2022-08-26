@@ -122,7 +122,7 @@ export default function Login() {
                         <div className={styles.group}>
                             <input
                                 name="email"
-                                type="text"
+                                type="email"
                                 onChange={(e) => (setData({ ...Data, [e.target.name]: e.target.value }), setNotSaved(true))}
                                 required
                                 autoComplete='off' />
