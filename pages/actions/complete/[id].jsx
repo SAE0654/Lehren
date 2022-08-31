@@ -5,7 +5,7 @@ import axios from 'axios'
 import Head from 'next/head';
 import Layout from '../../../components/Layout';
 import styles from "../../../styles/pages/ventas.module.scss";
-import { acceptedFiles, isAnyFieldEmpty, sessionHasExpired } from '../../../utils/forms';
+import { acceptedFiles, getTimeStamp, isAnyFieldEmpty, sessionHasExpired } from '../../../utils/forms';
 import { toast } from 'react-toastify';
 import { IoMdClose } from "react-icons/io";
 
@@ -74,6 +74,8 @@ export default function Complete() {
 
   const getToolsSelected = (data) => {
     let indexes = '';
+
+    if (!data.instrumentoValidacion) return;
     data.instrumentoValidacion.map(tool => {
       const _indice = herramientas.indexOf(tool);
       setVTools(data.instrumentoValidacion)
@@ -115,6 +117,17 @@ export default function Complete() {
         const _index = tools.indexOf(e.target.value)
         tools.splice(_index, 1);
       }
+      return;
+    }
+    if(e.target.name === "comentarios") {
+      setProducto({
+        ...Producto,
+        [e.target.name]: [{
+          user: session.user.names,
+          comentarios: e.target.value,
+          createdAt: getTimeStamp()
+        }]
+      });
       return;
     }
     setProducto({
@@ -384,7 +397,7 @@ export default function Complete() {
                 </label>
               </div>
               <br />
-              <textarea name="comentarios" maxLength="5000" placeholder='Comentarios' defaultValue={Producto.comentarios} onChange={(e) => setProductoItem(e)}></textarea>
+              <textarea name="comentarios" maxLength="5000" placeholder='Comentarios' defaultValue={Producto.comentarios === null ? "" : Producto.comentarios[0].comentarios} onChange={(e) => setProductoItem(e)}></textarea>
             </div>
             <div className={styles.form_group}>
               <h2>Análisis de mercado</h2>

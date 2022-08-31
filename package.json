@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@sweetalert2/theme-dark": "^5.0.12",
     "aws-sdk": "^2.1195.0",
     "axios": "^0.27.2",
     "bcryptjs": "^2.4.3",
@@ -22,6 +23,7 @@
     "react-router-dom": "^6.3.0",
     "react-toastify": "^9.0.5",
     "sass": "^1.52.3",
+    "sweetalert2": "^11.4.29",
     "webpack": "^5.73.0"
   },
   "devDependencies": {

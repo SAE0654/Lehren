@@ -466,3 +466,53 @@ button:disabled {
         text-decoration: underline;
     }
 }
+
+.swal2-popup, .swal2-input, .swal2-file, .swal2-textarea, .swal2-select, .swal2-radio, .swal2-checkbox {
+    font-family: "Poppins", sans-serif !important;
+}
+
+.swal2-textarea {
+    font-size: 0.8rem !important;
+}
+
+.comment_card {
+    position: relative;
+}
+
+.comment_card_container {
+    display: none;
+    width: 30em;
+    position: absolute;
+    background-color: rgb(7, 5, 5);
+    top: -10%;
+    left: 10.6em;
+    z-index: 200;
+    padding: 1em;
+    border-radius: 10px;
+    box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.541);
+    h2 {
+        display: block;
+        text-align: left;
+        font-size: 0.7rem;
+        span {
+            font-size: 0.5rem;
+            color: gray;
+        }
+    }
+    p {
+        display: block;
+        padding: 0.5em;
+        border: 1px solid rgba(128, 128, 128, 0.466);
+        text-align: justify;
+        color: rgb(207, 191, 191);
+        overflow-y: scroll;
+        max-height: 10vh;
+        &.disabled {
+            color: rgb(82, 70, 70);
+        }
+    }
+}
+
+.comment_card:hover ~ .comment_card_container, .comment_card_container:hover {
+    display: block;
+}

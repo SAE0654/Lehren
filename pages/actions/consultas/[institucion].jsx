@@ -11,6 +11,9 @@ import { getTimeStamp, sessionHasExpired } from '../../../utils/forms';
 import { NavLink } from '../../../components/NavLink';
 import { Router, useRouter } from 'next/router';
 import Pagination from '../../../components/Pagination';
+import { BiCommentAdd } from 'react-icons/bi';
+import Swal from 'sweetalert2/dist/sweetalert2';
+import Comment from '../../../components/Comment';
 
 let pageSize = 4;
 
@@ -186,10 +189,9 @@ export default function Consultas() {
                 product[j] = typeof EditInformation[j] === 'undefined' ? product[j] : EditInformation[j];
             }
         }
-        console.log("=== ", EditInformation)
         const newModified = Productos;
         newModified[index] = product;
-        console.log("===", index);
+
         setProductos(newModified);
         computePages(newModified)
         saveInformationToServer(newModified, index);
@@ -261,6 +263,45 @@ export default function Consultas() {
         setAprobando(false);
         document.querySelector("body").style.overflow = "auto";
         getProductos();
+    }
+
+    const displayCommentSection = async (pId, commentario) => {
+        const hasAlreadyAComment = commentario === null || commentario.length === 0 ? false : true;
+        await Swal.fire({
+            input: 'textarea',
+            inputLabel: session.user.names,
+            inputValue: hasAlreadyAComment ? commentario[0].comentarios : '',
+            inputPlaceholder: hasAlreadyAComment ? commentario[0].comentarios : 'Agrega un comentario al registro...',
+            inputAttributes: {
+                'aria-label': 'Escribe tu comentario aquí',
+                maxlength: 500
+            },
+            showCancelButton: true,
+            confirmButtonText: 'Agregar',
+            cancelButtonText: 'Cancelar',
+        }).then((res) => {
+            if (res.isDismissed) return;
+            if (res.value.trim().length === 0 && res.isConfirmed) {
+                toast.warn("El comentario no puede estar vacío");
+                displayCommentSection()
+                return;
+            }
+            saveComment(res.value, pId, hasAlreadyAComment);
+        })
+    }
+
+    const saveComment = async (comentario, pId, alreadyAdded) => {
+        const producto = Productos.filter((item) => item._id === pId);
+        producto[0].comentarios = [{
+            user: session.user.names,
+            comentarios: comentario,
+            createdAt: getTimeStamp()
+        }];
+        await axios.put(`${process.env.NEXT_PUBLIC_ENDPOINT}api/productos/` + pId, producto[0])
+            .then(() => {
+                toast.success(alreadyAdded ? "Comentario actualizado" : "Comentario agregado");
+                getProductos()
+            })
     }
 
     return <>
@@ -409,6 +450,12 @@ export default function Consultas() {
                                                                     onClick={() => (setDeleting(true), setId(producto._id), document.querySelector("body").style.overflow = "hidden")}>
                                                                     <AiFillDelete />
                                                                 </button>
+                                                                <button
+                                                                    className="comment_card"
+                                                                    onClick={() => displayCommentSection(producto._id, producto.comentarios)}>
+                                                                    <BiCommentAdd />
+                                                                </button>
+                                                                <Comment comments={producto.comentarios} />
                                                                 {
                                                                     producto.aprobado === 'on' ?
                                                                         <div className={styles.etapa2}>

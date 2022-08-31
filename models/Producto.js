@@ -30,7 +30,7 @@ const productoSchema = new Schema({
     mercado: { type: String, default: null },
     // Análisis financiero
     ROI: { type: String, default: null },
-    comentarios: { type: String, default: null },
+    comentarios: [],
     archivosETP1: [],
     archivosETP2: []
 })
