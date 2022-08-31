@@ -413,7 +413,7 @@ export default function Consultas() {
                                                                     producto.aprobado === 'on' ?
                                                                         <div className={styles.etapa2}>
                                                                             <NavLink href={"/actions/complete/" + producto._id} exact>
-                                                                                Ir a etapa 2
+                                                                                Validación
                                                                             </NavLink>
                                                                         </div>
                                                                         :
@@ -421,7 +421,7 @@ export default function Consultas() {
                                                                         session.user.rol === "administrador" && producto.aprobado === 'off' ?
                                                                             <div className={styles.etapa2} id="aprobado" onClick={() => (setAprobando(true),
                                                                                 setId(producto._id),
-                                                                                document.querySelector("body").style.overflow = "hidden")}>Aprobar</div>
+                                                                                document.querySelector("body").style.overflow = "hidden")}>Propuesta</div>
                                                                             :
                                                                             <div className={styles.etapa2} id="aprobado">No aprobado</div>
                                                                 }
