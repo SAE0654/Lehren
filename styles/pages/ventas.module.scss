@@ -72,13 +72,11 @@
                 display: block;
                 width: 95%;
                 max-width: 200px;
-                bottom: -4em;
-                right: 3em;
-                position: absolute;
                 background-color: #53899c;
                 padding: 1em;
                 font-weight: bold;
                 color: #fff;
+                margin-top: 3em !important;
             }
 
             .form_group {
@@ -744,7 +742,7 @@
                 }
             }
 
-            .etapa2 {
+            .etapa2, .etapa3 {
                 position: absolute;
                 width: 80%;
                 top: 1em;
@@ -770,6 +768,9 @@
                     color: #ffffff;
                     font-weight: bold;
                 }
+            }
+            .etapa3 {
+                background-color: green;
             }
         }
     }

@@ -11,7 +11,7 @@ import { getTimeStamp, sessionHasExpired } from '../../../utils/forms';
 import { NavLink } from '../../../components/NavLink';
 import { Router, useRouter } from 'next/router';
 import Pagination from '../../../components/Pagination';
-import { BiCommentAdd } from 'react-icons/bi';
+import { MdAddComment } from 'react-icons/md';
 import Swal from 'sweetalert2/dist/sweetalert2';
 import Comment from '../../../components/Comment';
 
@@ -205,7 +205,7 @@ export default function Consultas() {
             lastUpdate: getTimeStamp(),
             modifiedBy: session.user.names
         }
-        if (data[index].aprobado === 'on') {
+        if (data[index].aprobado === 'validacion') {
             payload[index] = {
                 ...payload[index],
                 aprobadoPor: session.user.email
@@ -249,7 +249,7 @@ export default function Consultas() {
 
     const aprobarProduct = async (id) => {
         const payload = TempProductos.filter((item) => item._id === id)[0];
-        payload.aprobado = payload.aprobado === 'on' ? 'off' : 'on';
+        payload.aprobado = payload.aprobado === 'validacion' ? 'off' : 'validacion';
         payload.aprobadoPor = session.user.names;
         payload.modifiedBy = session.user.names;
         payload.lastUpdate = getTimeStamp();
@@ -327,7 +327,7 @@ export default function Consultas() {
                             </div>
                         </div>
                         <div className={Aprobando ? "window_confirm" : "window_confirm hide"}>
-                            <h1>¿Aprobar producto?</h1>
+                            <h1>¿Mandar a validación?</h1>
                             <div className="cancel_continue">
                                 <button onClick={() => aprobarProduct(Id)}>Aprobar</button>
                                 <button onClick={() => ((setAprobando(false), setId(null), document.querySelector("body").style.overflow = "auto"))}>Cancelar</button>
@@ -453,11 +453,11 @@ export default function Consultas() {
                                                                 <button
                                                                     className="comment_card"
                                                                     onClick={() => displayCommentSection(producto._id, producto.comentarios)}>
-                                                                    <BiCommentAdd />
+                                                                    <MdAddComment />
                                                                 </button>
                                                                 <Comment comments={producto.comentarios} />
                                                                 {
-                                                                    producto.aprobado === 'on' ?
+                                                                    producto.aprobado === 'validacion' ?
                                                                         <div className={styles.etapa2}>
                                                                             <NavLink href={"/actions/complete/" + producto._id} exact>
                                                                                 Validación
@@ -469,8 +469,10 @@ export default function Consultas() {
                                                                             <div className={styles.etapa2} id="aprobado" onClick={() => (setAprobando(true),
                                                                                 setId(producto._id),
                                                                                 document.querySelector("body").style.overflow = "hidden")}>Propuesta</div>
-                                                                            :
-                                                                            <div className={styles.etapa2} id="aprobado">No aprobado</div>
+                                                                            : producto.aprobado === "aprobado"
+                                                                                ? <NavLink href={"/actions/complete/" + producto._id} exact><div className={styles.etapa3} id="aprobado">Aprobado</div></NavLink>
+                                                                                : <div className={styles.etapa2} id="aprobado">No aprobado</div>
+
                                                                 }
                                                             </div> :
                                                                 <>

@@ -141,6 +141,7 @@ export default function Complete() {
     await saveFilesToAWS();
     const producto = Producto;
     producto.archivosETP2 = url_files;
+    producto.aprobado = "aprobado";
     if (isAnyFieldEmpty(e.target)) { // Si true, campos vacíos
       toast.error("Rellena todos los campos");
       return;
@@ -165,14 +166,14 @@ export default function Complete() {
     setNotSaved(false);
     const producto = Producto;
     producto.aprobado = 'off';
-    producto.aprobadoPor = 'Mandado a revisión';
+    producto.aprobadoPor = 'Mandado a propuesta';
     await axios.put(`${process.env.NEXT_PUBLIC_ENDPOINT}api/productos/` + producto._id, producto, {
       headers: {
         accept: '*/*',
         'Content-Type': 'application/json'
       }
     }).then(() => {
-      toast.info("Producto mandado a revisión");
+      toast.info("Producto mandado a propuesta");
       router.push("/")
     }).catch(() => {
       toast.error("Ocurrió un error inesperado, inténtalo de nuevo")
@@ -397,7 +398,7 @@ export default function Complete() {
                 </label>
               </div>
               <br />
-              <textarea name="comentarios" maxLength="5000" placeholder='Comentarios' defaultValue={Producto.comentarios === null ? "" : Producto.comentarios[0].comentarios} onChange={(e) => setProductoItem(e)}></textarea>
+              <textarea name="comentarios" maxLength="5000" placeholder='Comentarios' defaultValue={Producto.comentarios === null || typeof Producto.comentarios[0] === "undefined" ? "" : Producto.comentarios[0].comentarios} onChange={(e) => setProductoItem(e)}></textarea>
             </div>
             <div className={styles.form_group}>
               <h2>Análisis de mercado</h2>
@@ -457,11 +458,13 @@ export default function Complete() {
                     ))
                 }
               </div>
-              <input type="submit" style={{ top: "100em", bottom: "inherit", left: "5em" }} value={Producto.objetivo !== null ? "Actualizar datos" : "Guardar formulario"} onClick={() => setNotSaved(false)} />
+              <input type="submit" style={{ top: "100em", bottom: "inherit", left: "5em" }} value="Aprobar" onClick={() => setNotSaved(false)} />
+              
             </div>
-
+            
           </form>
-          <button onClick={() => desaprobarProducto()}>Mandar producto a revisión (desaprobar)</button>
+          <button onClick={() => desaprobarProducto()}>Devolver a propuesta</button>
+          <br /><br />
         </div>
       </div>
     </Layout>

@@ -107,12 +107,12 @@ export default function ViewProduct() {
               <p><b>Institución:</b></p>
               <p className={styles.right_border}>{Producto.institucion.toUpperCase()}</p>
               <p><b>Aprobado:</b></p>
-              <p className={styles.right_border}>{Producto.aprobado === 'on' ? 'Sí' : 'No'}</p>
+              <p className={styles.right_border}>{Producto.aprobado === 'aprobado' ? 'Sí' : /*pregunta 2: */ Producto.aprobado === "validacion" ? 'En validación' : 'En propuesta'}</p>
               {
                 Producto.aprobadoPor === 'NP' ? null :
                   <>
                     <p><b>Aprobado por:</b> </p>
-                    <p className={styles.right_border}>{Producto.aprobadoPor}</p>
+                    <p className={styles.right_border}>{Producto.aprobado !== "aprobado" ? "Este producto no ha sido aprobado" : Producto.aprobadoPor}</p>
                   </>
               }
               <p><b>Objetivo del producto:</b></p>
