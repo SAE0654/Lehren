@@ -77,7 +77,6 @@ export default function Consultas() {
         getProductos();
     }, [institucion])
 
-
     const computePages = (data) => {
         const firstPageIndex = (currentPage - 1) * pageSize;
         let lastPageIndex = firstPageIndex + pageSize;
