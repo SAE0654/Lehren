@@ -140,7 +140,12 @@ export default function ViewProduct() {
                 : null}
               </p>}
               <p className={styles.last_row}><b>Comentarios:</b></p>
-              <p className={styles.right_bottom_border} style={{ minHeight: '60px' }}>{Producto.comentarios === null ? "" : Producto.comentarios[0].comentarios}</p>
+              {
+                Producto.comentarios === null ? 
+                <p className={styles.right_bottom_border} style={{ minHeight: '60px' }}>{Producto.comentarios === null ? "Sin comentarios" : Producto.comentarios[0].comentarios}</p>
+                :
+                <p className={styles.right_bottom_border} style={{ minHeight: '60px' }}>{Producto.comentarios.length >= 0 ? "Sin comentarios" : Producto.comentarios[0].comentarios}</p>
+              }
               <h2 className={styles.title5}>Análisis financiero</h2>
               <p className={styles.last_row}><b>Enlace a ROI:</b></p>
               <p className={styles.right_bottom_border} style={{ minHeight: '60px' }}>{Producto.ROI}</p>
