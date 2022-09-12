@@ -1,0 +1,143 @@
+@use "../util/mixins" as mix;
+@use "../util/colors" as color;
+@forward "../util/fonts";
+
+.main_content {
+    display: block;
+    max-width: 1300px;
+    margin: auto;
+    margin-top: 2em;
+    margin-bottom: 2em;
+    border-radius: 7px;
+    position: relative;
+
+    h1 {
+        @include mix.fontTitle(2.5rem);
+        text-align: left;
+        margin-top: 1em;
+        margin-bottom: 1em;
+        font-family: "Poppins", sans-serif;
+        color: #ffffff;
+        border-bottom: 1px solid gray;
+        padding-bottom: 1em;
+        letter-spacing: 3px;
+    }
+
+    .controls {
+        min-height: 10px;
+        width: 50%;
+        overflow-x: scroll;
+        margin: auto;
+        border-bottom: 1px solid rgba(226, 221, 221, 0.534);
+
+        &::-webkit-scrollbar-thumb {
+            background: rgb(255, 255, 255);
+            border-radius: 4px;
+        }
+
+        span {
+            display: block;
+            width: 1200px;
+        }
+    }
+
+    .tabla_catalogo {
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+        grid-template-rows: 0.4fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+        gap: 0px 0px;
+        grid-auto-flow: row;
+        color: #fff;
+        width: 100%;
+        max-width: 1200px;
+        overflow-x: scroll;
+        background-color: rgba(24, 22, 22, 0.582);
+        margin-top: 2em;
+        grid-template-areas:
+            ". . . . . . . . . . . . . . ."
+            ". . . . . . . . . . . . . . ."
+            ". . . . . . . . . . . . . . ."
+            ". . . . . . . . . . . . . . ."
+            ". . . . . . . . . . . . . . ."
+            ". . . . . . . . . . . . . . ."
+            ". . . . . . . . . . . . . . ."
+            ". . . . . . . . . . . . . . ."
+            ". . . . . . . . . . . . . . ."
+            ". . . . . . . . . . . . . . ."
+            ". . . . . . . . . . . . . . ."
+            ". . . . . . . . . . . . . . ."
+            ". . . . . . . . . . . . . . ."
+            ". . . . . . . . . . . . . . ."
+            ". . . . . . . . . . . . . . ."
+            ". . . . . . . . . . . . . . ."
+            ". . . . . . . . . . . . . . ."
+            ". . . . . . . . . . . . . . ."
+            ". . . . . . . . . . . . . . ."
+            ". . . . . . . . . . . . . . ."
+            ". . . . . . . . . . . . . . .";
+
+        &::-webkit-scrollbar {
+            width: 4px;
+            height: 10px;
+        }
+
+        &::-webkit-scrollbar-thumb {
+            background: rgba(0, 0, 0, 0);
+            border-radius: 10px;
+        }
+
+        &::-webkit-scrollbar-thumb:hover {
+            background: rgb(43, 40, 40);
+            box-shadow: 0 0 2px 1px rgba(0, 0, 0, 0.776);
+        }
+
+        &::-webkit-scrollbar-thumb:active {
+            background-color: rgb(49, 44, 44);
+        }
+
+        .col h3 {
+            text-transform: uppercase;
+        }
+
+        .col, .row {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 200px;
+            font-family: "Poppins", sans-serif;
+            border-left: 1px solid rgba(128, 128, 128, 0.479);
+            padding-left: 1em;
+            padding-right: 1em;
+            border-bottom: 1px solid rgba(128, 128, 128, 0.479);
+            &.last_element {
+                min-width: 100px;
+                border-left: none;
+                padding-left: 0em;
+                padding-right: 0em;
+            }
+            h3 {
+                display: block;
+                text-align: center;
+                font-weight: 600;
+                font-size: 0.9rem;
+            }
+            span, select {
+                display: block;
+                width: 100%;
+                text-align: center;
+                font-size: 0.9rem;
+            }
+            select {
+                width: 90%;
+                margin: auto;
+                background-color: rgb(24, 22, 22);
+                color: #fff;
+                font-family: "Poppins", sans-serif;
+            }
+            p {
+                font-size: 0.8rem;
+            }
+        }
+    }
+
+}

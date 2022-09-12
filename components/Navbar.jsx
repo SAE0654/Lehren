@@ -9,30 +9,9 @@ import { ADMIN, STAFF } from "../utils/roles";
 import { useEffect, useState } from "react";
 
 function Nav() {
-    const [Interface, setInterface] = useState([]);
-    const [ShowConsultasSubMenu, setShowConsultasSubMenu] = useState(false)
+    const [ShowConsultar, setShowConsultar] = useState(false);
+    const [ShowRegistrar, setShowRegistrar] = useState(false);
     const { data } = useSession();
-
-    useEffect(() => {
-        if (!data) return;
-        setRolInterface();
-    }, [data]);
-
-    const setRolInterface = () => {
-        switch (data.user.rol) {
-            case 'administrador':
-                setInterface(ADMIN);
-                break;
-            case 'staff':
-                setInterface(STAFF);
-                break;
-            case 'docente':
-                setInterface(STAFF);
-                break;
-            default:
-                break;
-        }
-    }
 
     return (
         data ? (
@@ -44,36 +23,49 @@ function Nav() {
                             <AiFillHome /> &nbsp;&nbsp;
                             Inicio
                         </NavLink>
-                        {
-                            Interface.map((item, index) => (
-                                <div key={index}>
+                        <div>
+                            <NavLink href="/view/catalogue" exact>
+                                Catálogo de validación
+                            </NavLink>
+                        </div>
+                        <div>
+                            <button className={styles.btn_sub} href="#" onClick={() => (setShowConsultar(!ShowConsultar), setShowRegistrar(false))}>
+                                Consultar
+                                <ul className={styles.submenu_consultas} style={ShowConsultar ? { display: "flex" } : { display: "none" }}>
+                                    <li>
+                                        <NavLink href="/actions/consultas/sae" exact>
+                                            Consultar SAE
+                                        </NavLink>
+                                    </li>
+                                    <li>
+                                        <NavLink href="/actions/consultas/artek" exact>
+                                            Consultar ARTEK
+                                        </NavLink>
+                                    </li>
+                                </ul>
+                            </button>
+                        </div>
+                        <div>
+                            <button className={styles.btn_sub} href="#" onClick={() => (setShowRegistrar(!ShowRegistrar), setShowConsultar(false))}>
+                                Registrar
+                                <ul className={styles.submenu_consultas} style={ShowRegistrar ? { display: "flex" } : { display: "none" }}>
+                                    <li>
+                                        <NavLink href="/actions/producto" exact>
+                                            Registrar producto
+                                        </NavLink>
+                                    </li>
                                     {
-                                        item.texto === "Consultar" ?
-                                            <button className={styles.btn_sub} href="#" onClick={() => setShowConsultasSubMenu(!ShowConsultasSubMenu)}>
-                                                Consultar
-                                                <ul className={styles.submenu_consultas} style={ShowConsultasSubMenu ? { display: "flex" } : { display: "none"}}>
-                                                    <li>
-                                                        <NavLink href={item.link + "sae"} exact>
-                                                            {item.texto} SAE
-                                                        </NavLink>
-                                                    </li>
-                                                    <li>
-                                                        <NavLink href={item.link + "artek"} exact>
-                                                            {item.texto} ARTEK
-                                                        </NavLink>
-                                                    </li>
-                                                </ul>
-                                            </button>
-                                            :
-                                            <NavLink href={item.link} exact key={index}>
-                                                {item.texto}
-                                            </NavLink>
+                                        data.user.rol === "administrador" ? 
+                                        <li>
+                                        <NavLink href="/signup" exact>
+                                            Registrar usuario
+                                        </NavLink>
+                                    </li>
+                                    : null
                                     }
-
-                                </div>
-
-                            ))
-                        }
+                                </ul>
+                            </button>
+                        </div>
                     </li>
                     <li>
                         <button>

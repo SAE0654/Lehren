@@ -1,5 +1,6 @@
 import Head from 'next/head';
 import { AiOutlineFileSearch, AiOutlineFolderAdd } from "react-icons/ai";
+import { BiBookContent } from "react-icons/bi"
 import { MdPersonAdd } from "react-icons/md";
 import { NavLink } from '../components/NavLink';
 import { useSession } from 'next-auth/react';
@@ -24,9 +25,11 @@ export default function Home() {
   const setRolInterface = () => {
     switch (data.user.rol) {
       case 'administrador':
-        ADMIN[1].icono = <AiOutlineFileSearch className="icon_button" />;
         ADMIN[0].icono = <AiOutlineFolderAdd className="icon_button" />;
-        ADMIN[2].icono = <MdPersonAdd className="icon_button" />;
+        ADMIN[1].icono = <AiOutlineFileSearch className="icon_button" />;
+        ADMIN[2].icono = <AiOutlineFileSearch className="icon_button" />;
+        ADMIN[3].icono = <MdPersonAdd className="icon_button" />
+        ADMIN[4].icono = <BiBookContent className="icon_button" />
         setInterface(ADMIN);
         break;
       case 'staff':
@@ -59,22 +62,11 @@ export default function Home() {
             {
               Interface.map((item, index) => (
                 <div key={index}>
-                  {
-                    item.texto === "Consultar" ? <>
-                      <NavLink href={item.link + "sae"}>
-                        {item.icono}
-                        <span>{item.texto} SAE</span>
-                      </NavLink>
-                      <NavLink href={item.link + "artek"}>
-                        {item.icono}
-                        <span>{item.texto} ARTEK</span>
-                      </NavLink>
-                    </> :
-                      <NavLink href={item.link}>
-                        {item.icono}
-                        <span>{item.texto}</span>
-                      </NavLink>
-                  }
+                  <NavLink href={item.link}>
+                    {item.icono}
+                    <span>{item.texto}</span>
+                  </NavLink>
+
                 </div>
               ))
             }
