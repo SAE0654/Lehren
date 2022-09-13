@@ -93,8 +93,10 @@ export default function ViewProduct() {
               <p className={styles.right_border}>{Producto.modalidad}</p>
               <p><b>Área a la que se víncula</b></p>
               <p className={styles.right_border}>{Producto.areaV}</p>
-              <p className={styles.last_row}><b>Persona que propone el producto:</b></p>
-              <p className={styles.right_bottom_border}>{Producto.quienPropone}</p>
+              <p><b>Persona que propone el producto:</b></p>
+              <p className={styles.right_border}>{Producto.quienPropone}</p>
+              <p className={styles.last_row}><b>Prioridad:</b></p>
+              <p className={styles.right_bottom_border}>{Producto.prioridad ? Producto.prioridad : "baja"}</p>
               <h2 className={styles.title2}>Análisis académico</h2>
               <p><b>Razón y necesidad de la propuesta:</b></p>
               <p className={styles.right_border}>{Producto.razon}</p>

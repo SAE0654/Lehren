@@ -32,7 +32,9 @@ const productoSchema = new Schema({
     ROI: { type: String, default: null },
     comentarios: [],
     archivosETP1: [],
-    archivosETP2: []
+    archivosETP2: [],
+    // Agregados después
+    prioridad: { type: String, default: "baja" }
 })
 
 const Producto = models.Producto || model('Producto', productoSchema);

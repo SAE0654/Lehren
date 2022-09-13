@@ -69,7 +69,8 @@ export default function Producto() {
         if (isAnyFieldEmpty(e.target)
             || producto.institucion === 'default'
             || typeof producto.institucion === 'undefined'
-            || typeof producto.areaV === 'undefined') { // Si true, campos vacíos
+            || typeof producto.areaV === 'undefined'
+            || typeof producto.prioridad === 'undefined') { // Si true, campos vacíos
             toast.error("Rellena todos los campos");
             return;
         }
@@ -107,7 +108,6 @@ export default function Producto() {
     }
 
     const verifyFiles = (e) => {
-        console.log(e.target.files[0].size / 1024 / 1024 + "MiB")
         let files = e.target.files;
         let file = [];
         let hasTheSameName = false;
@@ -391,9 +391,23 @@ export default function Producto() {
                                     <input type="checkbox" name="RVOE" id="RVOE" onChange={(e) => setProductoItem(e)} />
                                     RVOE
                                 </label>
+                                <div className={styles.prioridad}>
+                                    <span>Prioridad: </span>
+                                    <label className={styles.form_control} style={{color: "red"}}>
+                                        <input type="radio" name="prioridad" value="alta" style={{color: "red"}} onChange={(e) => setProductoItem(e)} />
+                                        Alta
+                                    </label>
+                                    <label className={styles.form_control} style={{color: "yellow"}}>
+                                        <input type="radio" name="prioridad" value="media" style={{color: "yellow"}} onChange={(e) => setProductoItem(e)} />
+                                        Media
+                                    </label>
+                                    <label className={styles.form_control} style={{color: "green"}}>
+                                        <input type="radio" name="prioridad" value="baja" style={{color: "green"}} onChange={(e) => setProductoItem(e)} />
+                                        Baja
+                                    </label>
+                                </div>
                                 <input type="submit" value="Registrar producto" />
                             </div>
-
                         </div>
                     </form>
                 </div>
