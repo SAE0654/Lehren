@@ -458,7 +458,7 @@ export default function Consultas() {
                                                                 {
                                                                     producto.aprobado === 'validacion' ?
                                                                         <div className={styles.etapa2}>
-                                                                            <NavLink href={"/actions/complete/" + producto._id} exact>
+                                                                            <NavLink href={"/actions/steptwo/" + producto._id} exact>
                                                                                 Validación
                                                                             </NavLink>
                                                                         </div>

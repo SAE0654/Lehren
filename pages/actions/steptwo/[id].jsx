@@ -139,6 +139,11 @@ export default function StepTwo() {
         setFiles([]);
     }
 
+    const uploadF2 = (e) => {
+        e.preventDefault();
+        console.log(e)
+    }
+
     if (!Producto) {
         return <h1>Cargando...</h1>
     }
@@ -172,7 +177,7 @@ export default function StepTwo() {
                         </div>
                     </div>
                     <br />
-                    <form style={{ flexDirection: 'column', alignItems: 'center' }}>
+                    <form style={{ flexDirection: 'column', alignItems: 'center' }} onSubmit={(e) => uploadF2(e)}>
                         <div className={styles.form_group}>
                             <textarea name="consideraciones" placeholder="Comentarios o consideraciones"></textarea>
                             <input type="text" name="fechaEjecucion" placeholder="Fecha de ejecución de la actividad" />
@@ -220,14 +225,14 @@ export default function StepTwo() {
                                     ))
                             }
                         </div>
-                        <input type="submit" value="Guardar" />
+                        <input type="submit" value="Ir al paso 3" />
                     </form>
 
-                    <NavLink href="/" exact>
+                    {/* <NavLink href="/" exact>
                         <button>
                             Regresar a Inicio
                         </button>
-                    </NavLink>
+                    </NavLink> */}
                 </div>
             </div>
         </Layout>

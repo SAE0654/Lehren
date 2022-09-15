@@ -15,7 +15,7 @@ const nextConfig = withPWA({
     disable: process.env.NODE_ENV === 'development'
   },
   images: {
-    domains: ['www.productoslehren.com/', 'sae-files.s3.amazonaws.com/'],
+    domains: ['www.productoslehren.com/', 'sae-files.s3.amazonaws.com/', 'https://lehren-desarrollo.vercel.app/'],
     formats: ['image/avif', 'image/webp'],
   },
   env: {

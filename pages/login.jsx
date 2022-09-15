@@ -50,8 +50,7 @@ export default function Login() {
     </Head>
     <Layout>
       <div className={styles.login_container}>
-        <img src="/img/Logo_Vertical.svg" alt="" />
-        <h1>INICIA SESIÓN</h1>
+        <h1 style={{textAlign: "center"}}>ENTORNO DE PRUEBAS</h1>
         <form onSubmit={(e) => handleLogin(e)}>
           <div className={styles.input_box}>
             <AiOutlineUser className={styles.icon} />
