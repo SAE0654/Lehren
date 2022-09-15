@@ -5,7 +5,7 @@ import Layout from '../../components/Layout';
 import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
-import { acceptedFiles, isAnyFieldEmpty, sessionHasExpired } from '../../utils/forms';
+import { acceptedFiles, getTimeStamp, isAnyFieldEmpty, sessionHasExpired } from '../../utils/forms';
 import { Router, useRouter } from 'next/router';
 import { IoMdClose } from "react-icons/io";
 
@@ -63,7 +63,7 @@ export default function Producto() {
         await saveFilesToAWS();
 
         const producto = Producto;
-        producto = { ...producto, creadoPor: session.user.names };
+        producto = { ...producto, creadoPor: session.user.names + ", el " + getTimeStamp() };
         producto = { ...producto, RVOE: producto.RVOE ? producto.RVOE : 'off' };
         producto = { ...producto, archivosETP1: url_files }
         if (isAnyFieldEmpty(e.target)

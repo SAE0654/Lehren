@@ -616,6 +616,7 @@
 
     table tbody tr td {
         position: relative;
+        text-transform: capitalize;
 
         input,
         textarea {

@@ -259,6 +259,11 @@ select {
     max-width: 100px;
 }
 
+.text_comment {
+    display: block;
+    text-align: justify;
+}
+
 .invalid-feedback {
     color: red;
 }

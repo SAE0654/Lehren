@@ -6,19 +6,21 @@ import Head from 'next/head';
 import Layout from '../../../components/Layout';
 import styles from "../../../styles/pages/ventas.module.scss";
 import { NavLink } from '../../../components/NavLink';
-import { acceptedFiles, sessionHasExpired } from '../../../utils/forms';
+import { acceptedFiles, isAnyFieldEmpty, sessionHasExpired } from '../../../utils/forms';
 import { IoMdClose } from "react-icons/io";
 import { toast } from 'react-toastify';
+
+const BUCKET_URI = "https://sae-files.s3.amazonaws.com/"
 
 export default function StepTwo() {
     const router = useRouter();
     const [Producto, setProducto] = useState(null);
-    const [FilesETP1, setFilesETP1] = useState([]);
-    const [FilesETP2, setFilesETP2] = useState([]);
     const [Files, setFiles] = useState([]);
 
     const { id } = router.query;
     const { data: session } = useSession();
+
+    let url_files = [];
 
     useEffect(() => {
         getId();
@@ -41,31 +43,6 @@ export default function StepTwo() {
         await axios.get(`${process.env.NEXT_PUBLIC_ENDPOINT}api/productos/` + id)
             .then((res) => {
                 setProducto(res.data);
-                console.log(res.data)
-                setFilesETP1(res.data.archivosETP1);
-                setFilesETP2(res.data.archivosETP2);
-            });
-    }
-
-    const deleteFile = async (fileName, etapa) => {
-        await axios.delete(`${process.env.NEXT_PUBLIC_ENDPOINT}api/s3/delete/${fileName.split("https://sae-files.s3.amazonaws.com/")[1]}`, {
-            headers: {
-                "Access-Control-Allow-Origin": "*",
-            },
-        }).then(() => {
-            deleteDBRecord(fileName, etapa)
-        }).catch((err) => {
-            console.log(err)
-        })
-    }
-
-    const deleteDBRecord = async (fileName, etapa) => { // Borrar el link del archivo de la BD
-        const productoArr = etapa === "archivosETP1" ? FilesETP1.filter((item) => item !== fileName) : FilesETP2.filter((item) => item !== fileName);
-        etapa === "archivosETP1" ? setFilesETP1(productoArr) : setFilesETP2(productoArr);
-        Producto[etapa] = productoArr;
-        await axios.put(`${process.env.NEXT_PUBLIC_ENDPOINT}api/productos/${id}`, Producto)
-            .then(() => {
-                toast.success("Archivo eliminado")
             });
     }
 
@@ -139,9 +116,29 @@ export default function StepTwo() {
         setFiles([]);
     }
 
-    const uploadF2 = (e) => {
+    const uploadF2 = async (e) => {
         e.preventDefault();
-        console.log(e)
+        await saveFilesToAWS();
+        const producto = Producto;
+        producto.archivosETP2 = url_files;
+        producto.aprobado = "aprobado";
+        if (isAnyFieldEmpty(e.target)) { // Si true, campos vacíos
+            toast.error("Rellena todos los campos");
+            return;
+        }
+        await axios.put(`${process.env.NEXT_PUBLIC_ENDPOINT}api/productos/` + id, producto,
+            {
+                headers: {
+                    accept: '*/*',
+                    'Content-Type': 'application/json'
+                }
+            }).then((res) => {
+                toast.info(res.data.message);
+                e.target.reset();
+                router.push(`${process.env.NEXT_PUBLIC_ENDPOINT}`)
+            }).catch((err) => {
+                toast.error("Error al completar")
+            })
     }
 
     if (!Producto) {
@@ -157,7 +154,7 @@ export default function StepTwo() {
         <Layout>
             <div className={styles.main_content} style={{ transform: 'translate(0%, -40%)', maxHeight: '1000px' }}>
                 <div className={styles.box_container}>
-                    <h1 className={styles.t_container} style={{ marginTop: "10em" }}>Formulario 2</h1>
+                    <h1 className={styles.t_container} style={{ marginTop: "10em" }}>Validación</h1>
                     <img src="/img/LOGO2.png" alt="" />
                     <div className={styles.info_container}>
                         <div className={styles.info_box_step2}>
