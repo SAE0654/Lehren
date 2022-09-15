@@ -62,7 +62,7 @@ export default function ViewProduct() {
     etapa === "archivosETP1" ? setFilesETP1(productoArr) : setFilesETP2(productoArr);
     Producto[etapa] = productoArr;
     await axios.put(`${process.env.NEXT_PUBLIC_ENDPOINT}api/productos/${id}`, Producto)
-      .then((res) => {
+      .then(() => {
         toast.success("Archivo eliminado")
       });
   }

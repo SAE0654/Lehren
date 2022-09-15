@@ -233,6 +233,11 @@ export default function Producto() {
                                     <input type="radio" name="tipo" value="Curso" onChange={(e) => setProductoItem(e)} />
                                     <div className="control_indicator"></div>
                                 </label>
+                                <label className="control control-radio">
+                                    Certificado
+                                    <input type="radio" name="tipo" value="Certificado" onChange={(e) => setProductoItem(e)} />
+                                    <div className="control_indicator"></div>
+                                </label>
                             </div>
                             <div className="radio_ck_section">
                                 <h3>Modalidad de oferta</h3>

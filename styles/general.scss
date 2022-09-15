@@ -491,7 +491,7 @@ button:disabled {
     position: absolute;
     background-color: rgb(7, 5, 5);
     top: -10%;
-    left: 10.6em;
+    left: 8em;
     z-index: 200;
     padding: 1em;
     border-radius: 10px;
@@ -521,4 +521,8 @@ button:disabled {
 
 .comment_card:hover ~ .comment_card_container, .comment_card_container:hover {
     display: block;
+}
+
+input[type="file"] {
+    display: none !important;
 }

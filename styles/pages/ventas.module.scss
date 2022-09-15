@@ -183,7 +183,8 @@
                         color: #fff;
                         cursor: pointer;
 
-                        input[type="checkbox"], input[type="radio"] {
+                        input[type="checkbox"],
+                        input[type="radio"] {
                             -webkit-appearance: none;
                             appearance: none;
                             margin: 0;
@@ -221,100 +222,24 @@
                             }
                         }
                     }
+
                     .prioridad {
                         @include mix.flexBox(row, center, flex-start);
                         width: 100%;
                         margin-top: 2em;
                         color: #fff;
+
                         span {
                             font-weight: bold;
                             margin-right: 1em;
                         }
                     }
                 }
-
-                .files_zone {
-                    display: flex;
-                    flex-direction: column;
-                    width: 90%;
-                    margin-top: 3em;
-
-                    .form_files {
-                        display: block;
-                        text-align: center;
-                        padding: 1em;
-                        color: #fff;
-                        border: 1px solid gray;
-                        width: 40%;
-                        margin: auto;
-                        font-weight: bold;
-
-                        input[type="file"] {
-                            display: none;
-                        }
-
-                        &:hover {
-                            background-color: #1a2225;
-                        }
-                    }
-
-                    label {
-                        cursor: pointer;
-                    }
-
-                    .zoner {
-                        display: block;
-                        width: 80%;
-                        margin: auto;
-                        margin-top: 1em;
-                        
-
-                        .zoner_box {
-                            display: flex;
-                            flex-direction: column;
-                            width: 90%;
-                            
-                           
-                            background-color: #000;
-                            border-radius: 10px;
-
-                            p {
-                                display: flex;
-                                align-items: center;
-                                justify-content: flex-start;
-                                gap: 1em;
-                                margin: 1em;
-                                position: relative;
-                                color: white;
-                                white-space: nowrap;
-                                .zoner_delete {
-                                    cursor: pointer;
-                                }
-                                span {
-                                    right: 0;
-                                    position: absolute;
-                                    padding: 0.3em 0.8em;
-                                    font-size: 0.6rem;
-                                    border-radius: 150px;
-                                }
-                                .fileName {
-                                    position: inherit !important;
-                                    font-size: 1rem;
-                                    white-space: nowrap;
-                                    overflow: hidden;
-                                    text-overflow: ellipsis;
-                                    max-width: 200px;
-                                }
-                            }
-                        }
-                    }
-                }
-
             }
         }
-        
+
         // Termina el componente de producto.jsx
-        
+
         .t_container {
             margin-top: 20em;
         }
@@ -328,7 +253,8 @@
             gap: 1em;
             font-family: "Quicksand", sans-serif;
 
-            .info_box {
+            .info_box,
+            .info_box_step2 {
                 display: grid;
                 width: 90%;
                 grid-template-columns: 0.5fr 1.5fr;
@@ -390,6 +316,7 @@
                         border-right: 1px solid gray;
                         border-bottom: 1px solid gray;
                     }
+
                     a {
                         display: inline-block;
                         color: yellow;
@@ -400,23 +327,31 @@
                         white-space: nowrap;
                         max-width: 130px;
                     }
+
                     .container_file {
                         display: flex;
                         flex-direction: row;
                         gap: 0.5em;
                         border-right: 1px solid gray;
                         padding-left: 1em;
+
                         .btn_delete {
                             cursor: pointer;
+
                             &:hover {
                                 color: red;
                             }
                         }
+
                         &:last-child {
                             border-right: none;
                         }
                     }
                 }
+            }
+
+            .info_box_step2 {
+                grid-template-rows: 0.5fr 0.5fr 0.5fr 0.5fr 0.5fr 0.5fr 0.5fr;
             }
 
             .title,
@@ -449,6 +384,7 @@
             .title5 {
                 grid-area: title5;
             }
+
             .title6 {
                 grid-area: title6;
             }
@@ -740,12 +676,12 @@
                 }
 
                 &:nth-child(2) {
-                    background-color: #223692;
+                    background-color: rgb(253, 71, 71);
                     color: #fff;
                 }
 
                 &:nth-child(3) {
-                    background-color: rgb(253, 71, 71);
+                    background-color: #223692;
                     color: #fff;
                 }
 
@@ -755,7 +691,8 @@
                 }
             }
 
-            .etapa2, .etapa3 {
+            .etapa2,
+            .etapa3 {
                 position: absolute;
                 width: 80%;
                 top: 1em;
@@ -782,6 +719,7 @@
                     font-weight: bold;
                 }
             }
+
             .etapa3 {
                 background-color: green;
             }
@@ -819,5 +757,85 @@
         margin: auto;
         font-size: 1.2rem;
         margin-top: 3em;
+    }
+}
+
+.files_zone {
+    display: flex;
+    flex-direction: column;
+    width: 90%;
+    margin-top: 3em;
+
+    .form_files {
+        display: block;
+        text-align: center;
+        padding: 1em;
+        color: #fff;
+        border: 1px solid gray;
+        width: 40%;
+        margin: auto;
+        font-weight: bold;
+
+        input[type="file"] {
+            display: none;
+        }
+
+        &:hover {
+            background-color: #1a2225;
+        }
+    }
+
+    label {
+        cursor: pointer;
+    }
+
+    .zoner {
+        display: block;
+        width: 80%;
+        margin: auto;
+        margin-top: 1em;
+
+
+        .zoner_box {
+            display: flex;
+            flex-direction: column;
+            width: 90%;
+
+
+            background-color: #000;
+            border-radius: 10px;
+
+            p {
+                display: flex;
+                align-items: center;
+                justify-content: flex-start;
+                gap: 1em;
+                margin: 1em;
+                position: relative;
+                color: white;
+                white-space: nowrap;
+
+                .zoner_delete {
+                    cursor: pointer;
+                }
+
+                span {
+                    right: 0;
+                    position: absolute;
+                    padding: 0.3em 0.8em;
+                    font-size: 0.6rem;
+                    border-radius: 150px;
+                }
+
+                .fileName {
+                    position: inherit !important;
+                    font-size: 1rem;
+                    white-space: nowrap;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                    max-width: 200px;
+                }
+            }
+        }
     }
 }

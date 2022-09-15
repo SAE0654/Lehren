@@ -119,7 +119,7 @@ export default function Complete() {
       }
       return;
     }
-    if(e.target.name === "comentarios") {
+    if (e.target.name === "comentarios") {
       setProducto({
         ...Producto,
         [e.target.name]: [{
@@ -459,9 +459,9 @@ export default function Complete() {
                 }
               </div>
               <input type="submit" style={{ top: "100em", bottom: "inherit", left: "5em" }} value="Aprobar" onClick={() => setNotSaved(false)} />
-              
+
             </div>
-            
+
           </form>
           <button onClick={() => desaprobarProducto()}>Devolver a propuesta</button>
           <br /><br />

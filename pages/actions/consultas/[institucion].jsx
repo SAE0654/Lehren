@@ -442,9 +442,9 @@ export default function Consultas() {
                                                                         <AiOutlineEye />
                                                                     </button>
                                                                 </NavLink>
-                                                                <button onClick={() => editFieldById(index)}>
+                                                                {/* <button onClick={() => editFieldById(index)}>
                                                                     <AiTwotoneEdit />
-                                                                </button>
+                                                                </button> */}
                                                                 <button
                                                                     onClick={() => (setDeleting(true), setId(producto._id), document.querySelector("body").style.overflow = "hidden")}>
                                                                     <AiFillDelete />
