@@ -16,7 +16,7 @@ const productoSchema = new Schema({
     creadoPor: { type: String, required: true },
     lastUpdate: { type: String, default: 'Sin actualizaciones' },
     modifiedBy: { type: String, default: 'Sin actualizaciones' },
-    aprobado: { type: String, default: 'off'},
+    aprobado: { type: String, default: 'Propuesta'},
     aprobadoPor: { type: String, default: 'No ha sido aprobado' },
     objetivo: { type: String, default: null},
     temas: { type: String, default: null},
@@ -34,7 +34,10 @@ const productoSchema = new Schema({
     archivosETP1: [],
     archivosETP2: [],
     // Agregados después
-    prioridad: { type: String, default: "baja" }
+    prioridad: { type: String, default: "baja" },
+    consideraciones: { type: String},
+    fechaEjecucion: { type: String},
+    fechaEntrega: { type: String }
 })
 
 const Producto = models.Producto || model('Producto', productoSchema);

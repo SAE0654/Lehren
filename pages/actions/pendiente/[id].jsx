@@ -8,22 +8,20 @@ import styles from "../../../styles/pages/ventas.module.scss";
 import { acceptedFiles, getTimeStamp, isAnyFieldEmpty, sessionHasExpired } from '../../../utils/forms';
 import { toast } from 'react-toastify';
 import { IoMdClose } from "react-icons/io";
+import Swal from 'sweetalert2/dist/sweetalert2';
 
-const BUCKET_URI = "https://sae-files.s3.amazonaws.com/"
+const BUCKET_URI = "https://sae-files.s3.amazonaws.com/";
+let onChangeURI = false;
 
 export default function Complete() {
   const router = useRouter();
   const [Producto, setProducto] = useState(null);
   // Función de cambios sin guardar
   const [notSaved, setNotSaved] = useState(false);
-  const [OnChangeRoute, setOnChangeRoute] = useState(false);
-  const [NextRoute, setNextRoute] = useState(null);
   const [GoToNext, setGoToNext] = useState(false);
   const [VTools, setVTools] = useState([]);
   const [SelectedTools, setSelectedTools] = useState([]);
   const [Files, setFiles] = useState([]);
-
-  const Route = useRouter();
   const { id } = router.query;
   const { data: session } = useSession();
 
@@ -53,13 +51,17 @@ export default function Complete() {
   }, []);
 
   useEffect(() => {
+    onChangeURI = false;
     const beforeRouteHandler = (url) => {
-      if (url === Route.asPath) return;
-      setOnChangeRoute(true);
-      setNextRoute(url);
+      if (url === router.asPath) return;
+      if (!onChangeURI) {
+        displaySureMessage(url);
+      }
       if (!GoToNext) {
         Router.events.emit('routeChangeError');
         throw "Operación cancelada";
+      } else {
+        Swal.close()
       }
     };
     if (notSaved) {
@@ -71,6 +73,28 @@ export default function Complete() {
       Router.events.off('routeChangeStart', beforeRouteHandler);
     };
   }, [notSaved, GoToNext]);
+
+  const displaySureMessage = (NextRoute) => {
+    Swal.fire({
+        title: '¿Salir de la página?',
+        text: "Perderás tu trabajo actual",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Confirmar',
+        cancelButtonText: 'Cancelar'
+    }).then(async (result) => {
+        if (result.isConfirmed) {
+            setGoToNext(true);
+            onChangeURI = true;
+            router.push(NextRoute)
+        } else {
+            onChangeURI = false;
+            setGoToNext(false)
+        }
+    })
+}
 
   const getToolsSelected = (data) => {
     let indexes = '';
@@ -141,7 +165,8 @@ export default function Complete() {
     await saveFilesToAWS();
     const producto = Producto;
     producto.archivosETP2 = url_files;
-    producto.aprobado = "aprobado";
+    producto.aprobado = "Aprobado";
+    producto.aprobadoPor = session.user.names;
     if (isAnyFieldEmpty(e.target)) { // Si true, campos vacíos
       toast.error("Rellena todos los campos");
       return;
@@ -155,7 +180,8 @@ export default function Complete() {
       }).then((res) => {
         toast.info(res.data.message);
         e.target.reset();
-        router.push(`${process.env.NEXT_PUBLIC_ENDPOINT}`)
+        setNotSaved(false);
+        router.push(`${process.env.NEXT_PUBLIC_ENDPOINT}`);
       }).catch((err) => {
         toast.error("Error al completar")
       })
@@ -165,7 +191,7 @@ export default function Complete() {
     if (notSaved) return;
     setNotSaved(false);
     const producto = Producto;
-    producto.aprobado = 'off';
+    producto.aprobado = 'Validación';
     producto.aprobadoPor = 'Mandado a propuesta';
     await axios.put(`${process.env.NEXT_PUBLIC_ENDPOINT}api/productos/` + producto._id, producto, {
       headers: {
@@ -181,7 +207,6 @@ export default function Complete() {
   }
 
   const verifyFiles = (e) => {
-    console.log(e.target.files[0].size / 1024 / 1024 + "MiB")
     let files = e.target.files;
     let file = [];
     let hasTheSameName = false;
@@ -261,22 +286,12 @@ export default function Complete() {
       <link rel="icon" href="/favicon.ico" />
     </Head>
     <Layout>
-      <div className={OnChangeRoute ? "wrapper_bg" : "wrapper_bg hide"} aria-hidden="true"></div>
-      <div className={OnChangeRoute ? "window_confirm" : "window_confirm hide"}>
-        <h1 className="mini">¿Seguro que quieres salir? Perderás tu trabajo actual</h1>
-        <div className="cancel_continue">
-          <button onClick={() => (setGoToNext(true), Route.push(NextRoute))}>Continuar</button>
-          <button onClick={() => setOnChangeRoute(false)}>Cancelar</button>
-        </div>
-      </div>
       <div className={styles.main_content}>
         <div className={styles.box_container}>
           <h1>{Producto.nombre}</h1>
           <form onSubmit={(e) => updateCourse(e)}>
             <div className={styles.form_group}>
               <h2>Análisis académico</h2>
-              <textarea name="objetivo" placeholder="Objetivo del producto" defaultValue={Producto.objetivo} onChange={(e) => setProductoItem(e)} maxLength="3000" required></textarea>
-              <br />
               <textarea name="temas" placeholder="Propuesta de temas" defaultValue={Producto.temas} onChange={(e) => setProductoItem(e)} maxLength="6000" required></textarea>
               <br />
               <textarea name="titulacion" placeholder="Forma de titulación o producto final integrador" defaultValue={Producto.titulacion} onChange={(e) => setProductoItem(e)} maxLength="3000" required></textarea>
@@ -458,12 +473,12 @@ export default function Complete() {
                     ))
                 }
               </div>
-              <input type="submit" style={{ top: "100em", bottom: "inherit", left: "5em" }} value="Aprobar" onClick={() => setNotSaved(false)} />
+              <input type="submit" style={{ top: "100em", bottom: "inherit", left: "5em" }} value="Aprobar este producto" onClick={() => setNotSaved(false)} />
 
             </div>
 
           </form>
-          <button onClick={() => desaprobarProducto()}>Devolver a propuesta</button>
+          <button onClick={() => desaprobarProducto()}>Devolver a Validación</button>
           <br /><br />
         </div>
       </div>

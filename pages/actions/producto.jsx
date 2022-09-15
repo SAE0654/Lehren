@@ -8,22 +8,22 @@ import { toast } from 'react-toastify';
 import { acceptedFiles, getTimeStamp, isAnyFieldEmpty, sessionHasExpired } from '../../utils/forms';
 import { Router, useRouter } from 'next/router';
 import { IoMdClose } from "react-icons/io";
+import Swal from 'sweetalert2/dist/sweetalert2';
 
-const BUCKET_URI = "https://sae-files.s3.amazonaws.com/"
+const BUCKET_URI = "https://sae-files.s3.amazonaws.com/";
+let onChangeURI = false;
 
 export default function Producto() {
     const [Cursos, setCursos] = useState([]);
     const [Producto, setProducto] = useState({});
     // Función de cambios sin guardar
     const [notSaved, setNotSaved] = useState(false);
-    const [OnChangeRoute, setOnChangeRoute] = useState(false);
-    const [NextRoute, setNextRoute] = useState(null);
     const [GoToNext, setGoToNext] = useState(false);
     // Función de institución para opciones y validacion tools
     const [Institucion, setInstitucion] = useState(undefined);
     const [Files, setFiles] = useState([]);
 
-    const Route = useRouter();
+    const router = useRouter();
     const { data: session } = useSession();
 
     let url_files = [];
@@ -36,13 +36,17 @@ export default function Producto() {
 
 
     useEffect(() => {
+        onChangeURI = false;
         const beforeRouteHandler = (url) => {
-            if (url === Route.asPath) return;
-            setOnChangeRoute(true);
-            setNextRoute(url);
+            if (url === router.asPath) return;
+            if (!onChangeURI) {
+                displaySureMessage(url);
+            }
             if (!GoToNext) {
                 Router.events.emit('routeChangeError');
                 throw "Operación cancelada";
+            } else {
+                Swal.close()
             }
         };
         if (notSaved) {
@@ -50,12 +54,32 @@ export default function Producto() {
         } else {
             Router.events.off('routeChangeStart', beforeRouteHandler);
         }
-        console.log("RECARGA")
         return () => {
             Router.events.off('routeChangeStart', beforeRouteHandler);
         };
     }, [notSaved, GoToNext]);
 
+    const displaySureMessage = (NextRoute) => {
+        Swal.fire({
+            title: '¿Salir de la página?',
+            text: "Perderás tu trabajo actual",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Confirmar',
+            cancelButtonText: 'Cancelar'
+        }).then(async (result) => {
+            if (result.isConfirmed) {
+                setGoToNext(true);
+                onChangeURI = true;
+                router.push(NextRoute)
+            } else {
+                onChangeURI = false;
+                setGoToNext(false)
+            }
+        })
+    }
 
     const registerCourse = async (e) => {
         e.preventDefault();
@@ -182,14 +206,6 @@ export default function Producto() {
             <link rel="icon" href="/favicon.ico" />
         </Head>
         <Layout>
-            <div className={OnChangeRoute ? "wrapper_bg" : "wrapper_bg hide"} aria-hidden="true"></div>
-            <div className={OnChangeRoute ? "window_confirm" : "window_confirm hide"}>
-                <h1 className="mini">¿Seguro que quieres salir? Perderás tu trabajo actual</h1>
-                <div className="cancel_continue">
-                    <button onClick={() => (setGoToNext(true), Route.push(NextRoute))}>Continuar</button>
-                    <button onClick={() => setOnChangeRoute(false)}>Cancelar</button>
-                </div>
-            </div>
             <div className={styles.main_content}>
                 <h1>Genera un producto</h1>
                 <div className={styles.box_container}>
@@ -398,16 +414,16 @@ export default function Producto() {
                                 </label>
                                 <div className={styles.prioridad}>
                                     <span>Prioridad: </span>
-                                    <label className={styles.form_control} style={{color: "red"}}>
-                                        <input type="radio" name="prioridad" value="alta" style={{color: "red"}} onChange={(e) => setProductoItem(e)} />
+                                    <label className={styles.form_control} style={{ color: "red" }}>
+                                        <input type="radio" name="prioridad" value="alta" style={{ color: "red" }} onChange={(e) => setProductoItem(e)} />
                                         Alta
                                     </label>
-                                    <label className={styles.form_control} style={{color: "yellow"}}>
-                                        <input type="radio" name="prioridad" value="media" style={{color: "yellow"}} onChange={(e) => setProductoItem(e)} />
+                                    <label className={styles.form_control} style={{ color: "yellow" }}>
+                                        <input type="radio" name="prioridad" value="media" style={{ color: "yellow" }} onChange={(e) => setProductoItem(e)} />
                                         Media
                                     </label>
-                                    <label className={styles.form_control} style={{color: "green"}}>
-                                        <input type="radio" name="prioridad" value="baja" style={{color: "green"}} onChange={(e) => setProductoItem(e)} />
+                                    <label className={styles.form_control} style={{ color: "green" }}>
+                                        <input type="radio" name="prioridad" value="baja" style={{ color: "green" }} onChange={(e) => setProductoItem(e)} />
                                         Baja
                                     </label>
                                 </div>

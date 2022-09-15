@@ -24,18 +24,8 @@ export default function Consultas() {
     const [Query, setQuery] = useState('');
     const [BoxFilter, setBoxFilter] = useState(false);
     const [Restaurar, setRestaurar] = useState(false);
-    const [Deleting, setDeleting] = useState(false);
-    const [Id, setId] = useState(null);
-    const [Aprobando, setAprobando] = useState(false);
     const [Loading, setLoading] = useState(true);
     // Monitor
-    const [CurrentIndex, setCurrentIndex] = useState(null);
-    const [EditInformation, setEditInformation] = useState([]);
-    const [notSaved, setNotSaved] = useState(false);
-    const [OnChangeRoute, setOnChangeRoute] = useState(false);
-    const [NextRoute, setNextRoute] = useState(null);
-    const [GoToNext, setGoToNext] = useState(false);
-
     const [currentPage, setCurrentPage] = useState(1);
     const [lastPage, setlastPage] = useState(1);
     const Route = useRouter();
@@ -52,26 +42,6 @@ export default function Consultas() {
         document.querySelector("body").classList.add("consultas_bg");
         sessionHasExpired();
     }, []);
-
-    useEffect(() => {
-        const beforeRouteHandler = (url) => {
-            if (url === Route.asPath) return;
-            setOnChangeRoute(true);
-            setNextRoute(url);
-            if (!GoToNext) {
-                Router.events.emit('routeChangeError');
-                throw "Operación cancelada";
-            }
-        };
-        if (notSaved) {
-            Router.events.on('routeChangeStart', beforeRouteHandler);
-        } else {
-            Router.events.off('routeChangeStart', beforeRouteHandler);
-        }
-        return () => {
-            Router.events.off('routeChangeStart', beforeRouteHandler);
-        };
-    }, [notSaved, GoToNext]);
 
     useEffect(() => {
         getProductos();
@@ -93,7 +63,6 @@ export default function Consultas() {
         setLoading(true);
         await axios(`${process.env.NEXT_PUBLIC_ENDPOINT}api/productos/` + institucion).then((res) => {
             setProductos(res.data);
-            setEditInformation(res.data);
             setTempProductos(res.data);
             setLoading(false);
             computePages(res.data);
@@ -161,55 +130,6 @@ export default function Consultas() {
         ), {})
     );
 
-
-    const saveInformationLocally = (index) => {
-        const product = Productos[index];
-        if (EditInformation.length <= 0) {
-            toast.info("Ningún dato se modificó")
-            return;
-        }
-        for (let j in product) {
-            if (product[j] !== EditInformation[j]) {
-                product[j] = typeof EditInformation[j] === 'undefined' ? product[j] : EditInformation[j];
-            }
-        }
-        const newModified = Productos;
-        newModified[index] = product;
-
-        setProductos(newModified);
-        computePages(newModified)
-        saveInformationToServer(newModified, index);
-        setNotSaved(false);
-    }
-
-    const saveInformationToServer = async (data, index) => {
-        let payload = data;
-        payload[index] = {
-            ...payload[index],
-            lastUpdate: getTimeStamp(),
-            modifiedBy: session.user.names
-        }
-        if (data[index].aprobado === 'validacion') {
-            payload[index] = {
-                ...payload[index],
-                aprobadoPor: session.user.email
-            }
-        } else {
-            payload[index] = {
-                ...payload[index],
-                aprobadoPor: 'No ha sido aprobado'
-            }
-        }
-        const loadingId = toast.loading("Actualizando...");
-        await axios.put(`${process.env.NEXT_PUBLIC_ENDPOINT}api/productos/` + payload[index]._id, payload[index])
-            .then(() => {
-                toast.success("Datos guardados");
-                toast.dismiss(loadingId);
-            })
-        setEditInformation([]);
-        setCurrentIndex(null);
-    }
-
     const deleteProduct = async (Id) => {
         Swal.fire({
             title: '¿Borrar producto?',
@@ -233,25 +153,6 @@ export default function Consultas() {
                     });
             }
         })
-
-    }
-
-    const aprobarProduct = async (id) => {
-        const payload = TempProductos.filter((item) => item._id === id)[0];
-        payload.aprobado = payload.aprobado === 'Validación' ? 'off' : 'Validación';
-        payload.aprobadoPor = session.user.names;
-        payload.modifiedBy = session.user.names;
-        payload.lastUpdate = getTimeStamp();
-        const loadingId = toast.loading("Aprobando...");
-        await axios.put(`${process.env.NEXT_PUBLIC_ENDPOINT}api/productos/` + id, payload)
-            .then(() => {
-                toast.success("Datos guardados");
-                toast.dismiss(loadingId);
-            });
-        setId(null);
-        setAprobando(false);
-        document.querySelector("body").style.overflow = "auto";
-        getProductos();
     }
 
     const displayCommentSection = async (pId, commentario) => {
@@ -308,21 +209,6 @@ export default function Consultas() {
                         <NavLink href="/actions/producto">Carga tu primer producto</NavLink>
                     </div> :
                     <>
-                        <div className={Aprobando ? "window_confirm" : "window_confirm hide"}>
-                            <h1>¿Mandar a validación?</h1>
-                            <div className="cancel_continue">
-                                <button onClick={() => aprobarProduct(Id)}>Aprobar</button>
-                                <button onClick={() => ((setAprobando(false), setId(null), document.querySelector("body").style.overflow = "auto"))}>Cancelar</button>
-                            </div>
-                        </div>
-                        <div className={OnChangeRoute ? "window_confirm" : "window_confirm hide"}>
-                            <h1 className="mini">¿Seguro que quieres salir? Perderás tu trabajo actual</h1>
-                            <div className="cancel_continue">
-                                <button onClick={() => (setGoToNext(true), Route.push(NextRoute))}>Continuar</button>
-                                <button onClick={() => setOnChangeRoute(false)}>Cancelar</button>
-                            </div>
-                        </div>
-                        <div className={Deleting || Aprobando || OnChangeRoute ? "wrapper_bg" : "wrapper_bg hide"} aria-hidden="true"></div>
                         <div className={styles.main_content}>
                             <h1>Consultas</h1>
                             <div className={styles.action_bar}>
@@ -397,7 +283,7 @@ export default function Consultas() {
                                         <thead>
                                             <tr>
                                                 <th>No. </th>
-                                                <th>Acciones </th>
+                                                <th className="medium">Acciones </th>
                                                 {TempProductos[0].aprobado ? <th>Status</th> : null}
                                                 {TempProductos[0].nombre ? <th>Nombre del producto</th> : null}
                                                 {TempProductos[0].tipo ? <th>Tipo de oferta</th> : null}
@@ -416,10 +302,10 @@ export default function Consultas() {
                                         <tbody>
                                             {
                                                 TempProductos.map((producto, index) => (
-                                                    <tr key={index} className={index === CurrentIndex ? 'currentEditingTr' : null}>
+                                                    <tr key={index}>
                                                         <td>{(lastPage - pageSize) + index + 1}</td>
                                                         <td>
-                                                            <div className={styles.action_by_id + " action_edit"}>
+                                                            <div className={styles.action_by_id}>
                                                                 <NavLink href={"/view/producto/" + producto._id} exact>
                                                                     <button>
                                                                         <AiOutlineEye />
@@ -436,26 +322,25 @@ export default function Consultas() {
                                                                 </button>
                                                                 <Comment comments={producto.comentarios} />
                                                                 {
-                                                                    producto.aprobado === 'validacion' ?
+                                                                    producto.aprobado === 'Propuesta' && session.user.rol === "administrador" ?
                                                                         <div className={styles.etapa2}>
-                                                                            <NavLink href={"/actions/steptwo/" + producto._id} exact>
-                                                                                Validación
+                                                                            <NavLink href={"/actions/validacion/" + producto._id} exact>
+                                                                                Etapa Validación
                                                                             </NavLink>
                                                                         </div>
-                                                                        :
-                                                                        // Segunda verificacion de administrador
-                                                                        session.user.rol === "administrador" && producto.aprobado === 'off' ?
-                                                                            <div className={styles.etapa2} id="aprobado" onClick={() => (setAprobando(true),
-                                                                                setId(producto._id),
-                                                                                document.querySelector("body").style.overflow = "hidden")}>Propuesta</div>
-                                                                            : producto.aprobado === "aprobado"
-                                                                                ? <NavLink href={"/actions/complete/" + producto._id} exact><div className={styles.etapa3} id="aprobado">Aprobado</div></NavLink>
-                                                                                : <div className={styles.etapa2} id="aprobado">No aprobado</div>
+                                                                        : producto.aprobado === "Validación" ?
+                                                                            <div className={styles.etapa2}>
+                                                                                <NavLink href={"/actions/pendiente/" + producto._id} exact>
+                                                                                    Etapa Pendiente
+                                                                                </NavLink>
+                                                                            </div>
+                                                                            : <div className={styles.etapa3} id="aprobado">{producto.aprobado}</div>
+
 
                                                                 }
                                                             </div>
                                                         </td>
-                                                        {producto.aprobado ? <td className="medium"> {producto.aprobado === "off" ? "No aprobado" : producto.aprobado} </td> : null}
+                                                        {producto.aprobado ? <td className="short"> {producto.aprobado} </td> : null}
                                                         {producto.nombre ? <td className="long"> {producto.nombre} </td> : null}
                                                         {producto.tipo ? <td className="short">{producto.tipo}</td> : null}
                                                         {producto.modalidad ? <td className="medium">{producto.modalidad}</td> : null}
@@ -508,7 +393,7 @@ export default function Consultas() {
                                         currentPage={currentPage}
                                         totalCount={Productos.length}
                                         pageSize={pageSize}
-                                        onPageChange={(page) => (setCurrentPage(page), setCurrentIndex(null))}
+                                        onPageChange={(page) => setCurrentPage(page)}
                                     />
                             }
 

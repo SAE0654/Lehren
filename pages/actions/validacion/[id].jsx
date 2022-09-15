@@ -1,21 +1,25 @@
-import { useRouter } from 'next/router'
+import { Router, useRouter } from 'next/router'
 import { getSession, useSession } from "next-auth/react";
 import { useEffect, useState } from 'react'
 import axios from 'axios';
 import Head from 'next/head';
 import Layout from '../../../components/Layout';
 import styles from "../../../styles/pages/ventas.module.scss";
-import { NavLink } from '../../../components/NavLink';
 import { acceptedFiles, isAnyFieldEmpty, sessionHasExpired } from '../../../utils/forms';
 import { IoMdClose } from "react-icons/io";
 import { toast } from 'react-toastify';
+import Swal from 'sweetalert2/dist/sweetalert2';
 
-const BUCKET_URI = "https://sae-files.s3.amazonaws.com/"
+const BUCKET_URI = "https://sae-files.s3.amazonaws.com/";
+let onChangeURI = false;
 
 export default function StepTwo() {
     const router = useRouter();
     const [Producto, setProducto] = useState(null);
     const [Files, setFiles] = useState([]);
+    // Función de cambios sin guardar
+    const [notSaved, setNotSaved] = useState(false);
+    const [GoToNext, setGoToNext] = useState(false);
 
     const { id } = router.query;
     const { data: session } = useSession();
@@ -31,6 +35,52 @@ export default function StepTwo() {
         document.querySelector("body").classList.add("consultas_bg");
         sessionHasExpired();
     }, []);
+
+    useEffect(() => {
+        onChangeURI = false;
+        const beforeRouteHandler = (url) => {
+            if (url === router.asPath) return;
+            if(!onChangeURI) {
+                displaySureMessage(url);
+            }
+            if (!GoToNext) {
+                Router.events.emit('routeChangeError');
+                throw "Operación cancelada";
+            } else {
+                Swal.close()
+            }
+        };
+        if (notSaved) {
+            Router.events.on('routeChangeStart', beforeRouteHandler);
+        } else {
+            Router.events.off('routeChangeStart', beforeRouteHandler);
+        }
+        return () => {
+            Router.events.off('routeChangeStart', beforeRouteHandler);
+        };
+    }, [notSaved, GoToNext]);
+
+    const displaySureMessage = (NextRoute) => {
+        Swal.fire({
+            title: '¿Salir de la página?',
+            text: "Perderás tu trabajo actual",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Confirmar',
+            cancelButtonText: 'Cancelar'
+        }).then(async (result) => {
+            if (result.isConfirmed) {
+                setGoToNext(true);
+                onChangeURI = true;
+                router.push(NextRoute)
+            } else {
+                onChangeURI = false;
+                setGoToNext(false)
+            }
+        })
+    }
 
     const getId = () => {
         if (typeof id === 'undefined') {
@@ -121,7 +171,7 @@ export default function StepTwo() {
         await saveFilesToAWS();
         const producto = Producto;
         producto.archivosETP2 = url_files;
-        producto.aprobado = "aprobado";
+        producto.aprobado = "Validación";
         if (isAnyFieldEmpty(e.target)) { // Si true, campos vacíos
             toast.error("Rellena todos los campos");
             return;
@@ -134,11 +184,31 @@ export default function StepTwo() {
                 }
             }).then((res) => {
                 toast.info(res.data.message);
+                setNotSaved(false);
                 e.target.reset();
                 router.push(`${process.env.NEXT_PUBLIC_ENDPOINT}`)
             }).catch((err) => {
                 toast.error("Error al completar")
             })
+    }
+
+    const handleChange = (e) => {
+        if (!notSaved) setNotSaved(true);
+        if (e.target.name === "comentarios") {
+            setProducto({
+                ...Producto,
+                [e.target.name]: [{
+                    user: session.user.names,
+                    comentarios: e.target.value,
+                    createdAt: getTimeStamp()
+                }]
+            });
+            return;
+        }
+        setProducto({
+            ...Producto,
+            [e.target.name]: e.target.value
+        });
     }
 
     if (!Producto) {
@@ -154,7 +224,7 @@ export default function StepTwo() {
         <Layout>
             <div className={styles.main_content} style={{ transform: 'translate(0%, -40%)', maxHeight: '1000px' }}>
                 <div className={styles.box_container}>
-                    <h1 className={styles.t_container} style={{ marginTop: "10em" }}>Validación</h1>
+                    <h1 className={styles.t_container} style={{ marginTop: "10em" }}>Etapa de validación</h1>
                     <img src="/img/LOGO2.png" alt="" />
                     <div className={styles.info_container}>
                         <div className={styles.info_box_step2}>
@@ -167,18 +237,18 @@ export default function StepTwo() {
                             <p className={styles.right_border}>{Producto.institucion}</p>
                             <p><b>Oferta educativa</b></p>
                             <p className={styles.right_border}>{Producto.tipo}</p>
-                            <p><b>Modalidad</b></p>
-                            <p className={styles.right_border}>{Producto.modalidad}</p>
-                            <p className={styles.last_row}><b>Objetivos:</b></p>
-                            <p className={styles.right_bottom_border}>{Producto.objetivo}</p>
+                            <p className={styles.last_row}><b>Modalidad</b></p>
+                            <p className={styles.right_bottom_border}>{Producto.modalidad}</p>
                         </div>
                     </div>
                     <br />
                     <form style={{ flexDirection: 'column', alignItems: 'center' }} onSubmit={(e) => uploadF2(e)}>
                         <div className={styles.form_group}>
-                            <textarea name="consideraciones" placeholder="Comentarios o consideraciones"></textarea>
-                            <input type="text" name="fechaEjecucion" placeholder="Fecha de ejecución de la actividad" />
-                            <input type="text" name="fechaEntrega" placeholder="Fecha de entrega de resultados" />
+                            <textarea name="objetivo" placeholder="Objetivo del producto" maxLength="10000" required onChange={(e) => handleChange(e)}></textarea>
+                            <br />
+                            <textarea name="consideraciones" placeholder="Comentarios o consideraciones" maxLength="10000" required onChange={(e) => handleChange(e)}></textarea>
+                            <input type="text" name="fechaEjecucion" placeholder="Fecha de ejecución de la actividad" required onChange={(e) => handleChange(e)} />
+                            <input type="text" name="fechaEntrega" placeholder="Fecha de entrega de resultados" required onChange={(e) => handleChange(e)} />
                         </div>
                         <div className={styles.files_zone}>
                             <label className={styles.form_files}>
@@ -222,14 +292,8 @@ export default function StepTwo() {
                                     ))
                             }
                         </div>
-                        <input type="submit" value="Ir al paso 3" />
+                        <input type="submit" value="Mandar a validación" />
                     </form>
-
-                    {/* <NavLink href="/" exact>
-                        <button>
-                            Regresar a Inicio
-                        </button>
-                    </NavLink> */}
                 </div>
             </div>
         </Layout>
