@@ -139,7 +139,8 @@
                     background-color: color.$bg_input;
                     border: none;
                     color: #fff;
-                    border: 1px solid gray
+                    border: 1px solid gray;
+                    margin-bottom: 1em
                 }
 
                 .container_footer {
@@ -842,4 +843,26 @@
             }
         }
     }
+}
+
+.main_content .box_container form .form_group .select_sp {
+    width: 100% !important;
+    border: 1px solid gray;
+    font-size: 0.7rem;
+    margin-top: 0em;
+    &:disabled {
+        opacity: 0.6;
+    }
+}
+
+.main_content .box_container form .form_group .herr label {
+    font-size: 0.9rem;
+    text-align: left;
+}
+
+.main_content .box_container form .form_group .herr {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
 }

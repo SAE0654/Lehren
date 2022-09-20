@@ -18,7 +18,7 @@ const productoSchema = new Schema({
     modifiedBy: { type: String, default: 'Sin actualizaciones' },
     aprobado: { type: String, default: 'Propuesta'},
     aprobadoPor: { type: String, default: 'No ha sido aprobado' },
-    objetivo: { type: String, default: null},
+    objetivo: [],
     temas: { type: String, default: null},
     titulacion: { type: String, default: null},
     experto: { type: String, default: null },

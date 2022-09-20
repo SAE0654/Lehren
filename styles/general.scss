@@ -315,17 +315,21 @@ button:disabled {
 }
 
 .radio_ck_section {
-    display: block;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
     width: 90%;
     margin: auto;
 }
 .control {
-    display: inline-block;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     position: relative;
     padding-left: 1.5rem;
     margin-bottom: 1em;
     margin-right: 1em;
-    padding-top: 4px;
+    padding-top: 7px;
     cursor: pointer;
     font-size: 0.8rem;
     color: rgb(214, 198, 198);
@@ -342,13 +346,13 @@ button:disabled {
     left: 0;
     height: 20px;
     width: 20px;
-    background: #e9e1e1;
-    border: 0px hidden #22268d;
+    background: transparent;
+    border: 1px solid #e7e7ec;
 }
 
 .control:hover input ~ .control_indicator,
 .control input:focus ~ .control_indicator {
-    background: #d5d2df;
+    background: #2f2e31;
 }
 
 .control input:checked ~ .control_indicator {
@@ -374,7 +378,7 @@ button:disabled {
 }
 
 .control-radio .control_indicator {
-    border-radius: 50%;
+    border-radius: 3%;
 }
 
 .control-radio .control_indicator:after {
@@ -382,7 +386,7 @@ button:disabled {
     top: 4px;
     height: 12px;
     width: 12px;
-    border-radius: 50%;
+    border-radius: 3%;
     background: #f9f8f9;
     transition: background 250ms;
 }

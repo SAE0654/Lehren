@@ -194,9 +194,9 @@ const Catalogue = () => {
             </div>
             <div className={styles.row}>
               <p>
-              Cuestionario cuya finalidad es recabar información
-              de cierta audiencia  y mejorar los elementos que 
-              se evalúan para el logro de los objetivos.
+                Cuestionario cuya finalidad es recabar información
+                de cierta audiencia  y mejorar los elementos que
+                se evalúan para el logro de los objetivos.
               </p>
             </div>
             <div className={styles.row}>
@@ -277,8 +277,8 @@ const Catalogue = () => {
             </div>
             <div className={styles.row}>
               <p>
-              Método de recogida de datos , que utiliza herramientas 
-              de análisis matemático y estadístico.
+                Método de recogida de datos , que utiliza herramientas
+                de análisis matemático y estadístico.
               </p>
             </div>
             <div className={styles.row}>
@@ -359,8 +359,8 @@ const Catalogue = () => {
             </div>
             <div className={styles.row}>
               <p>
-              Puesta en marcha de un nuevo producto en una muestra 
-              representativa de personas.
+                Puesta en marcha de un nuevo producto en una muestra
+                representativa de personas.
               </p>
             </div>
             <div className={styles.row}>
@@ -441,8 +441,8 @@ const Catalogue = () => {
             </div>
             <div className={styles.row}>
               <p>
-              Sesión de entrevistas individuales cuyo propósito es recabar 
-              de una manera personalizada comentarios.
+                Sesión de entrevistas individuales cuyo propósito es recabar
+                de una manera personalizada comentarios.
               </p>
             </div>
             <div className={styles.row}>
@@ -523,7 +523,7 @@ const Catalogue = () => {
             </div>
             <div className={styles.row}>
               <p>
-              Servicios digitales con diversos proveedores en la nube.
+                Servicios digitales con diversos proveedores en la nube.
               </p>
             </div>
             <div className={styles.row}>
@@ -604,8 +604,8 @@ const Catalogue = () => {
             </div>
             <div className={styles.row}>
               <p>
-              Contratación de empresas expertas en proporcionar servicios 
-              relacionados a la investigación de mercados.
+                Contratación de empresas expertas en proporcionar servicios
+                relacionados a la investigación de mercados.
               </p>
             </div>
             <div className={styles.row}>
@@ -686,8 +686,8 @@ const Catalogue = () => {
             </div>
             <div className={styles.row}>
               <p>
-              Contratación de empresas expertas en proporcionar 
-              servicios relacionados a la investigación de mercados.
+                Contratación de empresas expertas en proporcionar
+                servicios relacionados a la investigación de mercados.
               </p>
             </div>
             <div className={styles.row}>
@@ -768,8 +768,8 @@ const Catalogue = () => {
             </div>
             <div className={styles.row}>
               <p>
-              Contratación de empresas expertas en proporcionar 
-              servicios relacionados a la investigación de mercados.
+                Contratación de empresas expertas en proporcionar
+                servicios relacionados a la investigación de mercados.
               </p>
             </div>
             <div className={styles.row}>
@@ -850,8 +850,8 @@ const Catalogue = () => {
             </div>
             <div className={styles.row}>
               <p>
-              Contratación de un experto que implemente actividades 
-              y metodologías para alcanzar el objetivo.
+                Contratación de un experto que implemente actividades
+                y metodologías para alcanzar el objetivo.
               </p>
             </div>
             <div className={styles.row}>
@@ -932,8 +932,8 @@ const Catalogue = () => {
             </div>
             <div className={styles.row}>
               <p>
-              Participación en distintos fotos o grupos online 
-              que compartan intereses similares a la institución.
+                Participación en distintos fotos o grupos online
+                que compartan intereses similares a la institución.
               </p>
             </div>
             <div className={styles.row}>
@@ -1014,8 +1014,8 @@ const Catalogue = () => {
             </div>
             <div className={styles.row}>
               <p>
-              Testing rápido que permite verificar si un producto 
-              esta diseñado para la demando de los estudiantes.
+                Testing rápido que permite verificar si un producto
+                esta diseñado para la demando de los estudiantes.
               </p>
             </div>
             <div className={styles.row}>
@@ -1096,8 +1096,8 @@ const Catalogue = () => {
             </div>
             <div className={styles.row}>
               <p>
-              Comparación de 2 versiones de una oferta educativa para conocer 
-              cuál de las dos tiene mayor éxito y aceptación.
+                Comparación de 2 versiones de una oferta educativa para conocer
+                cuál de las dos tiene mayor éxito y aceptación.
               </p>
             </div>
             <div className={styles.row}>
@@ -1178,8 +1178,8 @@ const Catalogue = () => {
             </div>
             <div className={styles.row}>
               <p>
-              Prueba en donde se ofreceré por tiempo limitado una nueva 
-              oferta educativa con el fin de probar o evaluar el sevicio.
+                Prueba en donde se ofreceré por tiempo limitado una nueva
+                oferta educativa con el fin de probar o evaluar el sevicio.
               </p>
             </div>
             <div className={styles.row}>
@@ -1260,7 +1260,7 @@ const Catalogue = () => {
             </div>
             <div className={styles.row}>
               <p>
-              Es un estilo de prototipo el cual se experimenta con asistrentes al focus group.
+                Es un estilo de prototipo el cual se experimenta con asistrentes al focus group.
               </p>
             </div>
             <div className={styles.row}>

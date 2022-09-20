@@ -9,17 +9,18 @@ import { acceptedFiles, isAnyFieldEmpty, sessionHasExpired } from '../../../util
 import { IoMdClose } from "react-icons/io";
 import { toast } from 'react-toastify';
 import Swal from 'sweetalert2/dist/sweetalert2';
+import ValidationToolsForm from '../../../components/forms/validation_tools';
 
 const BUCKET_URI = "https://sae-files.s3.amazonaws.com/";
-let onChangeURI = false;
 
 export default function StepTwo() {
     const router = useRouter();
     const [Producto, setProducto] = useState(null);
     const [Files, setFiles] = useState([]);
+    const [Objetivos, setObjetivos] = useState([]);
+    const [HerramientasValidacion, setHerramientasValidacion] = useState([])
     // Función de cambios sin guardar
     const [notSaved, setNotSaved] = useState(false);
-    const [GoToNext, setGoToNext] = useState(false);
 
     const { id } = router.query;
     const { data: session } = useSession();
@@ -35,52 +36,6 @@ export default function StepTwo() {
         document.querySelector("body").classList.add("consultas_bg");
         sessionHasExpired();
     }, []);
-
-    useEffect(() => {
-        onChangeURI = false;
-        const beforeRouteHandler = (url) => {
-            if (url === router.asPath) return;
-            if(!onChangeURI) {
-                displaySureMessage(url);
-            }
-            if (!GoToNext) {
-                Router.events.emit('routeChangeError');
-                throw "Operación cancelada";
-            } else {
-                Swal.close()
-            }
-        };
-        if (notSaved) {
-            Router.events.on('routeChangeStart', beforeRouteHandler);
-        } else {
-            Router.events.off('routeChangeStart', beforeRouteHandler);
-        }
-        return () => {
-            Router.events.off('routeChangeStart', beforeRouteHandler);
-        };
-    }, [notSaved, GoToNext]);
-
-    const displaySureMessage = (NextRoute) => {
-        Swal.fire({
-            title: '¿Salir de la página?',
-            text: "Perderás tu trabajo actual",
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33',
-            confirmButtonText: 'Confirmar',
-            cancelButtonText: 'Cancelar'
-        }).then(async (result) => {
-            if (result.isConfirmed) {
-                setGoToNext(true);
-                onChangeURI = true;
-                router.push(NextRoute)
-            } else {
-                onChangeURI = false;
-                setGoToNext(false)
-            }
-        })
-    }
 
     const getId = () => {
         if (typeof id === 'undefined') {
@@ -176,6 +131,16 @@ export default function StepTwo() {
             toast.error("Rellena todos los campos");
             return;
         }
+        if(Objetivos.length <= 0) {
+            toast.error("Elige al menos un objetivo");
+            return;
+        }
+        if(HerramientasValidacion.length <= 0) {
+            toast.error("Elige al menos una herramienta de validación");
+            return;
+        }
+        producto.objetivo = Objetivos;
+        producto.instrumentoValidacion = HerramientasValidacion;
         await axios.put(`${process.env.NEXT_PUBLIC_ENDPOINT}api/productos/` + id, producto,
             {
                 headers: {
@@ -184,11 +149,10 @@ export default function StepTwo() {
                 }
             }).then((res) => {
                 toast.info(res.data.message);
-                setNotSaved(false);
                 e.target.reset();
-                router.push(`${process.env.NEXT_PUBLIC_ENDPOINT}`)
+                router.push(`${process.env.NEXT_PUBLIC_ENDPOINT}`);
             }).catch((err) => {
-                toast.error("Error al completar")
+                toast.error("Error al completar");
             })
     }
 
@@ -211,13 +175,23 @@ export default function StepTwo() {
         });
     }
 
+    const setObjetivoItem = (e) => {
+        let objetivos = Objetivos;
+        if(e.target.checked) {
+            objetivos.push(e.target.value);
+        } else {
+            objetivos = objetivos.filter((objetivo) => objetivo !== e.target.value);
+        }
+        setObjetivos(objetivos);
+    }
+
     if (!Producto) {
         return <h1>Cargando...</h1>
     }
 
     return <>
         <Head>
-            <title>{!session ? 'Cargando...' : session.user.username} | Vista de datos </title>
+            <title>Etapa de validación | {!session ? 'Cargando...' : session.user.names}</title>
             <meta name="description" content="Login app" />
             <link rel="icon" href="/favicon.ico" />
         </Head>
@@ -243,10 +217,153 @@ export default function StepTwo() {
                     </div>
                     <br />
                     <form style={{ flexDirection: 'column', alignItems: 'center' }} onSubmit={(e) => uploadF2(e)}>
-                        <div className={styles.form_group}>
-                            <textarea name="objetivo" placeholder="Objetivo del producto" maxLength="10000" required onChange={(e) => handleChange(e)}></textarea>
+                        <div className={styles.form_group} style={{ width: '100%' }}>
+                            <div className="radio_ck_section">
+                                <h3>Objetivos</h3>
+                                <label className="control control-radio">
+                                    Nombre de la oferta educativa
+                                    <input
+                                        type="checkbox"
+                                        name="objetivos"
+                                        value="Nombre de la oferta educativa"
+                                        onChange={(e) => setObjetivoItem(e)}
+                                    />
+                                    <div className="control_indicator"></div>
+                                </label>
+                                <label className="control control-radio">
+                                    Público objetivo
+                                    <input
+                                        type="checkbox"
+                                        name="objetivos"
+                                        value="Público objetivo"
+                                        onChange={(e) => setObjetivoItem(e)}
+                                    />
+                                    <div className="control_indicator"></div>
+                                </label>
+                                <label className="control control-radio">
+                                    Demanda
+                                    <input
+                                        type="checkbox"
+                                        name="objetivos"
+                                        value="Demanda"
+                                        onChange={(e) => setObjetivoItem(e)}
+                                    />
+                                    <div className="control_indicator"></div>
+                                </label>
+                                <label className="control control-radio">
+                                    Contenido académico
+                                    <input
+                                        type="checkbox"
+                                        name="objetivos"
+                                        value="Contenido académico"
+                                        onChange={(e) => setObjetivoItem(e)}
+                                    />
+                                    <div className="control_indicator"></div>
+                                </label>
+                                <label className="control control-radio">
+                                    Costos
+                                    <input
+                                        type="checkbox"
+                                        name="objetivos"
+                                        value="Costos"
+                                        onChange={(e) => setObjetivoItem(e)}
+                                    />
+                                    <div className="control_indicator"></div>
+                                </label>
+                                <label className="control control-radio">
+                                    Calidad educativa
+                                    <input
+                                        type="checkbox"
+                                        name="objetivos"
+                                        value="Calidad educativa"
+                                        onChange={(e) => setObjetivoItem(e)}
+                                    />
+                                    <div className="control_indicator"></div>
+                                </label>
+                                <label className="control control-radio">
+                                    Nuevos productos
+                                    <input
+                                        type="checkbox"
+                                        name="objetivos"
+                                        value="Nuevos productos"
+                                        onChange={(e) => setObjetivoItem(e)}
+                                    />
+                                    <div className="control_indicator"></div>
+                                </label>
+                                <label className="control control-radio">
+                                    Actualización del producto
+                                    <input
+                                        type="checkbox"
+                                        name="objetivos"
+                                        value="Actualización del producto"
+                                        onChange={(e) => setObjetivoItem(e)}
+                                    />
+                                    <div className="control_indicator"></div>
+                                </label>
+                                <label className="control control-radio">
+                                    Perfil de estudiantes (ingreso/egreso)
+                                    <input
+                                        type="checkbox"
+                                        name="objetivos"
+                                        value="Perfil de estudiantes (ingreso/egreso)"
+                                        onChange={(e) => setObjetivoItem(e)}
+                                    />
+                                    <div className="control_indicator"></div>
+                                </label>
+                                <label className="control control-radio">
+                                    Impacto en la industria
+                                    <input
+                                        type="checkbox"
+                                        name="objetivos"
+                                        value="Impacto en la industria"
+                                        onChange={(e) => setObjetivoItem(e)}
+                                    />
+                                    <div className="control_indicator"></div>
+                                </label>
+                                <label className="control control-radio">
+                                    Mercados
+                                    <input
+                                        type="checkbox"
+                                        name="objetivos"
+                                        value="Mercados"
+                                        onChange={(e) => setObjetivoItem(e)}
+                                    />
+                                    <div className="control_indicator"></div>
+                                </label>
+                                <label className="control control-radio">
+                                    Costos
+                                    <input
+                                        type="checkbox"
+                                        name="objetivos"
+                                        value="Costos"
+                                        onChange={(e) => setObjetivoItem(e)}
+                                    />
+                                    <div className="control_indicator"></div>
+                                </label>
+                                <label className="control control-radio">
+                                    Calidad educativa
+                                    <input
+                                        type="checkbox"
+                                        name="objetivos"
+                                        value="Calidad educativa"
+                                        onChange={(e) => setObjetivoItem(e)}
+                                    />
+                                    <div className="control_indicator"></div>
+                                </label>
+                                <label className="control control-radio">
+                                    Tendencia
+                                    <input
+                                        type="checkbox"
+                                        name="objetivos"
+                                        value="Tendencia"
+                                        onChange={(e) => setObjetivoItem(e)}
+                                    />
+                                    <div className="control_indicator"></div>
+                                </label>
+                            </div>
+                            <ValidationToolsForm HerramientasValidacion={HerramientasValidacion} setHerramientasValidacion={setHerramientasValidacion}/>
                             <br />
-                            <textarea name="consideraciones" placeholder="Comentarios o consideraciones" maxLength="10000" required onChange={(e) => handleChange(e)}></textarea>
+                            <textarea name="consideraciones" placeholder="Comentarios o consideraciones" maxLength="10000" required onChange={(e) => handleChange(e)} style={{ marginTop: '2em' }}></textarea>
                             <input type="text" name="fechaEjecucion" placeholder="Fecha de ejecución de la actividad" required onChange={(e) => handleChange(e)} />
                             <input type="text" name="fechaEntrega" placeholder="Fecha de entrega de resultados" required onChange={(e) => handleChange(e)} />
                         </div>

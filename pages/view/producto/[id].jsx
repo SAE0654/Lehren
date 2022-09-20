@@ -109,7 +109,7 @@ export default function ViewProduct() {
               <p><b>Institución:</b></p>
               <p className={styles.right_border}>{Producto.institucion.toUpperCase()}</p>
               <p><b>Aprobado:</b></p>
-              <p className={styles.right_border}>{Producto.aprobado === 'aprobado' ? 'Sí' : /*pregunta 2: */ Producto.aprobado === "validacion" ? 'En validación' : 'En propuesta'}</p>
+              <p className={styles.right_border}>{Producto.aprobado === 'Aprobado' ? 'Sí' : /*pregunta 2: */ Producto.aprobado === "Validacion" ? 'En validación' : 'En propuesta'}</p>
               {
                 Producto.aprobadoPor === 'NP' ? null :
                   <>
@@ -118,7 +118,7 @@ export default function ViewProduct() {
                   </>
               }
               <p><b>Objetivo del producto:</b></p>
-              <p className={styles.right_border}>{Producto.objetivo}</p>
+              <p className={styles.right_border}>{Producto.objetivo === null ? "Sin objetivos" : Producto.objetivo.map((item, index) => (item + ((index + 1) >= Producto.objetivo.length ? "." : ", ")))}</p>
               <p><b>Propuesta temas:</b></p>
               <p className={styles.right_border}>{Producto.temas}</p>
               <p><b>Forma de titulación o producto final integrador:</b></p>
@@ -136,9 +136,9 @@ export default function ViewProduct() {
               <p className={styles.last_row}><b>Mercado en el que incide:</b></p>
               <p className={styles.right_bottom_border}>{Producto.mercado}</p>
               <h2 className={styles.title4}>Herramientas de validación</h2>
-              <p><b>Instrumentos de validación empleados:</b></p>
+              <p><b>Instrumentos de validación empleados:</b></p> {console.log(Producto.instrumentoValidacion)}
               {Producto.instrumentoValidacion === null ? <p className={styles.right_border}>No se han seleccionado instrumentos de validación</p> : <p className={styles.right_border}>{Producto.instrumentoValidacion.length > 0
-                ? Producto.instrumentoValidacion.map((tool, index) => (Producto.instrumentoValidacion.length - 1) === index ? tool + ". " : tool + ", ")
+                ? Producto.instrumentoValidacion.map((tool, index) => (Producto.instrumentoValidacion.length - 1) === index ? tool.name + ". " : tool.name + ", ")
                 : null}
               </p>}
               <p className={styles.last_row}><b>Comentarios:</b></p>

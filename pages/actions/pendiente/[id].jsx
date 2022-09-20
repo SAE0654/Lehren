@@ -299,7 +299,7 @@ export default function Complete() {
               <textarea name="experto" placeholder="Experto recomendado para el desarrollo (en caso de ser programa curricular, incluir posibles expertos por asignatura)" defaultValue={Producto.experto} onChange={(e) => setProductoItem(e)} maxLength="3000" required></textarea>
               <br />
               <textarea name="requerimientos" placeholder="Requerimientos especiales de instalaciones, equipo, software, etc" defaultValue={Producto.requerimientos} onChange={(e) => setProductoItem(e)} maxLength="6000" required></textarea>
-              <div className="radio_ck_section">
+              {/* <div className="radio_ck_section">
                 <h3>Herramientas de validación</h3>
                 <label className="control control-radio">
                   Focus Group con estudiantes y docentes
@@ -411,7 +411,7 @@ export default function Complete() {
                     defaultChecked={VTools.includes('Consultor o asesor externo') ? true : false} />
                   <div className="control_indicator"></div>
                 </label>
-              </div>
+              </div> */}
               <br />
               <textarea name="comentarios" maxLength="5000" placeholder='Comentarios' defaultValue={Producto.comentarios === null || typeof Producto.comentarios[0] === "undefined" ? "" : Producto.comentarios[0].comentarios} onChange={(e) => setProductoItem(e)}></textarea>
             </div>
