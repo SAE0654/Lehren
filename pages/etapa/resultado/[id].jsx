@@ -123,7 +123,6 @@ export default function Complete() {
       .then((res) => {
         setProducto(res.data);
         getToolsSelected(res.data);
-        console.log(res.data)
       });
   }
 
@@ -165,7 +164,8 @@ export default function Complete() {
     await saveFilesToAWS();
     const producto = Producto;
     producto.archivosETP2 = url_files;
-    producto.aprobado = "Aprobado";
+    producto.status = "Validado";
+    producto.etapa = "Aprobado"
     producto.aprobadoPor = session.user.names;
     if (isAnyFieldEmpty(e.target)) { // Si true, campos vacíos
       toast.error("Rellena todos los campos");
@@ -191,8 +191,9 @@ export default function Complete() {
     if (notSaved) return;
     setNotSaved(false);
     const producto = Producto;
-    producto.aprobado = 'Validación';
-    producto.aprobadoPor = 'Mandado a propuesta';
+    producto.status = 'No aprobado';
+    producto.etapa = "Resultado"
+    producto.aprobadoPor = 'Producto no aprobado';
     await axios.put(`${process.env.NEXT_PUBLIC_ENDPOINT}api/productos/` + producto._id, producto, {
       headers: {
         accept: '*/*',
@@ -200,7 +201,7 @@ export default function Complete() {
       }
     }).then(() => {
       toast.info("Producto mandado a propuesta");
-      router.push("/")
+      router.push("/actions/consultas/" + producto.institucion)
     }).catch(() => {
       toast.error("Ocurrió un error inesperado, inténtalo de nuevo")
     });
@@ -281,14 +282,14 @@ export default function Complete() {
 
   return <>
     <Head>
-      <title>{!session ? 'Cargando...' : session.user.username} | Completar datos </title>
+      <title>Etapa de resultados </title>
       <meta name="description" content="Login app" />
       <link rel="icon" href="/favicon.ico" />
     </Head>
     <Layout>
       <div className={styles.main_content}>
         <div className={styles.box_container}>
-          <h1>{Producto.nombre}</h1>
+          <h1>Proceso de resultados</h1>
           <form onSubmit={(e) => updateCourse(e)}>
             <div className={styles.form_group}>
               <h2>Análisis académico</h2>
@@ -474,11 +475,10 @@ export default function Complete() {
                 }
               </div>
               <input type="submit" style={{ top: "100em", bottom: "inherit", left: "5em" }} value="Aprobar este producto" onClick={() => setNotSaved(false)} />
-
             </div>
 
           </form>
-          <button onClick={() => desaprobarProducto()}>Devolver a Validación</button>
+          <button onClick={() => desaprobarProducto()} style={{backgroundColor: "crimson"}}>No aprobar este producto</button>
           <br /><br />
         </div>
       </div>

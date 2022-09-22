@@ -13,6 +13,7 @@ export default function Login() {
   const [correo, setCorreo] = useState('')
   const [password, setPassword] = useState('')
   const [loginError, setLoginError] = useState('')
+  const [logginIn, setlogginIn] = useState(false)
   const router = useRouter()
 
   useEffect(() => {
@@ -25,6 +26,7 @@ export default function Login() {
 
   const handleLogin = (e) => {
     e.preventDefault();
+    setlogginIn(true);
     const toastId = toast.loading('Accediendo...');
     if (correo.trim().length === 0 || password.trim().length === 0) {
       setLoginError("Rellena todos los campos")
@@ -39,6 +41,7 @@ export default function Login() {
       }
     ).then(() => {
       toast.dismiss(toastId);
+      setlogginIn(false)
     });
   }
 
@@ -50,7 +53,8 @@ export default function Login() {
     </Head>
     <Layout>
       <div className={styles.login_container}>
-        <h1 style={{textAlign: "center"}}>ENTORNO DE PRUEBAS</h1>
+        <img src="/img/Logo_Vertical.svg" alt="" />
+        <h1>DESARROLLO</h1>
         <form onSubmit={(e) => handleLogin(e)}>
           <div className={styles.input_box}>
             <AiOutlineUser className={styles.icon} />
@@ -60,7 +64,8 @@ export default function Login() {
                 type="text"
                 onChange={(e) => setCorreo(e.target.value)}
                 required
-                autoComplete="off" />
+                autoComplete="off"
+                 />
               <span className="highlight"></span>
               <span className="bar"></span>
               <label>Correo electrónico</label>
@@ -80,7 +85,7 @@ export default function Login() {
             </div>
           </div>
           <div className="error">{loginError}</div>
-          <input type="submit" hidden />
+          <input type="submit" value="Acceder" className="login_btn" disabled={logginIn} />
         </form>
       </div>
     </Layout>

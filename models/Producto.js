@@ -16,7 +16,8 @@ const productoSchema = new Schema({
     creadoPor: { type: String, required: true },
     lastUpdate: { type: String, default: 'Sin actualizaciones' },
     modifiedBy: { type: String, default: 'Sin actualizaciones' },
-    aprobado: { type: String, default: 'Propuesta'},
+    status: { type: String, default: 'Revisión'},
+    etapa: {type: String, default: 'Propuesta'},
     aprobadoPor: { type: String, default: 'No ha sido aprobado' },
     objetivo: [],
     temas: { type: String, default: null},
@@ -35,7 +36,7 @@ const productoSchema = new Schema({
     archivosETP2: [],
     // Agregados después
     prioridad: { type: String, default: "baja" },
-    consideraciones: { type: String},
+    generalComments: { type: String },
     fechaEjecucion: { type: String},
     fechaEntrega: { type: String }
 })

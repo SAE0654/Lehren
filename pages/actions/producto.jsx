@@ -6,19 +6,16 @@ import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import { acceptedFiles, getTimeStamp, isAnyFieldEmpty, sessionHasExpired } from '../../utils/forms';
-import { Router, useRouter } from 'next/router';
+import { useRouter } from 'next/router';
 import { IoMdClose } from "react-icons/io";
-import Swal from 'sweetalert2/dist/sweetalert2';
 
 const BUCKET_URI = "https://sae-files.s3.amazonaws.com/";
-let onChangeURI = false;
 
 export default function Producto() {
     const [Cursos, setCursos] = useState([]);
     const [Producto, setProducto] = useState({});
     // Función de cambios sin guardar
     const [notSaved, setNotSaved] = useState(false);
-    const [GoToNext, setGoToNext] = useState(false);
     // Función de institución para opciones y validacion tools
     const [Institucion, setInstitucion] = useState(undefined);
     const [Files, setFiles] = useState([]);
@@ -34,53 +31,6 @@ export default function Producto() {
         sessionHasExpired();
     }, []);
 
-
-    useEffect(() => {
-        onChangeURI = false;
-        const beforeRouteHandler = (url) => {
-            if (url === router.asPath) return;
-            if (!onChangeURI) {
-                displaySureMessage(url);
-            }
-            if (!GoToNext) {
-                Router.events.emit('routeChangeError');
-                throw "Operación cancelada";
-            } else {
-                Swal.close()
-            }
-        };
-        if (notSaved) {
-            Router.events.on('routeChangeStart', beforeRouteHandler);
-        } else {
-            Router.events.off('routeChangeStart', beforeRouteHandler);
-        }
-        return () => {
-            Router.events.off('routeChangeStart', beforeRouteHandler);
-        };
-    }, [notSaved, GoToNext]);
-
-    const displaySureMessage = (NextRoute) => {
-        Swal.fire({
-            title: '¿Salir de la página?',
-            text: "Perderás tu trabajo actual",
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33',
-            confirmButtonText: 'Confirmar',
-            cancelButtonText: 'Cancelar'
-        }).then(async (result) => {
-            if (result.isConfirmed) {
-                setGoToNext(true);
-                onChangeURI = true;
-                router.push(NextRoute)
-            } else {
-                onChangeURI = false;
-                setGoToNext(false)
-            }
-        })
-    }
-
     const registerCourse = async (e) => {
         e.preventDefault();
 
@@ -93,8 +43,7 @@ export default function Producto() {
         if (isAnyFieldEmpty(e.target)
             || producto.institucion === 'default'
             || typeof producto.institucion === 'undefined'
-            || typeof producto.areaV === 'undefined'
-            || typeof producto.prioridad === 'undefined') { // Si true, campos vacíos
+            || typeof producto.areaV === 'undefined') { // Si true, campos vacíos
             toast.error("Rellena todos los campos");
             return;
         }
@@ -113,6 +62,7 @@ export default function Producto() {
                 toast.success("Producto creado con éxito");
                 setNotSaved(false);
                 e.target.reset();
+                router.push("/view/validacion/" + res.data._id);
             }).catch(() => {
                 toast.error("Falta información")
             });
@@ -412,21 +362,6 @@ export default function Producto() {
                                     <input type="checkbox" name="RVOE" id="RVOE" onChange={(e) => setProductoItem(e)} />
                                     RVOE
                                 </label>
-                                <div className={styles.prioridad}>
-                                    <span>Prioridad: </span>
-                                    <label className={styles.form_control} style={{ color: "red" }}>
-                                        <input type="radio" name="prioridad" value="alta" style={{ color: "red" }} onChange={(e) => setProductoItem(e)} />
-                                        Alta
-                                    </label>
-                                    <label className={styles.form_control} style={{ color: "yellow" }}>
-                                        <input type="radio" name="prioridad" value="media" style={{ color: "yellow" }} onChange={(e) => setProductoItem(e)} />
-                                        Media
-                                    </label>
-                                    <label className={styles.form_control} style={{ color: "green" }}>
-                                        <input type="radio" name="prioridad" value="baja" style={{ color: "green" }} onChange={(e) => setProductoItem(e)} />
-                                        Baja
-                                    </label>
-                                </div>
                                 <input type="submit" value="Registrar producto" />
                             </div>
                         </div>

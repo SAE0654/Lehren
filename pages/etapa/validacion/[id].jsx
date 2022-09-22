@@ -126,16 +126,17 @@ export default function StepTwo() {
         await saveFilesToAWS();
         const producto = Producto;
         producto.archivosETP2 = url_files;
-        producto.aprobado = "Validación";
-        if (isAnyFieldEmpty(e.target)) { // Si true, campos vacíos
+        producto.status = "Recolección";
+        producto.etapa = "Resultado"
+        if (isAnyFieldEmpty(e.target) || typeof producto.prioridad === 'undefined') { // Si true, campos vacíos
             toast.error("Rellena todos los campos");
             return;
         }
-        if(Objetivos.length <= 0) {
+        if (Objetivos.length <= 0) {
             toast.error("Elige al menos un objetivo");
             return;
         }
-        if(HerramientasValidacion.length <= 0) {
+        if (HerramientasValidacion.length <= 0) {
             toast.error("Elige al menos una herramienta de validación");
             return;
         }
@@ -150,25 +151,14 @@ export default function StepTwo() {
             }).then((res) => {
                 toast.info(res.data.message);
                 e.target.reset();
-                router.push(`${process.env.NEXT_PUBLIC_ENDPOINT}`);
-            }).catch((err) => {
+                router.push(`${process.env.NEXT_PUBLIC_ENDPOINT}/view/resultado/` + id);
+            }).catch(() => {
                 toast.error("Error al completar");
             })
     }
 
     const handleChange = (e) => {
         if (!notSaved) setNotSaved(true);
-        if (e.target.name === "comentarios") {
-            setProducto({
-                ...Producto,
-                [e.target.name]: [{
-                    user: session.user.names,
-                    comentarios: e.target.value,
-                    createdAt: getTimeStamp()
-                }]
-            });
-            return;
-        }
         setProducto({
             ...Producto,
             [e.target.name]: e.target.value
@@ -177,7 +167,7 @@ export default function StepTwo() {
 
     const setObjetivoItem = (e) => {
         let objetivos = Objetivos;
-        if(e.target.checked) {
+        if (e.target.checked) {
             objetivos.push(e.target.value);
         } else {
             objetivos = objetivos.filter((objetivo) => objetivo !== e.target.value);
@@ -198,26 +188,26 @@ export default function StepTwo() {
         <Layout>
             <div className={styles.main_content} style={{ transform: 'translate(0%, -40%)', maxHeight: '1000px' }}>
                 <div className={styles.box_container}>
-                    <h1 className={styles.t_container} style={{ marginTop: "10em" }}>Etapa de validación</h1>
-                    <img src="/img/LOGO2.png" alt="" />
-                    <div className={styles.info_container}>
-                        <div className={styles.info_box_step2}>
-                            <h2 className={styles.title}>Datos generales</h2>
-                            <p><b>Nombre del producto</b></p>
-                            <p className={styles.right_border}>{Producto.nombre}</p>
-                            <p className={styles.last_row}><b>Prioridad:</b></p>
-                            <p className={styles.right_bottom_border}>{Producto.prioridad ? Producto.prioridad : "baja"}</p>
-                            <p><b>Institución</b></p>
-                            <p className={styles.right_border}>{Producto.institucion}</p>
-                            <p><b>Oferta educativa</b></p>
-                            <p className={styles.right_border}>{Producto.tipo}</p>
-                            <p className={styles.last_row}><b>Modalidad</b></p>
-                            <p className={styles.right_bottom_border}>{Producto.modalidad}</p>
-                        </div>
-                    </div>
-                    <br />
+                    <h1 className={styles.t_container} style={{ marginTop: "10em" }}>Proceso de validación</h1>
                     <form style={{ flexDirection: 'column', alignItems: 'center' }} onSubmit={(e) => uploadF2(e)}>
                         <div className={styles.form_group} style={{ width: '100%' }}>
+                        <div className={styles.container_footer}>
+                            <div className={styles.prioridad} style={{ justifyContent: "center" }}>
+                                <span>Prioridad: </span>
+                                <label className={styles.form_control} style={{ color: "red" }}>
+                                    <input type="radio" name="prioridad" value="alta" style={{ color: "red" }} onChange={(e) => handleChange(e)} />
+                                    Alta
+                                </label>
+                                <label className={styles.form_control} style={{ color: "yellow" }}>
+                                    <input type="radio" name="prioridad" value="media" style={{ color: "yellow" }} onChange={(e) => handleChange(e)} />
+                                    Media
+                                </label>
+                                <label className={styles.form_control} style={{ color: "green" }}>
+                                    <input type="radio" name="prioridad" value="baja" style={{ color: "green" }} onChange={(e) => handleChange(e)} />
+                                    Baja
+                                </label>
+                            </div>
+                        </div>
                             <div className="radio_ck_section">
                                 <h3>Objetivos</h3>
                                 <label className="control control-radio">
@@ -361,9 +351,9 @@ export default function StepTwo() {
                                     <div className="control_indicator"></div>
                                 </label>
                             </div>
-                            <ValidationToolsForm HerramientasValidacion={HerramientasValidacion} setHerramientasValidacion={setHerramientasValidacion}/>
+                            <ValidationToolsForm HerramientasValidacion={HerramientasValidacion} setHerramientasValidacion={setHerramientasValidacion} />
                             <br />
-                            <textarea name="consideraciones" placeholder="Comentarios o consideraciones" maxLength="10000" required onChange={(e) => handleChange(e)} style={{ marginTop: '2em' }}></textarea>
+                            <textarea name="generalComments" placeholder="Comentarios generales" maxLength="10000" required onChange={(e) => handleChange(e)} style={{ marginTop: '2em' }}></textarea>
                             <input type="text" name="fechaEjecucion" placeholder="Fecha de ejecución de la actividad" required onChange={(e) => handleChange(e)} />
                             <input type="text" name="fechaEntrega" placeholder="Fecha de entrega de resultados" required onChange={(e) => handleChange(e)} />
                         </div>
@@ -409,7 +399,7 @@ export default function StepTwo() {
                                     ))
                             }
                         </div>
-                        <input type="submit" value="Mandar a validación" />
+                        <input type="submit" value="Guardar formulario" />
                     </form>
                 </div>
             </div>

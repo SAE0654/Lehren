@@ -283,8 +283,8 @@ export default function Consultas() {
                                         <thead>
                                             <tr>
                                                 <th>No. </th>
-                                                <th className="medium">Acciones </th>
-                                                {TempProductos[0].aprobado ? <th>Status</th> : null}
+                                                <th className="medium">Etapa</th>
+                                                {TempProductos[0].status ? <th>Estatus</th> : null}
                                                 {TempProductos[0].nombre ? <th>Nombre del producto</th> : null}
                                                 {TempProductos[0].tipo ? <th>Tipo de oferta</th> : null}
                                                 {TempProductos[0].modalidad ? <th>Modalidad</th> : null}
@@ -306,7 +306,7 @@ export default function Consultas() {
                                                         <td>{(lastPage - pageSize) + index + 1}</td>
                                                         <td>
                                                             <div className={styles.action_by_id}>
-                                                                <NavLink href={"/view/producto/" + producto._id} exact>
+                                                                <NavLink href={"/view/aprobado/" + producto._id} exact>
                                                                     <button>
                                                                         <AiOutlineEye />
                                                                     </button>
@@ -322,25 +322,33 @@ export default function Consultas() {
                                                                 </button>
                                                                 <Comment comments={producto.comentarios} />
                                                                 {
-                                                                    producto.aprobado === 'Propuesta' && session.user.rol === "administrador" ?
-                                                                        <div className={styles.etapa2}>
-                                                                            <NavLink href={"/actions/validacion/" + producto._id} exact>
-                                                                                Etapa Validación
-                                                                            </NavLink>
-                                                                        </div>
-                                                                        : producto.aprobado === "Validación" ?
-                                                                            <div className={styles.etapa2}>
-                                                                                <NavLink href={"/actions/pendiente/" + producto._id} exact>
-                                                                                    Etapa Pendiente
+                                                                    session.user.rol === "administrador" ?
+                                                                        producto.etapa === "Aprobado" ?
+                                                                            <div className={styles.etapa2} style={{backgroundColor: "green"}}>
+                                                                                <NavLink
+                                                                                    href={"/view/aprobado/" + producto._id}
+                                                                                    exact>
+                                                                                    {producto.etapa}
                                                                                 </NavLink>
                                                                             </div>
-                                                                            : <div className={styles.etapa3} id="aprobado">{producto.aprobado}</div>
+                                                                            :
+                                                                            <div className={styles.etapa2}>
+                                                                                <NavLink
+                                                                                    href={
+                                                                                        `/etapa/${producto.etapa === "Propuesta" || producto.etapa === "Validación" || producto.etapa === "Pendiente"
+                                                                                            ? "validacion" :
+                                                                                            producto.etapa.toLowerCase()}/` + producto._id}
+                                                                                    exact>
+                                                                                    {producto.etapa}
+                                                                                </NavLink>
+                                                                            </div>
+                                                                        : null
 
 
                                                                 }
                                                             </div>
                                                         </td>
-                                                        {producto.aprobado ? <td className="short"> {producto.aprobado} </td> : null}
+                                                        {producto.status ? <td className="short"> {producto.status} </td> : null}
                                                         {producto.nombre ? <td className="long"> {producto.nombre} </td> : null}
                                                         {producto.tipo ? <td className="short">{producto.tipo}</td> : null}
                                                         {producto.modalidad ? <td className="medium">{producto.modalidad}</td> : null}
