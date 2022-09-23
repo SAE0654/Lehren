@@ -1,4 +1,4 @@
-import { Router, useRouter } from 'next/router'
+import { useRouter } from 'next/router'
 import { getSession, useSession } from "next-auth/react";
 import { useEffect, useState } from 'react'
 import axios from 'axios';
@@ -8,7 +8,6 @@ import styles from "../../../styles/pages/ventas.module.scss";
 import { acceptedFiles, isAnyFieldEmpty, sessionHasExpired } from '../../../utils/forms';
 import { IoMdClose } from "react-icons/io";
 import { toast } from 'react-toastify';
-import Swal from 'sweetalert2/dist/sweetalert2';
 import ValidationToolsForm from '../../../components/forms/validation_tools';
 
 const BUCKET_URI = "https://sae-files.s3.amazonaws.com/";
@@ -52,7 +51,6 @@ export default function StepTwo() {
     }
 
     const verifyFiles = (e) => {
-        console.log(e.target.files[0].size / 1024 / 1024 + "MiB")
         let files = e.target.files;
         let file = [];
         let hasTheSameName = false;
@@ -173,6 +171,19 @@ export default function StepTwo() {
             objetivos = objetivos.filter((objetivo) => objetivo !== e.target.value);
         }
         setObjetivos(objetivos);
+    }
+
+    const getMinAndMaxDate = (type) => {
+        const date = new Date();
+        const year = date.getFullYear();
+        const month = (date.getMonth() + 1) > 9 ? date.getMonth() + 1 : "0" + (date.getMonth() + 1);
+        const day = date.getDate();
+        if(type === "max") {
+            return (year + 1) + "-" + month + "-" + day;
+        }
+        if(type === "min") {
+            return (year - 1) + "-" + month + "-" + day;
+        }
     }
 
     if (!Producto) {
@@ -354,8 +365,12 @@ export default function StepTwo() {
                             <ValidationToolsForm HerramientasValidacion={HerramientasValidacion} setHerramientasValidacion={setHerramientasValidacion} />
                             <br />
                             <textarea name="generalComments" placeholder="Comentarios generales" maxLength="10000" required onChange={(e) => handleChange(e)} style={{ marginTop: '2em' }}></textarea>
-                            <input type="text" name="fechaEjecucion" placeholder="Fecha de ejecución de la actividad" required onChange={(e) => handleChange(e)} />
-                            <input type="text" name="fechaEntrega" placeholder="Fecha de entrega de resultados" required onChange={(e) => handleChange(e)} />
+                            <br />
+                            <label htmlFor="fechaEj" style={{color: "#fff"}}>Fecha de ejecución de la actividad: </label>
+                            <input type="date" name="fechaEjecucion" id="fechaEj" required onChange={(e) => handleChange(e)} min={getMinAndMaxDate("min")} max={getMinAndMaxDate("max")} />
+                            <br />
+                            <label htmlFor="fechaEn" style={{color: "#fff"}}>Fecha de entrega de resultados: </label>
+                            <input type="date" name="fechaEntrega" id="fechaEn" required onChange={(e) => handleChange(e)} min={getMinAndMaxDate("min")} max={getMinAndMaxDate("max")} />
                         </div>
                         <div className={styles.files_zone}>
                             <label className={styles.form_files}>

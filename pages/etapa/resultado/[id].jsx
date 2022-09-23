@@ -19,26 +19,24 @@ export default function Complete() {
   // Función de cambios sin guardar
   const [notSaved, setNotSaved] = useState(false);
   const [GoToNext, setGoToNext] = useState(false);
-  const [VTools, setVTools] = useState([]);
-  const [SelectedTools, setSelectedTools] = useState([]);
   const [Files, setFiles] = useState([]);
   const { id } = router.query;
   const { data: session } = useSession();
 
   let url_files = [];
 
-  let herramientas = [
-    "Focus Group con estudiantes y docentes",
-    "Encuestas de retroalimentación de estudiantes",
-    "Encuestas de ex alumnos",
-    "Piloto de un prototipo",
-    "Encuestas en redes sociales",
-    "Sesiones con expertos de la industria",
-    "Herramientas digitales (Google Trends)",
-    "Master research",
-    "Bitácora social",
-    "Estudio de mercado con un tercero",
-    "Consultor o asesor externo"]
+  // let herramientas = [
+  //   "Focus Group con estudiantes y docentes",
+  //   "Encuestas de retroalimentación de estudiantes",
+  //   "Encuestas de ex alumnos",
+  //   "Piloto de un prototipo",
+  //   "Encuestas en redes sociales",
+  //   "Sesiones con expertos de la industria",
+  //   "Herramientas digitales (Google Trends)",
+  //   "Master research",
+  //   "Bitácora social",
+  //   "Estudio de mercado con un tercero",
+  //   "Consultor o asesor externo"]
 
   useEffect(() => {
     getId();
@@ -76,39 +74,39 @@ export default function Complete() {
 
   const displaySureMessage = (NextRoute) => {
     Swal.fire({
-        title: '¿Salir de la página?',
-        text: "Perderás tu trabajo actual",
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonColor: '#3085d6',
-        cancelButtonColor: '#d33',
-        confirmButtonText: 'Confirmar',
-        cancelButtonText: 'Cancelar'
+      title: '¿Salir de la página?',
+      text: "Perderás tu trabajo actual",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Confirmar',
+      cancelButtonText: 'Cancelar'
     }).then(async (result) => {
-        if (result.isConfirmed) {
-            setGoToNext(true);
-            onChangeURI = true;
-            router.push(NextRoute)
-        } else {
-            onChangeURI = false;
-            setGoToNext(false)
-        }
-    })
-}
-
-  const getToolsSelected = (data) => {
-    let indexes = '';
-
-    if (!data.instrumentoValidacion) return;
-    data.instrumentoValidacion.map(tool => {
-      const _indice = herramientas.indexOf(tool);
-      setVTools(data.instrumentoValidacion)
-      if (_indice >= 0) {
-        indexes += ' ' + _indice;
+      if (result.isConfirmed) {
+        setGoToNext(true);
+        onChangeURI = true;
+        router.push(NextRoute)
+      } else {
+        onChangeURI = false;
+        setGoToNext(false)
       }
     })
-    setSelectedTools(indexes);
   }
+
+  // const getToolsSelected = (data) => {
+  //   let indexes = '';
+
+  //   if (!data.instrumentoValidacion) return;
+  //   data.instrumentoValidacion.map(tool => {
+  //     const _indice = herramientas.indexOf(tool);
+  //     setVTools(data.instrumentoValidacion)
+  //     if (_indice >= 0) {
+  //       indexes += ' ' + _indice;
+  //     }
+  //   })
+  //   setSelectedTools(indexes);
+  // }
 
 
   const getId = () => {
@@ -128,20 +126,6 @@ export default function Complete() {
 
   const setProductoItem = (e) => {
     if (!notSaved) setNotSaved(true);
-    const tools = VTools;
-    if (e.target.name === "instrumentoValidacion") {
-      if (e.target.checked) {
-        tools.push(e.target.value);
-        setProducto({
-          ...Producto,
-          [e.target.name]: tools
-        });
-      } else {
-        const _index = tools.indexOf(e.target.value)
-        tools.splice(_index, 1);
-      }
-      return;
-    }
     if (e.target.name === "comentarios") {
       setProducto({
         ...Producto,
@@ -165,11 +149,18 @@ export default function Complete() {
     const producto = Producto;
     producto.archivosETP2 = url_files;
     producto.status = "Validado";
-    producto.etapa = "Aprobado"
+    producto.etapa = "Aprobado";
     producto.aprobadoPor = session.user.names;
     if (isAnyFieldEmpty(e.target)) { // Si true, campos vacíos
       toast.error("Rellena todos los campos");
       return;
+    }
+    if(producto.status === "No aprobado") {
+      producto.comentarios = [{
+        user: session.user.names,
+        comentarios: "Este producto fue aprobado",
+        createdAt: getTimeStamp()
+      }];
     }
     await axios.put(`${process.env.NEXT_PUBLIC_ENDPOINT}api/productos/` + id, producto,
       {
@@ -188,23 +179,46 @@ export default function Complete() {
   }
 
   const desaprobarProducto = async () => {
-    if (notSaved) return;
     setNotSaved(false);
-    const producto = Producto;
-    producto.status = 'No aprobado';
-    producto.etapa = "Resultado"
-    producto.aprobadoPor = 'Producto no aprobado';
-    await axios.put(`${process.env.NEXT_PUBLIC_ENDPOINT}api/productos/` + producto._id, producto, {
-      headers: {
-        accept: '*/*',
-        'Content-Type': 'application/json'
+    await Swal.fire({
+      input: 'textarea',
+      inputLabel: "Explica por qué el producto no fue aprobado",
+      inputValue: "",
+      inputPlaceholder: "Comentario...",
+      inputAttributes: {
+        'aria-label': 'Escribe tu comentario aquí',
+        maxlength: 500
+      },
+      showCancelButton: true,
+      confirmButtonText: 'Continuar',
+      cancelButtonText: 'Cancelar',
+    }).then(async (res) => {
+      if (res.isDismissed) return;
+      if (res.value.trim().length === 0 && res.isConfirmed) {
+        toast.warn("El comentario no puede estar vacío");
+        return;
       }
-    }).then(() => {
-      toast.info("Producto mandado a propuesta");
-      router.push("/actions/consultas/" + producto.institucion)
-    }).catch(() => {
-      toast.error("Ocurrió un error inesperado, inténtalo de nuevo")
-    });
+      const producto = Producto;
+      producto.status = 'No aprobado';
+      producto.etapa = "Resultado"
+      producto.aprobadoPor = 'Producto no aprobado';
+      producto.comentarios = [{
+        user: session.user.names,
+        comentarios: "NO APROBADO: " + res.value,
+        createdAt: getTimeStamp()
+      }];
+      await axios.put(`${process.env.NEXT_PUBLIC_ENDPOINT}api/productos/` + producto._id, producto, {
+        headers: {
+          accept: '*/*',
+          'Content-Type': 'application/json'
+        }
+      }).then(() => {
+        toast.info("Producto mandado a propuesta");
+        router.push("/actions/consultas/" + producto.institucion)
+      }).catch(() => {
+        toast.error("Ocurrió un error inesperado, inténtalo de nuevo")
+      });
+    })
   }
 
   const verifyFiles = (e) => {
@@ -478,7 +492,12 @@ export default function Complete() {
             </div>
 
           </form>
-          <button onClick={() => desaprobarProducto()} style={{backgroundColor: "crimson"}}>No aprobar este producto</button>
+          {
+            Producto.status === "No aprobado" ? 
+            <button style={{ backgroundColor: "crimson", opacity: "0.7", cursor: "not-allowed" }}>Este producto ya fue desaprobado</button>
+            :
+            <button onClick={() => desaprobarProducto()} style={{ backgroundColor: "crimson" }}>No aprobar este producto</button>
+          }
           <br /><br />
         </div>
       </div>
