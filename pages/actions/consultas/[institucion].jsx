@@ -107,7 +107,7 @@ export default function Consultas() {
             setRestaurar(false);
             return;
         }
-        omitir.push("aprobado");
+        omitir.push("etapa");
         Productos.map((student) => {
             temp.push(omit(student, omitir));
         });
