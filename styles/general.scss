@@ -1,3 +1,4 @@
+
 @use "util/mixins" as mix;
 @use "util/colors" as color;
 @forward "util/fonts";
@@ -594,3 +595,14 @@ button:disabled {
         cursor: not-allowed;
     }
 }
+<<<<<<< HEAD
+=======
+
+input[type="file"] {
+    display: none !important;
+}
+
+input {
+    color-scheme: dark;
+}
+>>>>>>> dev_steem

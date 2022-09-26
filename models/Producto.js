@@ -16,9 +16,10 @@ const productoSchema = new Schema({
     creadoPor: { type: String, required: true },
     lastUpdate: { type: String, default: 'Sin actualizaciones' },
     modifiedBy: { type: String, default: 'Sin actualizaciones' },
-    aprobado: { type: String, default: 'off'},
+    status: { type: String, default: 'Revisión'},
+    etapa: {type: String, default: 'Propuesta'},
     aprobadoPor: { type: String, default: 'No ha sido aprobado' },
-    objetivo: { type: String, default: null},
+    objetivo: [],
     temas: { type: String, default: null},
     titulacion: { type: String, default: null},
     experto: { type: String, default: null },
@@ -32,7 +33,12 @@ const productoSchema = new Schema({
     ROI: { type: String, default: null },
     comentarios: [],
     archivosETP1: [],
-    archivosETP2: []
+    archivosETP2: [],
+    // Agregados después
+    prioridad: { type: String, default: "baja" },
+    generalComments: { type: String },
+    fechaEjecucion: { type: String},
+    fechaEntrega: { type: String }
 })
 
 const Producto = models.Producto || model('Producto', productoSchema);

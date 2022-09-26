@@ -5,25 +5,22 @@ import Layout from '../../components/Layout';
 import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
-import { acceptedFiles, isAnyFieldEmpty, sessionHasExpired } from '../../utils/forms';
-import { Router, useRouter } from 'next/router';
+import { acceptedFiles, getTimeStamp, isAnyFieldEmpty, sessionHasExpired } from '../../utils/forms';
+import { useRouter } from 'next/router';
 import { IoMdClose } from "react-icons/io";
 
-const BUCKET_URI = "https://sae-files.s3.amazonaws.com/"
+const BUCKET_URI = "https://sae-files.s3.amazonaws.com/";
 
 export default function Producto() {
     const [Cursos, setCursos] = useState([]);
     const [Producto, setProducto] = useState({});
     // Función de cambios sin guardar
     const [notSaved, setNotSaved] = useState(false);
-    const [OnChangeRoute, setOnChangeRoute] = useState(false);
-    const [NextRoute, setNextRoute] = useState(null);
-    const [GoToNext, setGoToNext] = useState(false);
     // Función de institución para opciones y validacion tools
     const [Institucion, setInstitucion] = useState(undefined);
     const [Files, setFiles] = useState([]);
 
-    const Route = useRouter();
+    const router = useRouter();
     const { data: session } = useSession();
 
     let url_files = [];
@@ -34,36 +31,13 @@ export default function Producto() {
         sessionHasExpired();
     }, []);
 
-
-    useEffect(() => {
-        const beforeRouteHandler = (url) => {
-            if (url === Route.asPath) return;
-            setOnChangeRoute(true);
-            setNextRoute(url);
-            if (!GoToNext) {
-                Router.events.emit('routeChangeError');
-                throw "Operación cancelada";
-            }
-        };
-        if (notSaved) {
-            Router.events.on('routeChangeStart', beforeRouteHandler);
-        } else {
-            Router.events.off('routeChangeStart', beforeRouteHandler);
-        }
-        console.log("RECARGA")
-        return () => {
-            Router.events.off('routeChangeStart', beforeRouteHandler);
-        };
-    }, [notSaved, GoToNext]);
-
-
     const registerCourse = async (e) => {
         e.preventDefault();
 
         await saveFilesToAWS();
 
         const producto = Producto;
-        producto = { ...producto, creadoPor: session.user.names };
+        producto = { ...producto, creadoPor: session.user.names + ", el " + getTimeStamp() };
         producto = { ...producto, RVOE: producto.RVOE ? producto.RVOE : 'off' };
         producto = { ...producto, archivosETP1: url_files }
         if (isAnyFieldEmpty(e.target)
@@ -88,6 +62,7 @@ export default function Producto() {
                 toast.success("Producto creado con éxito");
                 setNotSaved(false);
                 e.target.reset();
+                router.push("/view/validacion/" + res.data._id);
             }).catch(() => {
                 toast.error("Falta información")
             });
@@ -107,7 +82,6 @@ export default function Producto() {
     }
 
     const verifyFiles = (e) => {
-        console.log(e.target.files[0].size / 1024 / 1024 + "MiB")
         let files = e.target.files;
         let file = [];
         let hasTheSameName = false;
@@ -182,14 +156,6 @@ export default function Producto() {
             <link rel="icon" href="/favicon.ico" />
         </Head>
         <Layout>
-            <div className={OnChangeRoute ? "wrapper_bg" : "wrapper_bg hide"} aria-hidden="true"></div>
-            <div className={OnChangeRoute ? "window_confirm" : "window_confirm hide"}>
-                <h1 className="mini">¿Seguro que quieres salir? Perderás tu trabajo actual</h1>
-                <div className="cancel_continue">
-                    <button onClick={() => (setGoToNext(true), Route.push(NextRoute))}>Continuar</button>
-                    <button onClick={() => setOnChangeRoute(false)}>Cancelar</button>
-                </div>
-            </div>
             <div className={styles.main_content}>
                 <h1>Genera un producto</h1>
                 <div className={styles.box_container}>
@@ -231,6 +197,11 @@ export default function Producto() {
                                 <label className="control control-radio">
                                     Curso
                                     <input type="radio" name="tipo" value="Curso" onChange={(e) => setProductoItem(e)} />
+                                    <div className="control_indicator"></div>
+                                </label>
+                                <label className="control control-radio">
+                                    Certificado
+                                    <input type="radio" name="tipo" value="Certificado" onChange={(e) => setProductoItem(e)} />
                                     <div className="control_indicator"></div>
                                 </label>
                             </div>
@@ -393,7 +364,6 @@ export default function Producto() {
                                 </label>
                                 <input type="submit" value="Registrar producto" />
                             </div>
-
                         </div>
                     </form>
                 </div>

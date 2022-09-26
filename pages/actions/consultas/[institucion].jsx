@@ -9,7 +9,7 @@ import { BsSearch } from "react-icons/bs";
 import { toast } from 'react-toastify';
 import { getTimeStamp, sessionHasExpired } from '../../../utils/forms';
 import { NavLink } from '../../../components/NavLink';
-import { Router, useRouter } from 'next/router';
+import { useRouter } from 'next/router';
 import Pagination from '../../../components/Pagination';
 import { MdAddComment } from 'react-icons/md';
 import Swal from 'sweetalert2/dist/sweetalert2';
@@ -24,18 +24,8 @@ export default function Consultas() {
     const [Query, setQuery] = useState('');
     const [BoxFilter, setBoxFilter] = useState(false);
     const [Restaurar, setRestaurar] = useState(false);
-    const [Deleting, setDeleting] = useState(false);
-    const [Id, setId] = useState(null);
-    const [Aprobando, setAprobando] = useState(false);
     const [Loading, setLoading] = useState(true);
     // Monitor
-    const [CurrentIndex, setCurrentIndex] = useState(null);
-    const [EditInformation, setEditInformation] = useState([]);
-    const [notSaved, setNotSaved] = useState(false);
-    const [OnChangeRoute, setOnChangeRoute] = useState(false);
-    const [NextRoute, setNextRoute] = useState(null);
-    const [GoToNext, setGoToNext] = useState(false);
-
     const [currentPage, setCurrentPage] = useState(1);
     const [lastPage, setlastPage] = useState(1);
     const Route = useRouter();
@@ -52,26 +42,6 @@ export default function Consultas() {
         document.querySelector("body").classList.add("consultas_bg");
         sessionHasExpired();
     }, []);
-
-    useEffect(() => {
-        const beforeRouteHandler = (url) => {
-            if (url === Route.asPath) return;
-            setOnChangeRoute(true);
-            setNextRoute(url);
-            if (!GoToNext) {
-                Router.events.emit('routeChangeError');
-                throw "Operación cancelada";
-            }
-        };
-        if (notSaved) {
-            Router.events.on('routeChangeStart', beforeRouteHandler);
-        } else {
-            Router.events.off('routeChangeStart', beforeRouteHandler);
-        }
-        return () => {
-            Router.events.off('routeChangeStart', beforeRouteHandler);
-        };
-    }, [notSaved, GoToNext]);
 
     useEffect(() => {
         getProductos();
@@ -93,7 +63,6 @@ export default function Consultas() {
         setLoading(true);
         await axios(`${process.env.NEXT_PUBLIC_ENDPOINT}api/productos/` + institucion).then((res) => {
             setProductos(res.data);
-            setEditInformation(res.data);
             setTempProductos(res.data);
             setLoading(false);
             computePages(res.data);
@@ -138,7 +107,7 @@ export default function Consultas() {
             setRestaurar(false);
             return;
         }
-        omitir.push("aprobado");
+        omitir.push("etapa");
         Productos.map((student) => {
             temp.push(omit(student, omitir));
         });
@@ -161,107 +130,29 @@ export default function Consultas() {
         ), {})
     );
 
-    // Funciones de editado
-
-    const editFieldById = (index) => {
-        setCurrentIndex(index);
-    }
-
-    const restoreFieldInfo = (id, index) => {
-        setCurrentIndex(null);
-        const inputs = document.getElementsByClassName(id);
-        console.log(inputs.length)
-        for (let i = 0; i < inputs.length; i++) {
-            inputs[i].value = TempProductos[index][inputs[i].name];
-        }
-        setNotSaved(false);
-    }
-
-    const saveInformationLocally = (index) => {
-        const product = Productos[index];
-        if (EditInformation.length <= 0) {
-            toast.info("Ningún dato se modificó")
-            return;
-        }
-        for (let j in product) {
-            if (product[j] !== EditInformation[j]) {
-                product[j] = typeof EditInformation[j] === 'undefined' ? product[j] : EditInformation[j];
+    const deleteProduct = async (Id) => {
+        Swal.fire({
+            title: '¿Borrar producto?',
+            text: "Esta acción no se puede deshacer",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Eliminar',
+            cancelButtonText: 'Cancelar'
+        }).then(async (result) => {
+            if (result.isConfirmed) {
+                await axios.delete(`${process.env.NEXT_PUBLIC_ENDPOINT}api/productos/` + Id)
+                    .then(() => {
+                        Swal.fire(
+                            'Eliminado',
+                            'Producto borrado con éxito',
+                            'success'
+                        )
+                        getProductos();
+                    });
             }
-        }
-        const newModified = Productos;
-        newModified[index] = product;
-
-        setProductos(newModified);
-        computePages(newModified)
-        saveInformationToServer(newModified, index);
-        setNotSaved(false);
-    }
-
-    const saveInformationToServer = async (data, index) => {
-        let payload = data;
-        payload[index] = {
-            ...payload[index],
-            lastUpdate: getTimeStamp(),
-            modifiedBy: session.user.names
-        }
-        if (data[index].aprobado === 'validacion') {
-            payload[index] = {
-                ...payload[index],
-                aprobadoPor: session.user.email
-            }
-        } else {
-            payload[index] = {
-                ...payload[index],
-                aprobadoPor: 'No ha sido aprobado'
-            }
-        }
-        const loadingId = toast.loading("Actualizando...");
-        await axios.put(`${process.env.NEXT_PUBLIC_ENDPOINT}api/productos/` + payload[index]._id, payload[index])
-            .then(() => {
-                toast.success("Datos guardados");
-                toast.dismiss(loadingId);
-            })
-        setEditInformation([]);
-        setCurrentIndex(null);
-    }
-
-    const handleChange = (e) => {
-        if (!notSaved) setNotSaved(true);
-        setEditInformation({
-            ...EditInformation,
-            [e.target.name]: e.target.value
-        });
-        console.log(e.target.value)
-    }
-
-    const deleteProduct = async () => {
-        await axios.delete(`${process.env.NEXT_PUBLIC_ENDPOINT}api/productos/` + Id)
-            .then(() => {
-                toast.success("Producto eliminado");
-                getProductos();
-            });
-        setId(null);
-        setDeleting(false);
-        document.querySelector("body").style.overflow = "auto";
-        setNotSaved(false);
-    }
-
-    const aprobarProduct = async (id) => {
-        const payload = TempProductos.filter((item) => item._id === id)[0];
-        payload.aprobado = payload.aprobado === 'validacion' ? 'off' : 'validacion';
-        payload.aprobadoPor = session.user.names;
-        payload.modifiedBy = session.user.names;
-        payload.lastUpdate = getTimeStamp();
-        const loadingId = toast.loading("Aprobando...");
-        await axios.put(`${process.env.NEXT_PUBLIC_ENDPOINT}api/productos/` + id, payload)
-            .then(() => {
-                toast.success("Datos guardados");
-                toast.dismiss(loadingId);
-            });
-        setId(null);
-        setAprobando(false);
-        document.querySelector("body").style.overflow = "auto";
-        getProductos();
+        })
     }
 
     const displayCommentSection = async (pId, commentario) => {
@@ -318,28 +209,6 @@ export default function Consultas() {
                         <NavLink href="/actions/producto">Carga tu primer producto</NavLink>
                     </div> :
                     <>
-                        <div className={Deleting ? "window_confirm" : "window_confirm hide"}>
-                            <h1>¿Eliminar producto?</h1>
-                            <div className="cancel_continue">
-                                <button onClick={() => (deleteProduct(Id))}>Continuar</button>
-                                <button onClick={() => ((setDeleting(false), setId(null), document.querySelector("body").style.overflow = "auto"))}>Cancelar</button>
-                            </div>
-                        </div>
-                        <div className={Aprobando ? "window_confirm" : "window_confirm hide"}>
-                            <h1>¿Mandar a validación?</h1>
-                            <div className="cancel_continue">
-                                <button onClick={() => aprobarProduct(Id)}>Aprobar</button>
-                                <button onClick={() => ((setAprobando(false), setId(null), document.querySelector("body").style.overflow = "auto"))}>Cancelar</button>
-                            </div>
-                        </div>
-                        <div className={OnChangeRoute ? "window_confirm" : "window_confirm hide"}>
-                            <h1 className="mini">¿Seguro que quieres salir? Perderás tu trabajo actual</h1>
-                            <div className="cancel_continue">
-                                <button onClick={() => (setGoToNext(true), Route.push(NextRoute))}>Continuar</button>
-                                <button onClick={() => setOnChangeRoute(false)}>Cancelar</button>
-                            </div>
-                        </div>
-                        <div className={Deleting || Aprobando || OnChangeRoute ? "wrapper_bg" : "wrapper_bg hide"} aria-hidden="true"></div>
                         <div className={styles.main_content}>
                             <h1>Consultas</h1>
                             <div className={styles.action_bar}>
@@ -414,7 +283,8 @@ export default function Consultas() {
                                         <thead>
                                             <tr>
                                                 <th>No. </th>
-                                                <th>Acciones </th>
+                                                <th className="medium">Etapa</th>
+                                                {TempProductos[0].status ? <th>Estatus</th> : null}
                                                 {TempProductos[0].nombre ? <th>Nombre del producto</th> : null}
                                                 {TempProductos[0].tipo ? <th>Tipo de oferta</th> : null}
                                                 {TempProductos[0].modalidad ? <th>Modalidad</th> : null}
@@ -423,7 +293,6 @@ export default function Consultas() {
                                                 {TempProductos[0].razon ? <th>Razón</th> : null}
                                                 {TempProductos[0].poblacionObj ? <th>Población objetivo</th> : null}
                                                 {TempProductos[0].descripcion ? <th>Descripción</th> : null}
-                                                {TempProductos[0].RVOE ? <th>RVOE</th> : null}
                                                 {TempProductos[0].institucion ? <th>Institución</th> : null}
                                                 {TempProductos[0].creadoPor ? <th>Creado por</th> : null}
                                                 {TempProductos[0].aprobadoPor ? <th>Aprobado por</th> : null}
@@ -433,20 +302,17 @@ export default function Consultas() {
                                         <tbody>
                                             {
                                                 TempProductos.map((producto, index) => (
-                                                    <tr key={index} className={index === CurrentIndex ? 'currentEditingTr' : null}>
+                                                    <tr key={index}>
                                                         <td>{(lastPage - pageSize) + index + 1}</td>
                                                         <td>
-                                                            {index !== CurrentIndex ? <div className={styles.action_by_id + " action_edit"}>
-                                                                <NavLink href={"/view/producto/" + producto._id} exact>
+                                                            <div className={styles.action_by_id}>
+                                                                <NavLink href={"/view/aprobado/" + producto._id} exact>
                                                                     <button>
                                                                         <AiOutlineEye />
                                                                     </button>
                                                                 </NavLink>
-                                                                <button onClick={() => editFieldById(index)}>
-                                                                    <AiTwotoneEdit />
-                                                                </button>
                                                                 <button
-                                                                    onClick={() => (setDeleting(true), setId(producto._id), document.querySelector("body").style.overflow = "hidden")}>
+                                                                    onClick={() => deleteProduct(producto._id)}>
                                                                     <AiFillDelete />
                                                                 </button>
                                                                 <button
@@ -456,173 +322,63 @@ export default function Consultas() {
                                                                 </button>
                                                                 <Comment comments={producto.comentarios} />
                                                                 {
-                                                                    producto.aprobado === 'validacion' ?
-                                                                        <div className={styles.etapa2}>
-                                                                            <NavLink href={"/actions/complete/" + producto._id} exact>
-                                                                                Validación
-                                                                            </NavLink>
-                                                                        </div>
-                                                                        :
-                                                                        // Segunda verificacion de administrador
-                                                                        session.user.rol === "administrador" && producto.aprobado === 'off' ?
-                                                                            <div className={styles.etapa2} id="aprobado" onClick={() => (setAprobando(true),
-                                                                                setId(producto._id),
-                                                                                document.querySelector("body").style.overflow = "hidden")}>Propuesta</div>
-                                                                            : producto.aprobado === "aprobado"
-                                                                                ? <NavLink href={"/actions/complete/" + producto._id} exact><div className={styles.etapa3} id="aprobado">Aprobado</div></NavLink>
-                                                                                : <div className={styles.etapa2} id="aprobado">No aprobado</div>
-
-                                                                }
-                                                            </div> :
-                                                                <>
-                                                                    <button onClick={() => saveInformationLocally((lastPage - pageSize) + index)} className="saveIcon">
-                                                                        <AiOutlineSave />
-                                                                    </button>
-                                                                    <button onClick={() => (restoreFieldInfo(producto._id, index))} className="closeIcon">
-                                                                        <AiOutlineClose />
-                                                                    </button>
-                                                                </>
-                                                            }
-                                                        </td>
-                                                        {producto.nombre ?
-                                                            <td className="long">
-                                                                <textarea
-                                                                    name="nombre"
-                                                                    className={producto._id}
-                                                                    placeholder={producto.nombre}
-                                                                    disabled={index !== CurrentIndex ? true : false}
-                                                                    autoComplete="off"
-                                                                    onChange={(e) => handleChange(e)}></textarea>
-
-                                                            </td> : null}
-                                                        {producto.tipo ?
-                                                            <td className="short">
-                                                                {
-                                                                    CurrentIndex === index ?
-                                                                        <select name="tipo" className={producto._id} defaultValue={producto.tipo} disabled={index !== CurrentIndex ? true : false} onChange={(e) => handleChange(e)}>
-                                                                            <option value="default">Tipo de oferta</option>
-                                                                            <option value={"Diplomado"}>Diplomado</option>
-                                                                            <option value={"Especialidad"}>Especialidad</option>
-                                                                            <option value={"Licenciatura"}>Licenciatura</option>
-                                                                            <option value={"Maestría"}>Maestría</option>
-                                                                            <option value={"Taller"}>Taller</option>
-                                                                            <option value={"Curso"}>Curso</option>
-                                                                        </select>
-                                                                        : producto.tipo
-                                                                }
-                                                            </td> : null}
-                                                        {producto.modalidad ?
-                                                            <td className="medium">
-                                                                {
-                                                                    CurrentIndex === index ?
-                                                                        <select name="modalidad" className={producto._id} defaultValue={producto.modalidad} disabled={index !== CurrentIndex ? true : false} onChange={(e) => handleChange(e)}>
-                                                                            <option value="default">Modalidad de oferta</option>
-                                                                            <option value={"Presencial"}>Presencial</option>
-                                                                            <option value={"Mixto"}>Mixto</option>
-                                                                            <option value={"En línea asincrónico"}>En línea asincrónico</option>
-                                                                            <option value={"En línea sincrónico"}>En línea sincrónico</option>
-                                                                        </select> :
-                                                                        producto.modalidad
-                                                                }
-                                                            </td> : null}
-                                                        {producto.areaV ?
-                                                            <td className="medium">
-                                                                {
-                                                                    CurrentIndex === index ?
-                                                                        producto.institucion === 'sae' ?
-                                                                            <select name="areaV" className={producto._id} defaultValue={producto.areaV} disabled={index !== CurrentIndex ? true : false} onChange={(e) => handleChange(e)} style={producto.institucion === 'sae' ? { display: 'block' } : { display: 'none' }}>
-                                                                                <option value="default">Área a la que se víncula</option>
-                                                                                <option value={"Cine digital"}>Cine digital</option>
-                                                                                <option value={"Animación y efectos visuales"}>Animación y efectos visuales</option>
-                                                                                <option value={"Comunicación"}>Comunicación</option>
-                                                                                <option value={"Diseño de videojuegos"}>Diseño de videojuegos</option>
-                                                                                <option value={"Ingeniería de audio"}>Ingeniería de audio</option>
-                                                                                <option value={"Negocios de la música"}>Negocios de la música</option>
-                                                                                <option value={"Programación de videojuegos"}>Programación de videojuegos</option>
-                                                                            </select>
+                                                                    session.user.rol === "administrador" ?
+                                                                        producto.etapa === "Aprobado" ?
+                                                                            <div className={styles.etapa2} style={{backgroundColor: "green"}}>
+                                                                                <NavLink
+                                                                                    href={"/view/aprobado/" + producto._id}
+                                                                                    exact>
+                                                                                    {producto.etapa}
+                                                                                </NavLink>
+                                                                            </div>
                                                                             :
-                                                                            <select name="areaV" className={producto._id} defaultValue={producto.areaV} disabled={index !== CurrentIndex ? true : false} onChange={(e) => handleChange(e)} style={producto.institucion === 'artek' ? { display: 'block' } : { display: 'none' }}>
-                                                                                <option value="default">Área a la que se víncula</option>
-                                                                                <option value={"Gestión tecnológica"}>Gestión Tecnológica</option>
-                                                                                <option value={"Desarrollo de software"}>Desarrollo de Software</option>
-                                                                                <option value={"Ciencia de datos"}>Ciencia de Datos</option>
-                                                                                <option value={"Ciberseguridad"}>Ciberseguridad</option>
-                                                                                <option value={"Inteligencia artificial"}>Inteligencia Artificial</option>
-                                                                            </select>
+                                                                            <div className={styles.etapa2}>
+                                                                                <NavLink
+                                                                                    href={
+                                                                                        `/etapa/${producto.etapa === "Propuesta" || producto.etapa === "Validación" || producto.etapa === "Pendiente"
+                                                                                            ? "validacion" :
+                                                                                            producto.etapa.toLowerCase()}/` + producto._id}
+                                                                                    exact>
+                                                                                    {producto.etapa}
+                                                                                </NavLink>
+                                                                            </div>
+                                                                        : null
 
-                                                                        : producto.areaV
+
                                                                 }
-
-
-                                                            </td> : null}
-                                                        {producto.quienPropone ?
-                                                            <td className="medium">
-                                                                <input
-                                                                    type="text"
-                                                                    name="quienPropone"
-                                                                    className={producto._id}
-                                                                    placeholder={producto.quienPropone}
-                                                                    disabled={index !== CurrentIndex ? true : false}
-                                                                    autoComplete="off"
-                                                                    onChange={(e) => handleChange(e)} />
-                                                            </td> : null}
+                                                            </div>
+                                                        </td>
+                                                        {producto.status ? <td className="short"> {producto.status} </td> : null}
+                                                        {producto.nombre ? <td className="long"> {producto.nombre} </td> : null}
+                                                        {producto.tipo ? <td className="short">{producto.tipo}</td> : null}
+                                                        {producto.modalidad ? <td className="medium">{producto.modalidad}</td> : null}
+                                                        {producto.areaV ? <td className="medium">{producto.areaV}</td> : null}
+                                                        {producto.quienPropone ? <td className="medium">{producto.quienPropone}</td> : null}
                                                         {producto.razon ?
                                                             <td className="long">
                                                                 <textarea
-                                                                    name="razon"
-                                                                    className={"scroll " + producto._id}
+                                                                    className="scroll"
                                                                     placeholder={producto.razon}
-                                                                    disabled={index !== CurrentIndex ? true : false}
-                                                                    autoComplete="off"
-                                                                    onChange={(e) => handleChange(e)} />
+                                                                    disabled={true} />
                                                             </td> : null}
                                                         {producto.poblacionObj ?
                                                             <td className="long">
                                                                 <textarea
-                                                                    name="poblacionObj"
-                                                                    className={"scroll " + producto._id}
+                                                                    className="scroll"
                                                                     placeholder={producto.poblacionObj}
-                                                                    disabled={index !== CurrentIndex ? true : false}
-                                                                    autoComplete="off"
-                                                                    onChange={(e) => handleChange(e)}>
+                                                                    disabled={true}>
                                                                 </textarea>
                                                             </td> : null}
                                                         {producto.descripcion ?
                                                             <td className="long">
                                                                 <textarea
-                                                                    name="descripcion"
-                                                                    className={"scroll " + producto._id}
+                                                                    className="scroll"
                                                                     placeholder={producto.descripcion}
-                                                                    disabled={index !== CurrentIndex ? true : false}
-                                                                    autoComplete="off"
-                                                                    onChange={(e) => handleChange(e)} />
+                                                                    disabled={true} />
                                                             </td> : null}
-                                                        {producto.RVOE ?
-                                                            <td>
-                                                                {index !== CurrentIndex ?
-                                                                    producto.RVOE === 'on' ? 'Tiene RVOE' : 'No tiene RVOE' :
-                                                                    <>
-                                                                        <input type="checkbox" name="RVOE" className={producto._id} defaultChecked={producto.RVOE === 'on' ? true : false} onChange={(e) => handleChange(e)} />
-                                                                    </>
-                                                                }
-                                                            </td> : null}
-                                                        {producto.institucion ?
-                                                            <td>
-                                                                {producto.institucion}
-                                                            </td> : null}
-                                                        {producto.creadoPor ?
-                                                            <td className="long">
-                                                                <input
-                                                                    type="text"
-                                                                    name="creadoPor"
-                                                                    className={producto._id}
-                                                                    placeholder={producto.creadoPor}
-                                                                    disabled={true}
-                                                                    autoComplete="off" />
-                                                            </td> : null}
-                                                        {
-                                                            producto.aprobadoPor ? <td className="medium">{producto.aprobadoPor}</td> : null
-                                                        }
+                                                        {producto.institucion ? <td>{producto.institucion}</td> : null}
+                                                        {producto.creadoPor ? <td className="long">{producto.creadoPor}</td> : null}
+                                                        {producto.aprobadoPor ? <td className="medium">{producto.aprobadoPor}</td> : null}
                                                         {
                                                             producto.modifiedBy ? <td className="long">
                                                                 {producto.modifiedBy !== "Sin actualizaciones" ? <>{producto.modifiedBy}, el {producto.lastUpdate}</> : "No ha sido actualizado "}
@@ -645,7 +401,7 @@ export default function Consultas() {
                                         currentPage={currentPage}
                                         totalCount={Productos.length}
                                         pageSize={pageSize}
-                                        onPageChange={(page) => (setCurrentPage(page), setCurrentIndex(null))}
+                                        onPageChange={(page) => setCurrentPage(page)}
                                     />
                             }
 

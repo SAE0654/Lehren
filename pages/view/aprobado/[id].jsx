@@ -62,7 +62,7 @@ export default function ViewProduct() {
     etapa === "archivosETP1" ? setFilesETP1(productoArr) : setFilesETP2(productoArr);
     Producto[etapa] = productoArr;
     await axios.put(`${process.env.NEXT_PUBLIC_ENDPOINT}api/productos/${id}`, Producto)
-      .then((res) => {
+      .then(() => {
         toast.success("Archivo eliminado")
       });
   }
@@ -93,8 +93,10 @@ export default function ViewProduct() {
               <p className={styles.right_border}>{Producto.modalidad}</p>
               <p><b>Área a la que se víncula</b></p>
               <p className={styles.right_border}>{Producto.areaV}</p>
-              <p className={styles.last_row}><b>Persona que propone el producto:</b></p>
-              <p className={styles.right_bottom_border}>{Producto.quienPropone}</p>
+              <p><b>Persona que propone el producto:</b></p>
+              <p className={styles.right_border}>{Producto.quienPropone}</p>
+              <p className={styles.last_row}><b>Prioridad:</b></p>
+              <p className={styles.right_bottom_border}>{Producto.prioridad ? Producto.prioridad : "baja"}</p>
               <h2 className={styles.title2}>Análisis académico</h2>
               <p><b>Razón y necesidad de la propuesta:</b></p>
               <p className={styles.right_border}>{Producto.razon}</p>
@@ -107,7 +109,7 @@ export default function ViewProduct() {
               <p><b>Institución:</b></p>
               <p className={styles.right_border}>{Producto.institucion.toUpperCase()}</p>
               <p><b>Aprobado:</b></p>
-              <p className={styles.right_border}>{Producto.aprobado === 'aprobado' ? 'Sí' : /*pregunta 2: */ Producto.aprobado === "validacion" ? 'En validación' : 'En propuesta'}</p>
+              <p className={styles.right_border}>{Producto.aprobado === 'Aprobado' ? 'Sí' : /*pregunta 2: */ Producto.aprobado === "Validacion" ? 'En validación' : 'En propuesta'}</p>
               {
                 Producto.aprobadoPor === 'NP' ? null :
                   <>
@@ -116,7 +118,7 @@ export default function ViewProduct() {
                   </>
               }
               <p><b>Objetivo del producto:</b></p>
-              <p className={styles.right_border}>{Producto.objetivo}</p>
+              <p className={styles.right_border}>{Producto.objetivo === null ? "Sin objetivos" : Producto.objetivo.map((item, index) => (item + ((index + 1) >= Producto.objetivo.length ? "." : ", ")))}</p>
               <p><b>Propuesta temas:</b></p>
               <p className={styles.right_border}>{Producto.temas}</p>
               <p><b>Forma de titulación o producto final integrador:</b></p>
@@ -136,15 +138,15 @@ export default function ViewProduct() {
               <h2 className={styles.title4}>Herramientas de validación</h2>
               <p><b>Instrumentos de validación empleados:</b></p>
               {Producto.instrumentoValidacion === null ? <p className={styles.right_border}>No se han seleccionado instrumentos de validación</p> : <p className={styles.right_border}>{Producto.instrumentoValidacion.length > 0
-                ? Producto.instrumentoValidacion.map((tool, index) => (Producto.instrumentoValidacion.length - 1) === index ? tool + ". " : tool + ", ")
+                ? Producto.instrumentoValidacion.map((tool, index) => (Producto.instrumentoValidacion.length - 1) === index ? tool.name + ". " : tool.name + ", ")
                 : null}
               </p>}
               <p className={styles.last_row}><b>Comentarios:</b></p>
               {
-                Producto.comentarios === null ? 
-                <p className={styles.right_bottom_border} style={{ minHeight: '60px' }}>{Producto.comentarios === null ? "Sin comentarios" : Producto.comentarios[0].comentarios}</p>
-                :
-                <p className={styles.right_bottom_border} style={{ minHeight: '60px' }}>{Producto.comentarios.length >= 0 ? "Sin comentarios" : Producto.comentarios[0].comentarios}</p>
+                Producto.comentarios === null ?
+                  <p className={styles.right_bottom_border} style={{ minHeight: '60px' }}>{Producto.comentarios === null ? "Sin comentarios" : Producto.comentarios[0].comentarios}</p>
+                  :
+                  <p className={styles.right_bottom_border} style={{ minHeight: '60px' }}>{Producto.comentarios.length <= 0 ? "Sin comentarios" : Producto.comentarios[0].comentarios}</p>
               }
               <h2 className={styles.title5}>Análisis financiero</h2>
               <p className={styles.last_row}><b>Enlace a ROI:</b></p>

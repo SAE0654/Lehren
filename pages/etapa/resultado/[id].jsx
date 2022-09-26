@@ -8,39 +8,35 @@ import styles from "../../../styles/pages/ventas.module.scss";
 import { acceptedFiles, getTimeStamp, isAnyFieldEmpty, sessionHasExpired } from '../../../utils/forms';
 import { toast } from 'react-toastify';
 import { IoMdClose } from "react-icons/io";
+import Swal from 'sweetalert2/dist/sweetalert2';
 
-const BUCKET_URI = "https://sae-files.s3.amazonaws.com/"
+const BUCKET_URI = "https://sae-files.s3.amazonaws.com/";
+let onChangeURI = false;
 
 export default function Complete() {
   const router = useRouter();
   const [Producto, setProducto] = useState(null);
   // Función de cambios sin guardar
   const [notSaved, setNotSaved] = useState(false);
-  const [OnChangeRoute, setOnChangeRoute] = useState(false);
-  const [NextRoute, setNextRoute] = useState(null);
   const [GoToNext, setGoToNext] = useState(false);
-  const [VTools, setVTools] = useState([]);
-  const [SelectedTools, setSelectedTools] = useState([]);
   const [Files, setFiles] = useState([]);
-
-  const Route = useRouter();
   const { id } = router.query;
   const { data: session } = useSession();
 
   let url_files = [];
 
-  let herramientas = [
-    "Focus Group con estudiantes y docentes",
-    "Encuestas de retroalimentación de estudiantes",
-    "Encuestas de ex alumnos",
-    "Piloto de un prototipo",
-    "Encuestas en redes sociales",
-    "Sesiones con expertos de la industria",
-    "Herramientas digitales (Google Trends)",
-    "Master research",
-    "Bitácora social",
-    "Estudio de mercado con un tercero",
-    "Consultor o asesor externo"]
+  // let herramientas = [
+  //   "Focus Group con estudiantes y docentes",
+  //   "Encuestas de retroalimentación de estudiantes",
+  //   "Encuestas de ex alumnos",
+  //   "Piloto de un prototipo",
+  //   "Encuestas en redes sociales",
+  //   "Sesiones con expertos de la industria",
+  //   "Herramientas digitales (Google Trends)",
+  //   "Master research",
+  //   "Bitácora social",
+  //   "Estudio de mercado con un tercero",
+  //   "Consultor o asesor externo"]
 
   useEffect(() => {
     getId();
@@ -53,13 +49,17 @@ export default function Complete() {
   }, []);
 
   useEffect(() => {
+    onChangeURI = false;
     const beforeRouteHandler = (url) => {
-      if (url === Route.asPath) return;
-      setOnChangeRoute(true);
-      setNextRoute(url);
+      if (url === router.asPath) return;
+      if (!onChangeURI) {
+        displaySureMessage(url);
+      }
       if (!GoToNext) {
         Router.events.emit('routeChangeError');
         throw "Operación cancelada";
+      } else {
+        Swal.close()
       }
     };
     if (notSaved) {
@@ -72,19 +72,41 @@ export default function Complete() {
     };
   }, [notSaved, GoToNext]);
 
-  const getToolsSelected = (data) => {
-    let indexes = '';
-
-    if (!data.instrumentoValidacion) return;
-    data.instrumentoValidacion.map(tool => {
-      const _indice = herramientas.indexOf(tool);
-      setVTools(data.instrumentoValidacion)
-      if (_indice >= 0) {
-        indexes += ' ' + _indice;
+  const displaySureMessage = (NextRoute) => {
+    Swal.fire({
+      title: '¿Salir de la página?',
+      text: "Perderás tu trabajo actual",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Confirmar',
+      cancelButtonText: 'Cancelar'
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        setGoToNext(true);
+        onChangeURI = true;
+        router.push(NextRoute)
+      } else {
+        onChangeURI = false;
+        setGoToNext(false)
       }
     })
-    setSelectedTools(indexes);
   }
+
+  // const getToolsSelected = (data) => {
+  //   let indexes = '';
+
+  //   if (!data.instrumentoValidacion) return;
+  //   data.instrumentoValidacion.map(tool => {
+  //     const _indice = herramientas.indexOf(tool);
+  //     setVTools(data.instrumentoValidacion)
+  //     if (_indice >= 0) {
+  //       indexes += ' ' + _indice;
+  //     }
+  //   })
+  //   setSelectedTools(indexes);
+  // }
 
 
   const getId = () => {
@@ -99,27 +121,12 @@ export default function Complete() {
       .then((res) => {
         setProducto(res.data);
         getToolsSelected(res.data);
-        console.log(res.data)
       });
   }
 
   const setProductoItem = (e) => {
     if (!notSaved) setNotSaved(true);
-    const tools = VTools;
-    if (e.target.name === "instrumentoValidacion") {
-      if (e.target.checked) {
-        tools.push(e.target.value);
-        setProducto({
-          ...Producto,
-          [e.target.name]: tools
-        });
-      } else {
-        const _index = tools.indexOf(e.target.value)
-        tools.splice(_index, 1);
-      }
-      return;
-    }
-    if(e.target.name === "comentarios") {
+    if (e.target.name === "comentarios") {
       setProducto({
         ...Producto,
         [e.target.name]: [{
@@ -141,10 +148,19 @@ export default function Complete() {
     await saveFilesToAWS();
     const producto = Producto;
     producto.archivosETP2 = url_files;
-    producto.aprobado = "aprobado";
+    producto.status = "Validado";
+    producto.etapa = "Aprobado";
+    producto.aprobadoPor = session.user.names;
     if (isAnyFieldEmpty(e.target)) { // Si true, campos vacíos
       toast.error("Rellena todos los campos");
       return;
+    }
+    if(producto.status === "No aprobado") {
+      producto.comentarios = [{
+        user: session.user.names,
+        comentarios: "Este producto fue aprobado",
+        createdAt: getTimeStamp()
+      }];
     }
     await axios.put(`${process.env.NEXT_PUBLIC_ENDPOINT}api/productos/` + id, producto,
       {
@@ -155,33 +171,57 @@ export default function Complete() {
       }).then((res) => {
         toast.info(res.data.message);
         e.target.reset();
-        router.push(`${process.env.NEXT_PUBLIC_ENDPOINT}`)
+        setNotSaved(false);
+        router.push(`${process.env.NEXT_PUBLIC_ENDPOINT}`);
       }).catch((err) => {
         toast.error("Error al completar")
       })
   }
 
   const desaprobarProducto = async () => {
-    if (notSaved) return;
     setNotSaved(false);
-    const producto = Producto;
-    producto.aprobado = 'off';
-    producto.aprobadoPor = 'Mandado a propuesta';
-    await axios.put(`${process.env.NEXT_PUBLIC_ENDPOINT}api/productos/` + producto._id, producto, {
-      headers: {
-        accept: '*/*',
-        'Content-Type': 'application/json'
+    await Swal.fire({
+      input: 'textarea',
+      inputLabel: "Explica por qué el producto no fue aprobado",
+      inputValue: "",
+      inputPlaceholder: "Comentario...",
+      inputAttributes: {
+        'aria-label': 'Escribe tu comentario aquí',
+        maxlength: 500
+      },
+      showCancelButton: true,
+      confirmButtonText: 'Continuar',
+      cancelButtonText: 'Cancelar',
+    }).then(async (res) => {
+      if (res.isDismissed) return;
+      if (res.value.trim().length === 0 && res.isConfirmed) {
+        toast.warn("El comentario no puede estar vacío");
+        return;
       }
-    }).then(() => {
-      toast.info("Producto mandado a propuesta");
-      router.push("/")
-    }).catch(() => {
-      toast.error("Ocurrió un error inesperado, inténtalo de nuevo")
-    });
+      const producto = Producto;
+      producto.status = 'No aprobado';
+      producto.etapa = "Resultado"
+      producto.aprobadoPor = 'Producto no aprobado';
+      producto.comentarios = [{
+        user: session.user.names,
+        comentarios: "NO APROBADO: " + res.value,
+        createdAt: getTimeStamp()
+      }];
+      await axios.put(`${process.env.NEXT_PUBLIC_ENDPOINT}api/productos/` + producto._id, producto, {
+        headers: {
+          accept: '*/*',
+          'Content-Type': 'application/json'
+        }
+      }).then(() => {
+        toast.info("Producto mandado a propuesta");
+        router.push("/actions/consultas/" + producto.institucion)
+      }).catch(() => {
+        toast.error("Ocurrió un error inesperado, inténtalo de nuevo")
+      });
+    })
   }
 
   const verifyFiles = (e) => {
-    console.log(e.target.files[0].size / 1024 / 1024 + "MiB")
     let files = e.target.files;
     let file = [];
     let hasTheSameName = false;
@@ -256,27 +296,17 @@ export default function Complete() {
 
   return <>
     <Head>
-      <title>{!session ? 'Cargando...' : session.user.username} | Completar datos </title>
+      <title>Etapa de resultados </title>
       <meta name="description" content="Login app" />
       <link rel="icon" href="/favicon.ico" />
     </Head>
     <Layout>
-      <div className={OnChangeRoute ? "wrapper_bg" : "wrapper_bg hide"} aria-hidden="true"></div>
-      <div className={OnChangeRoute ? "window_confirm" : "window_confirm hide"}>
-        <h1 className="mini">¿Seguro que quieres salir? Perderás tu trabajo actual</h1>
-        <div className="cancel_continue">
-          <button onClick={() => (setGoToNext(true), Route.push(NextRoute))}>Continuar</button>
-          <button onClick={() => setOnChangeRoute(false)}>Cancelar</button>
-        </div>
-      </div>
       <div className={styles.main_content}>
         <div className={styles.box_container}>
-          <h1>{Producto.nombre}</h1>
+          <h1>Proceso de resultados</h1>
           <form onSubmit={(e) => updateCourse(e)}>
             <div className={styles.form_group}>
               <h2>Análisis académico</h2>
-              <textarea name="objetivo" placeholder="Objetivo del producto" defaultValue={Producto.objetivo} onChange={(e) => setProductoItem(e)} maxLength="3000" required></textarea>
-              <br />
               <textarea name="temas" placeholder="Propuesta de temas" defaultValue={Producto.temas} onChange={(e) => setProductoItem(e)} maxLength="6000" required></textarea>
               <br />
               <textarea name="titulacion" placeholder="Forma de titulación o producto final integrador" defaultValue={Producto.titulacion} onChange={(e) => setProductoItem(e)} maxLength="3000" required></textarea>
@@ -284,7 +314,7 @@ export default function Complete() {
               <textarea name="experto" placeholder="Experto recomendado para el desarrollo (en caso de ser programa curricular, incluir posibles expertos por asignatura)" defaultValue={Producto.experto} onChange={(e) => setProductoItem(e)} maxLength="3000" required></textarea>
               <br />
               <textarea name="requerimientos" placeholder="Requerimientos especiales de instalaciones, equipo, software, etc" defaultValue={Producto.requerimientos} onChange={(e) => setProductoItem(e)} maxLength="6000" required></textarea>
-              <div className="radio_ck_section">
+              {/* <div className="radio_ck_section">
                 <h3>Herramientas de validación</h3>
                 <label className="control control-radio">
                   Focus Group con estudiantes y docentes
@@ -396,7 +426,7 @@ export default function Complete() {
                     defaultChecked={VTools.includes('Consultor o asesor externo') ? true : false} />
                   <div className="control_indicator"></div>
                 </label>
-              </div>
+              </div> */}
               <br />
               <textarea name="comentarios" maxLength="5000" placeholder='Comentarios' defaultValue={Producto.comentarios === null || typeof Producto.comentarios[0] === "undefined" ? "" : Producto.comentarios[0].comentarios} onChange={(e) => setProductoItem(e)}></textarea>
             </div>
@@ -458,12 +488,16 @@ export default function Complete() {
                     ))
                 }
               </div>
-              <input type="submit" style={{ top: "100em", bottom: "inherit", left: "5em" }} value="Aprobar" onClick={() => setNotSaved(false)} />
-              
+              <input type="submit" style={{ top: "100em", bottom: "inherit", left: "5em" }} value="Aprobar este producto" onClick={() => setNotSaved(false)} />
             </div>
-            
+
           </form>
-          <button onClick={() => desaprobarProducto()}>Devolver a propuesta</button>
+          {
+            Producto.status === "No aprobado" ? 
+            <button style={{ backgroundColor: "crimson", opacity: "0.7", cursor: "not-allowed" }}>Este producto ya fue desaprobado</button>
+            :
+            <button onClick={() => desaprobarProducto()} style={{ backgroundColor: "crimson" }}>No aprobar este producto</button>
+          }
           <br /><br />
         </div>
       </div>

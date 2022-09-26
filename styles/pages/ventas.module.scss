@@ -139,11 +139,12 @@
                     background-color: color.$bg_input;
                     border: none;
                     color: #fff;
-                    border: 1px solid gray
+                    border: 1px solid gray;
+                    margin-bottom: 1em
                 }
 
                 .container_footer {
-                    @include mix.flexBox(row, center, center);
+                    @include mix.flexBox(column, flex-start, center);
                     width: 100%;
                     margin-top: 1em;
 
@@ -168,6 +169,7 @@
 
                     .form_control {
                         display: flex;
+                        flex-direction: column;
                         align-items: center;
                         justify-content: center;
                         width: 20%;
@@ -182,7 +184,8 @@
                         color: #fff;
                         cursor: pointer;
 
-                        input[type="checkbox"] {
+                        input[type="checkbox"],
+                        input[type="radio"] {
                             -webkit-appearance: none;
                             appearance: none;
                             margin: 0;
@@ -220,90 +223,24 @@
                             }
                         }
                     }
-                }
 
-                .files_zone {
-                    display: flex;
-                    flex-direction: column;
-                    width: 90%;
-                    margin-top: 3em;
-
-                    .form_files {
-                        display: block;
-                        text-align: center;
-                        padding: 1em;
+                    .prioridad {
+                        @include mix.flexBox(row, center, flex-start);
+                        width: 100%;
+                        margin-top: 2em;
                         color: #fff;
-                        border: 1px solid gray;
-                        width: 40%;
-                        margin: auto;
-                        font-weight: bold;
 
-                        input[type="file"] {
-                            display: none;
-                        }
-
-                        &:hover {
-                            background-color: #1a2225;
-                        }
-                    }
-
-                    label {
-                        cursor: pointer;
-                    }
-
-                    .zoner {
-                        display: block;
-                        width: 80%;
-                        margin: auto;
-                        margin-top: 1em;
-                        
-
-                        .zoner_box {
-                            display: flex;
-                            flex-direction: column;
-                            width: 90%;
-                            
-                           
-                            background-color: #000;
-                            border-radius: 10px;
-
-                            p {
-                                display: flex;
-                                align-items: center;
-                                justify-content: flex-start;
-                                gap: 1em;
-                                margin: 1em;
-                                position: relative;
-                                color: white;
-                                white-space: nowrap;
-                                .zoner_delete {
-                                    cursor: pointer;
-                                }
-                                span {
-                                    right: 0;
-                                    position: absolute;
-                                    padding: 0.3em 0.8em;
-                                    font-size: 0.6rem;
-                                    border-radius: 150px;
-                                }
-                                .fileName {
-                                    position: inherit !important;
-                                    font-size: 1rem;
-                                    white-space: nowrap;
-                                    overflow: hidden;
-                                    text-overflow: ellipsis;
-                                    max-width: 200px;
-                                }
-                            }
+                        span {
+                            font-weight: bold;
+                            margin-right: 1em;
                         }
                     }
                 }
-
             }
         }
-        
+
         // Termina el componente de producto.jsx
-        
+
         .t_container {
             margin-top: 20em;
         }
@@ -317,7 +254,8 @@
             gap: 1em;
             font-family: "Quicksand", sans-serif;
 
-            .info_box {
+            .info_box,
+            .info_box_step2 {
                 display: grid;
                 width: 90%;
                 grid-template-columns: 0.5fr 1.5fr;
@@ -325,6 +263,7 @@
                 grid-auto-flow: row;
                 grid-template-areas:
                     "title title"
+                    ". ."
                     ". ."
                     ". ."
                     ". ."
@@ -359,7 +298,7 @@
                 p {
                     display: flex;
                     align-items: center;
-                    padding-left: 1em;
+                    padding: 1em;
                     margin: 0px;
                     border-left: 1px solid gray;
                     border-top: 1px solid gray;
@@ -378,6 +317,7 @@
                         border-right: 1px solid gray;
                         border-bottom: 1px solid gray;
                     }
+
                     a {
                         display: inline-block;
                         color: yellow;
@@ -388,23 +328,31 @@
                         white-space: nowrap;
                         max-width: 130px;
                     }
+
                     .container_file {
                         display: flex;
                         flex-direction: row;
                         gap: 0.5em;
                         border-right: 1px solid gray;
                         padding-left: 1em;
+
                         .btn_delete {
                             cursor: pointer;
+
                             &:hover {
                                 color: red;
                             }
                         }
+
                         &:last-child {
                             border-right: none;
                         }
                     }
                 }
+            }
+
+            .info_box_step2 {
+                grid-template-rows: 0.5fr 0.5fr 0.5fr 0.5fr 0.5fr 0.5fr 0.5fr;
             }
 
             .title,
@@ -437,6 +385,7 @@
             .title5 {
                 grid-area: title5;
             }
+
             .title6 {
                 grid-area: title6;
             }
@@ -605,6 +554,7 @@
                         }
                     }
 
+
                     button {
                         background-color: #53899c;
                         color: #fff;
@@ -667,6 +617,7 @@
 
     table tbody tr td {
         position: relative;
+        text-transform: capitalize;
 
         input,
         textarea {
@@ -712,6 +663,7 @@
         .action_by_id {
             display: flex;
             flex-direction: row;
+            justify-content: center;
             width: 100%;
             gap: 0.5em;
             margin-top: 1em;
@@ -727,12 +679,12 @@
                 }
 
                 &:nth-child(2) {
-                    background-color: #223692;
+                    background-color: rgb(253, 71, 71);
                     color: #fff;
                 }
 
                 &:nth-child(3) {
-                    background-color: rgb(253, 71, 71);
+                    background-color: #223692;
                     color: #fff;
                 }
 
@@ -742,7 +694,8 @@
                 }
             }
 
-            .etapa2, .etapa3 {
+            .etapa2,
+            .etapa3 {
                 position: absolute;
                 width: 80%;
                 top: 1em;
@@ -753,6 +706,7 @@
                 font-weight: bold;
                 padding: 0.2em;
                 border-radius: 5px;
+                
                 cursor: pointer;
 
                 &:hover {
@@ -767,8 +721,10 @@
                     padding: 0.5em;
                     color: #ffffff;
                     font-weight: bold;
+                    text-align: center;
                 }
             }
+
             .etapa3 {
                 background-color: green;
             }
@@ -807,4 +763,106 @@
         font-size: 1.2rem;
         margin-top: 3em;
     }
+}
+
+.files_zone {
+    display: flex;
+    flex-direction: column;
+    width: 90%;
+    margin-top: 3em;
+
+    .form_files {
+        display: block;
+        text-align: center;
+        padding: 1em;
+        color: #fff;
+        border: 1px solid gray;
+        width: 40%;
+        margin: auto;
+        font-weight: bold;
+
+        input[type="file"] {
+            display: none;
+        }
+
+        &:hover {
+            background-color: #1a2225;
+        }
+    }
+
+    label {
+        cursor: pointer;
+    }
+
+    .zoner {
+        display: block;
+        width: 80%;
+        margin: auto;
+        margin-top: 1em;
+
+
+        .zoner_box {
+            display: flex;
+            flex-direction: column;
+            width: 90%;
+
+
+            background-color: #000;
+            border-radius: 10px;
+
+            p {
+                display: flex;
+                align-items: center;
+                justify-content: flex-start;
+                gap: 1em;
+                margin: 1em;
+                position: relative;
+                color: white;
+                white-space: nowrap;
+
+                .zoner_delete {
+                    cursor: pointer;
+                }
+
+                span {
+                    right: 0;
+                    position: absolute;
+                    padding: 0.3em 0.8em;
+                    font-size: 0.6rem;
+                    border-radius: 150px;
+                }
+
+                .fileName {
+                    position: inherit !important;
+                    font-size: 1rem;
+                    white-space: nowrap;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                    max-width: 200px;
+                }
+            }
+        }
+    }
+}
+
+.main_content .box_container form .form_group .select_sp {
+    width: 100% !important;
+    border: 1px solid gray;
+    font-size: 0.7rem;
+    margin-top: 0em;
+    &:disabled {
+        opacity: 0.6;
+    }
+}
+
+.main_content .box_container form .form_group .herr label {
+    font-size: 0.9rem;
+    text-align: left;
+}
+
+.main_content .box_container form .form_group .herr {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
 }

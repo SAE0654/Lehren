@@ -6,13 +6,23 @@ export const ADMIN = [
     },
     {
         icono: '',
-        texto: "Consultar",
-        link: "/actions/consultas/"
+        texto: "Consultar SAE",
+        link: "/actions/consultas/sae"
+    },
+    {
+        icono: '',
+        texto: "Consultar ARTEK",
+        link: "/actions/consultas/artek"
     },
     {
         icono: '',
         texto: "Registrar usuario",
         link: "/signup"
+    },
+    {
+        icono: '',
+        texto: "Catálogo de validación",
+        link: "/view/catalogue"
     }
 ]
 
