@@ -138,7 +138,7 @@ export default function ViewProduct() {
               <h2 className={styles.title4}>Herramientas de validación</h2>
               <p><b>Instrumentos de validación empleados:</b></p>
               {Producto.instrumentoValidacion === null ? <p className={styles.right_border}>No se han seleccionado instrumentos de validación</p> : <p className={styles.right_border}>{Producto.instrumentoValidacion.length > 0
-                ? Producto.instrumentoValidacion.map((tool, index) => (Producto.instrumentoValidacion.length - 1) === index ? tool.name + ". " : tool.name + ", ")
+                ? Producto.instrumentoValidacion.map((tool, index) => (Producto.instrumentoValidacion.length - 1) === index ? (index +1) + " .-" + tool.nombre + ". " : (index +1) + " .-" + tool.nombre + ", ")
                 : null}
               </p>}
               <p className={styles.last_row}><b>Comentarios:</b></p>

@@ -619,6 +619,12 @@
         position: relative;
         text-transform: capitalize;
 
+        .icon_minus {
+            font-size: 1.5rem;
+            color: rgb(224, 24, 24);
+            cursor: pointer;
+        }
+
         input,
         textarea {
             display: inline-block;
@@ -865,4 +871,18 @@
     flex-direction: row;
     align-items: center;
     justify-content: flex-start;
+    .icon_plus {
+        display: block;
+        cursor: pointer;
+        color: #cfd9e2;
+        font-size: 1.6rem;
+        &:active {
+            scale: 0.9;
+        }
+        &:hover {
+            color: wheat;
+        }
+    }
 }
+
+

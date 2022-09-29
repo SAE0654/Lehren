@@ -63,7 +63,7 @@ export default function Producto() {
                 setNotSaved(false);
                 e.target.reset();
                 router.push("/view/validacion/" + res.data._id);
-            }).catch(() => {
+            }).catch((err) => {
                 toast.error("Falta información")
             });
     }
