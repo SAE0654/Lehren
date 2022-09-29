@@ -8,7 +8,7 @@ import styles from "../../../styles/pages/ventas.module.scss";
 import { acceptedFiles, isAnyFieldEmpty, sessionHasExpired } from '../../../utils/forms';
 import { IoMdClose } from "react-icons/io";
 import { toast } from 'react-toastify';
-import ValidationToolsForm from '../../../components/forms/validation_tools';
+import ValidationToolsForm from '../../../components/validationTools/validation_tools';
 
 const BUCKET_URI = "https://sae-files.s3.amazonaws.com/";
 

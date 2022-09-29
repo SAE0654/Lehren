@@ -90,7 +90,7 @@ export default function ResultadoView() {
                             {Producto.instrumentoValidacion === null ?
                                 <p className={styles.right_border}>No se han seleccionado instrumentos de validación</p> :
                                 <p className={styles.right_border}>{Producto.instrumentoValidacion.length > 0
-                                    ? Producto.instrumentoValidacion.map((tool, index) => (Producto.instrumentoValidacion.length - 1) === index ? tool.name + ". " : tool.name + ", ")
+                                    ? Producto.instrumentoValidacion.map((tool, index) => (Producto.instrumentoValidacion.length - 1) === index ? (index +1) + " .-" + tool.nombre + ". " : (index +1) + " .-" + tool.nombre + ", ")
                                     : null}
                                 </p>}
                             <p><b>Comentarios generales: </b></p>

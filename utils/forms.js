@@ -4,7 +4,7 @@ export const isAnyFieldEmpty = (form) => {
   let isEmpty = false;
   for (let i = 0; i < form.length; i++) {
     console.log();
-    if(form[i].name === "files_att") {
+    if (form[i].name === "files_att") {
       console.log("Archivo")
     } else {
       form[i].value.trim().length <= 0 ? isEmpty = true : null;
@@ -41,19 +41,30 @@ export const sessionHasExpired = () => {
 export const acceptedFiles = (e) => {
   // PDF, WORD, PNG, JPG
   let files = e.target.files;
-  for(let i = 0; i < files.length; i++) {
+  for (let i = 0; i < files.length; i++) {
     console.log(e.target.files[i].type)
-    if(e.target.files[i].type !== "image/png" 
-    && e.target.files[i].type !== "image/jpg" 
-    && e.target.files[i].type !== "image/jpeg"
-    && e.target.files[i].type !== "application/pdf"
-    && e.target.files[i].type !== "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
-    && e.target.files[i].type !== "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-    && e.target.files[i].type !== "application/vnd.openxmlformats-officedocument.presentationml.presentation") {
+    if (e.target.files[i].type !== "image/png"
+      && e.target.files[i].type !== "image/jpg"
+      && e.target.files[i].type !== "image/jpeg"
+      && e.target.files[i].type !== "application/pdf"
+      && e.target.files[i].type !== "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+      && e.target.files[i].type !== "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+      && e.target.files[i].type !== "application/vnd.openxmlformats-officedocument.presentationml.presentation") {
       return false;
     }
   }
 
   return true;
 
+}
+
+export const makeid = (length) => {
+  var result = '';
+  var characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+  var charactersLength = characters.length;
+  for (var i = 0; i < length; i++) {
+    result += characters.charAt(Math.floor(Math.random() *
+      charactersLength));
+  }
+  return result;
 }
