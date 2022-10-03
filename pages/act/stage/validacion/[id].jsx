@@ -3,12 +3,12 @@ import { getSession, useSession } from "next-auth/react";
 import { useEffect, useState } from 'react'
 import axios from 'axios';
 import Head from 'next/head';
-import Layout from '../../../components/Layout';
-import styles from "../../../styles/pages/ventas.module.scss";
-import { acceptedFiles, isAnyFieldEmpty, sessionHasExpired } from '../../../utils/forms';
+import Layout from '../../../../components/Layout';
+import styles from "../../../../styles/pages/ventas.module.scss";
+import { acceptedFiles, isAnyFieldEmpty, sessionHasExpired } from '../../../../utils/forms';
 import { IoMdClose } from "react-icons/io";
 import { toast } from 'react-toastify';
-import ValidationToolsForm from '../../../components/validationTools/validation_tools';
+import ValidationToolsForm from '../../../../components/validationTools/validation_tools';
 
 const BUCKET_URI = "https://sae-files.s3.amazonaws.com/";
 
@@ -149,7 +149,7 @@ export default function StepTwo() {
             }).then((res) => {
                 toast.info(res.data.message);
                 e.target.reset();
-                router.push(`${process.env.NEXT_PUBLIC_ENDPOINT}/view/resultado/` + id);
+                router.push(`${process.env.NEXT_PUBLIC_ENDPOINT}/`);
             }).catch(() => {
                 toast.error("Error al completar");
             })
@@ -178,10 +178,10 @@ export default function StepTwo() {
         const year = date.getFullYear();
         const month = (date.getMonth() + 1) > 9 ? date.getMonth() + 1 : "0" + (date.getMonth() + 1);
         const day = date.getDate();
-        if(type === "max") {
+        if (type === "max") {
             return (year + 1) + "-" + month + "-" + day;
         }
-        if(type === "min") {
+        if (type === "min") {
             return (year - 1) + "-" + month + "-" + day;
         }
     }
@@ -202,26 +202,26 @@ export default function StepTwo() {
                     <h1 className={styles.t_container} style={{ marginTop: "10em" }}>Proceso de validación</h1>
                     <form style={{ flexDirection: 'column', alignItems: 'center' }} onSubmit={(e) => uploadF2(e)}>
                         <div className={styles.form_group} style={{ width: '100%' }}>
-                        <div className={styles.container_footer}>
-                            <div className={styles.prioridad} style={{ justifyContent: "center" }}>
-                                <span>Prioridad: </span>
-                                <label className={styles.form_control} style={{ color: "red" }}>
-                                    <input type="radio" name="prioridad" value="alta" style={{ color: "red" }} onChange={(e) => handleChange(e)} />
-                                    Alta
-                                </label>
-                                <label className={styles.form_control} style={{ color: "yellow" }}>
-                                    <input type="radio" name="prioridad" value="media" style={{ color: "yellow" }} onChange={(e) => handleChange(e)} />
-                                    Media
-                                </label>
-                                <label className={styles.form_control} style={{ color: "green" }}>
-                                    <input type="radio" name="prioridad" value="baja" style={{ color: "green" }} onChange={(e) => handleChange(e)} />
-                                    Baja
-                                </label>
+                            <div className={styles.container_footer}>
+                                <div className={styles.prioridad} style={{ justifyContent: "center" }}>
+                                    <span>Prioridad: </span>
+                                    <label className={styles.form_control} style={{ color: "red" }}>
+                                        <input type="radio" name="prioridad" value="alta" style={{ color: "red" }} onChange={(e) => handleChange(e)} />
+                                        Alta
+                                    </label>
+                                    <label className={styles.form_control} style={{ color: "yellow" }}>
+                                        <input type="radio" name="prioridad" value="media" style={{ color: "yellow" }} onChange={(e) => handleChange(e)} />
+                                        Media
+                                    </label>
+                                    <label className={styles.form_control} style={{ color: "green" }}>
+                                        <input type="radio" name="prioridad" value="baja" style={{ color: "green" }} onChange={(e) => handleChange(e)} />
+                                        Baja
+                                    </label>
+                                </div>
                             </div>
-                        </div>
                             <div className="radio_ck_section">
                                 <h3>Objetivos</h3>
-                                <label className="control control-radio">
+                                <label className="control control-radio valid">
                                     Nombre de la oferta educativa
                                     <input
                                         type="checkbox"
@@ -231,7 +231,7 @@ export default function StepTwo() {
                                     />
                                     <div className="control_indicator"></div>
                                 </label>
-                                <label className="control control-radio">
+                                <label className="control control-radio valid">
                                     Público objetivo
                                     <input
                                         type="checkbox"
@@ -241,7 +241,7 @@ export default function StepTwo() {
                                     />
                                     <div className="control_indicator"></div>
                                 </label>
-                                <label className="control control-radio">
+                                <label className="control control-radio valid">
                                     Demanda
                                     <input
                                         type="checkbox"
@@ -251,7 +251,7 @@ export default function StepTwo() {
                                     />
                                     <div className="control_indicator"></div>
                                 </label>
-                                <label className="control control-radio">
+                                <label className="control control-radio valid">
                                     Contenido académico
                                     <input
                                         type="checkbox"
@@ -261,7 +261,7 @@ export default function StepTwo() {
                                     />
                                     <div className="control_indicator"></div>
                                 </label>
-                                <label className="control control-radio">
+                                <label className="control control-radio valid">
                                     Costos
                                     <input
                                         type="checkbox"
@@ -269,9 +269,9 @@ export default function StepTwo() {
                                         value="Costos"
                                         onChange={(e) => setObjetivoItem(e)}
                                     />
-                                    <div className="control_indicator"></div>
+                                    <div className="control_indicator valid"></div>
                                 </label>
-                                <label className="control control-radio">
+                                <label className="control control-radio valid">
                                     Calidad educativa
                                     <input
                                         type="checkbox"
@@ -281,7 +281,7 @@ export default function StepTwo() {
                                     />
                                     <div className="control_indicator"></div>
                                 </label>
-                                <label className="control control-radio">
+                                <label className="control control-radio valid">
                                     Nuevos productos
                                     <input
                                         type="checkbox"
@@ -291,7 +291,7 @@ export default function StepTwo() {
                                     />
                                     <div className="control_indicator"></div>
                                 </label>
-                                <label className="control control-radio">
+                                <label className="control control-radio valid">
                                     Actualización del producto
                                     <input
                                         type="checkbox"
@@ -299,9 +299,9 @@ export default function StepTwo() {
                                         value="Actualización del producto"
                                         onChange={(e) => setObjetivoItem(e)}
                                     />
-                                    <div className="control_indicator"></div>
+                                    <div className="control_indicator valid"></div>
                                 </label>
-                                <label className="control control-radio">
+                                <label className="control control-radio valid">
                                     Perfil de estudiantes (ingreso/egreso)
                                     <input
                                         type="checkbox"
@@ -309,9 +309,9 @@ export default function StepTwo() {
                                         value="Perfil de estudiantes (ingreso/egreso)"
                                         onChange={(e) => setObjetivoItem(e)}
                                     />
-                                    <div className="control_indicator"></div>
+                                    <div className="control_indicator valid"></div>
                                 </label>
-                                <label className="control control-radio">
+                                <label className="control control-radio valid">
                                     Impacto en la industria
                                     <input
                                         type="checkbox"
@@ -319,9 +319,9 @@ export default function StepTwo() {
                                         value="Impacto en la industria"
                                         onChange={(e) => setObjetivoItem(e)}
                                     />
-                                    <div className="control_indicator"></div>
+                                    <div className="control_indicator valid"></div>
                                 </label>
-                                <label className="control control-radio">
+                                <label className="control control-radio valid">
                                     Mercados
                                     <input
                                         type="checkbox"
@@ -329,9 +329,9 @@ export default function StepTwo() {
                                         value="Mercados"
                                         onChange={(e) => setObjetivoItem(e)}
                                     />
-                                    <div className="control_indicator"></div>
+                                    <div className="control_indicator valid"></div>
                                 </label>
-                                <label className="control control-radio">
+                                <label className="control control-radio valid">
                                     Costos
                                     <input
                                         type="checkbox"
@@ -339,9 +339,9 @@ export default function StepTwo() {
                                         value="Costos"
                                         onChange={(e) => setObjetivoItem(e)}
                                     />
-                                    <div className="control_indicator"></div>
+                                    <div className="control_indicator valid"></div>
                                 </label>
-                                <label className="control control-radio">
+                                <label className="control control-radio valid">
                                     Calidad educativa
                                     <input
                                         type="checkbox"
@@ -349,9 +349,9 @@ export default function StepTwo() {
                                         value="Calidad educativa"
                                         onChange={(e) => setObjetivoItem(e)}
                                     />
-                                    <div className="control_indicator"></div>
+                                    <div className="control_indicator valid"></div>
                                 </label>
-                                <label className="control control-radio">
+                                <label className="control control-radio valid">
                                     Tendencia
                                     <input
                                         type="checkbox"
@@ -366,11 +366,13 @@ export default function StepTwo() {
                             <br />
                             <textarea name="generalComments" placeholder="Comentarios generales" maxLength="10000" required onChange={(e) => handleChange(e)} style={{ marginTop: '2em' }}></textarea>
                             <br />
-                            <label htmlFor="fechaEj" style={{color: "#fff"}}>Fecha de ejecución de la actividad: </label>
-                            <input type="date" name="fechaEjecucion" id="fechaEj" required onChange={(e) => handleChange(e)} min={getMinAndMaxDate("min")} max={getMinAndMaxDate("max")} />
-                            <br />
-                            <label htmlFor="fechaEn" style={{color: "#fff"}}>Fecha de entrega de resultados: </label>
-                            <input type="date" name="fechaEntrega" id="fechaEn" required onChange={(e) => handleChange(e)} min={getMinAndMaxDate("min")} max={getMinAndMaxDate("max")} />
+                            <div className="fecha">
+                                <label htmlFor="fechaEj" style={{ color: "#fff" }}>Fecha de ejecución de la actividad: </label>
+                                <input type="date" name="fechaEjecucion" id="fechaEj" required onChange={(e) => handleChange(e)} min={getMinAndMaxDate("min")} max={getMinAndMaxDate("max")} />
+                                <br />
+                                <label htmlFor="fechaEn" style={{ color: "#fff" }}>Fecha de entrega de resultados: </label>
+                                <input type="date" name="fechaEntrega" id="fechaEn" required onChange={(e) => handleChange(e)} min={getMinAndMaxDate("min")} max={getMinAndMaxDate("max")} />
+                            </div>
                         </div>
                         <div className={styles.files_zone}>
                             <label className={styles.form_files}>

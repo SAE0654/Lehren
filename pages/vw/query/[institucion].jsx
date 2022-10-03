@@ -14,6 +14,7 @@ import Pagination from '../../../components/Pagination';
 import { MdAddComment } from 'react-icons/md';
 import Swal from 'sweetalert2/dist/sweetalert2';
 import Comment from '../../../components/Comment';
+import { CSVLink } from 'react-csv';
 
 let pageSize = 4;
 
@@ -22,13 +23,29 @@ export default function Consultas() {
     const [TempProductos, setTempProductos] = useState([]);
     const [NoResults, setNoResults] = useState(false);
     const [Query, setQuery] = useState('');
-    const [BoxFilter, setBoxFilter] = useState(false);
-    const [Restaurar, setRestaurar] = useState(false);
     const [Loading, setLoading] = useState(true);
     // Monitor
     const [currentPage, setCurrentPage] = useState(1);
     const [lastPage, setlastPage] = useState(1);
     const Route = useRouter();
+    //CSV
+    const [CSV, setCSV] = useState([]);
+
+    const headers = [
+        { label: "No.", key: "no" },
+        { label: "Nombre del producto", key: "nombre" },
+        { label: "Estatus", key: "status" },
+        { label: "Tipo", key: "tipo" },
+        { label: "Modalidad", key: "modalidad" },
+        { label: "Area vinculada", key: "areaV" },
+        { label: "Persona o área que propone", key: "quienPropone" },
+        { label: "Razón", key: "razon" },
+        { label: "Población objetivo", key: "poblacionObj" },
+        { label: "Descripción", key: "descripcion" },
+        { label: "Institución", key: "institucion" },
+        { label: "Creado por", key: "creadoPor" },
+        { label: "RVOE", key: "RVOE" }
+    ];
 
     const { institucion } = Route.query;
 
@@ -89,46 +106,6 @@ export default function Consultas() {
         }
         setTempProductos(productos);
     }
-
-    const filterFields = (e) => {
-        e.preventDefault();
-        const omitir = [];
-        const temp = [];
-        for (let i = 0; i <= 9; i++) {
-            if (e.target[i].checked) {
-                omitir.push(e.target[i].name);
-                console.log(e.target[i].name)
-            }
-        }
-        if (omitir.length <= 0) {
-            toast.info("Filtro restaurado");
-            // setTempProductos(Productos);
-            computePages(Productos);
-            setRestaurar(false);
-            return;
-        }
-        omitir.push("etapa");
-        Productos.map((student) => {
-            temp.push(omit(student, omitir));
-        });
-        // setTempProductos(temp);
-        computePages(temp)
-        clearFilters(e);
-        toast.success("Filtro aplicado");
-        setRestaurar(true);
-    }
-
-    const clearFilters = (e) => {
-        for (let i = 0; i <= 9; i++) {
-            e.target[i].checked = false;
-        }
-    }
-
-    const omit = (source = {}, omitKeys = []) => (
-        Object.keys(source).reduce((output, key) => (
-            omitKeys.includes(key) ? { ...output, [key]: source[key] } : output
-        ), {})
-    );
 
     const deleteProduct = async (Id) => {
         Swal.fire({
@@ -194,6 +171,36 @@ export default function Consultas() {
             })
     }
 
+    const prepareCSV = () => {
+        const productos = Productos;
+        let _CSV = [];
+        productos.map((item, index) => {
+            _CSV = [..._CSV, {
+                no: index + 1,
+                nombre: item.nombre,
+                status: item.status,
+                tipo: item.tipo,
+                modalidad: item.modalidad,
+                areaV: item.areaV,
+                quienPropone: item.quienPropone,
+                razon: item.razon,
+                poblacionObj: item.poblacionObj,
+                descripcion: item.descripcion,
+                institucion: item.institucion,
+                creadoPor: item.creadoPor,
+                RVOE: item.RVOE === "off" ? "No tiene RVOE" : "Tiene RVOE"
+            }]
+        });
+        setCSV(_CSV);
+    }
+
+    useEffect(() => {
+        if (CSV.length > 0) {
+            document.getElementById("downloadCSV").click();
+        }
+    }, [CSV])
+
+
     return <>
         <Head>
             <title>{!session ? 'Cargando...' : session.user.names} | Consultas </title>
@@ -206,7 +213,7 @@ export default function Consultas() {
                     <div className="badge_info">
                         <h1>No hay consultas</h1>
                         <img src="/img/sad.jpg" alt="" />
-                        <NavLink href="/actions/producto">Carga tu primer producto</NavLink>
+                        <NavLink href="/act/register">Carga tu primer producto</NavLink>
                     </div> :
                     <>
                         <div className={styles.main_content}>
@@ -239,42 +246,8 @@ export default function Consultas() {
                                     }
                                 </div>
                                 <div className={styles.filters}>
-                                    <button onClick={() => setBoxFilter(!BoxFilter)}>Filtrar campos</button>
-                                    <div className={styles.fields_options + ' scroll'} style={BoxFilter ? { display: 'block' } : { display: 'none' }}>
-                                        <form onSubmit={(e) => filterFields(e)}>
-                                            <h1>Campos a visualizar</h1>
-                                            <div className={styles.box_wrapper_checkbox}>
-                                                <input type="checkbox" name="nombre" id="nombre" />
-                                                <label htmlFor="nombre">Nombre del producto</label>
-                                                <input type="checkbox" name="tipo" id="tipo" />
-                                                <label htmlFor="tipo">Tipo de producto</label>
-                                                <input type="checkbox" name="modalidad" id="modalidad" />
-                                                <label htmlFor="modalidad">Modalidad</label>
-                                                <input type="checkbox" name="areaV" id="areaV" />
-                                                <label htmlFor="areaV">Área vinculada</label>
-                                                <input type="checkbox" name="razon" id="razon" />
-                                                <label htmlFor="razon">Razón</label>
-                                                <input type="checkbox" name="quienPropone" id="quienPropone" />
-                                                <label htmlFor="quienPropone">Persona o área que propone</label>
-                                                <input type="checkbox" name="poblacionObj" id="poblacionObj" />
-                                                <label htmlFor="poblacionObj">A quién va dirigido</label>
-                                                <input type="checkbox" name="descripcion" id="descripcion" />
-                                                <label htmlFor="descripcion">Descripción</label>
-                                                <input type="checkbox" name="RVOE" id="RVOE" />
-                                                <label htmlFor="RVOE">RVOE</label>
-                                                <input type="checkbox" name="institucion" id="institucion" />
-                                                <label htmlFor="institucion">Institución</label>
-                                            </div>
-                                            {TempProductos.length <= 0 ?
-                                                <button type="submit" onClick={() => (setBoxFilter(!BoxFilter), computePages(Productos), setCurrentPage(1))}>
-                                                    Restaurar datos
-                                                </button>
-                                                : <button type="submit" onClick={() => setBoxFilter(!BoxFilter)}>
-                                                    {Restaurar ? 'Restaurar filtro' : 'Aplicar filtro'}
-                                                </button>
-                                            }
-                                        </form>
-                                    </div>
+                                    <CSVLink data={CSV} headers={headers} filename={`${institucion}.csv`} style={{ display: "none" }} id="downloadCSV">Exportar</CSVLink>
+                                    <a href="#" onClick={() => prepareCSV()}>Exportar CSV</a>
                                 </div>
                             </div>
                             {
@@ -306,7 +279,7 @@ export default function Consultas() {
                                                         <td>{(lastPage - pageSize) + index + 1}</td>
                                                         <td>
                                                             <div className={styles.action_by_id}>
-                                                                <NavLink href={"/view/aprobado/" + producto._id} exact>
+                                                                <NavLink href={"/vw/aprobado/" + producto._id} exact>
                                                                     <button>
                                                                         <AiOutlineEye />
                                                                     </button>
@@ -324,9 +297,9 @@ export default function Consultas() {
                                                                 {
                                                                     session.user.rol === "administrador" ?
                                                                         producto.etapa === "Aprobado" ?
-                                                                            <div className={styles.etapa2} style={{backgroundColor: "green"}}>
+                                                                            <div className={styles.etapa2} style={{ backgroundColor: "green" }}>
                                                                                 <NavLink
-                                                                                    href={"/view/aprobado/" + producto._id}
+                                                                                    href={"/vw/aprobado/" + producto._id}
                                                                                     exact>
                                                                                     {producto.etapa}
                                                                                 </NavLink>
@@ -335,7 +308,7 @@ export default function Consultas() {
                                                                             <div className={styles.etapa2}>
                                                                                 <NavLink
                                                                                     href={
-                                                                                        `/etapa/${producto.etapa === "Propuesta" || producto.etapa === "Validación" || producto.etapa === "Pendiente"
+                                                                                        `/vw/${producto.etapa === "Propuesta" || producto.etapa === "Validación" || producto.etapa === "Pendiente"
                                                                                             ? "validacion" :
                                                                                             producto.etapa.toLowerCase()}/` + producto._id}
                                                                                     exact>

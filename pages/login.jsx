@@ -54,7 +54,7 @@ export default function Login() {
     <Layout>
       <div className={styles.login_container}>
         <img src="/img/Logo_Vertical.svg" alt="" />
-        <h1>Inicia sesión</h1>
+        <h1>DESARROLLO</h1>
         <form onSubmit={(e) => handleLogin(e)}>
           <div className={styles.input_box}>
             <AiOutlineUser className={styles.icon} />

@@ -32,7 +32,7 @@ export default function Search() {
         const idMsg = toast.loading("Buscando usuario...");
         let nombre = Name;
         nombre = nombre[0].toUpperCase() + nombre.substring(1);
-        axios.get("https://www.productoslehren.com/api/usuario/" + nombre)
+        axios.get(`${process.env.NEXT_PUBLIC_ENDPOINT}/api/usuario/` + nombre)
             .then((res) => {
                 if (res.data.length === 0) {
                     toast.info("No existe ningún usuario con este correo");

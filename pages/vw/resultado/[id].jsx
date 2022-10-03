@@ -5,9 +5,7 @@ import axios from 'axios';
 import Head from 'next/head';
 import Layout from '../../../components/Layout';
 import styles from "../../../styles/pages/ventas.module.scss";
-import { getTimeStamp, sessionHasExpired } from '../../../utils/forms';
-import { toast } from 'react-toastify';
-import Swal from 'sweetalert2/dist/sweetalert2';
+import { sessionHasExpired } from '../../../utils/forms';
 import { NavLink } from '../../../components/NavLink';
 
 export default function ResultadoView() {
@@ -103,7 +101,7 @@ export default function ResultadoView() {
                     </div>
                     <br />
                     <button>
-                        <NavLink href={"/etapa/resultado/" + Producto._id} style={{ color: "#fff" }}>Ir al último paso</NavLink>
+                        <NavLink href={"/act/stage/resultado/" + Producto._id} style={{ color: "#fff" }}>Ir al último paso</NavLink>
                     </button>
                 </div>
             </div>

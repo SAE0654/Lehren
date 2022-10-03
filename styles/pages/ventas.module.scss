@@ -76,7 +76,7 @@
                 padding: 1em;
                 font-weight: bold;
                 color: #fff;
-                margin-top: 3em !important;
+                margin-top: 3em;
             }
 
             .form_group {
@@ -405,6 +405,20 @@
         .filters {
             @include mix.flexBox(row, center, center);
             width: 45%;
+            a {
+                display: block;
+                width: 50%;
+                padding: 1em;
+                background-color: #1a2225d2;
+                color: rgb(255, 255, 255);
+                border: 1px solid rgba(158, 141, 141, 0.575);
+                font-size: 1rem;
+                border-radius: 7px;
+                text-align: center;
+                &:active {
+                    scale: 0.9;
+                }
+            }
         }
 
         .search {

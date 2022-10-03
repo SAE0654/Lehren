@@ -24,7 +24,7 @@ function Nav() {
                             Inicio
                         </NavLink>
                         <div>
-                            <NavLink href="/view/catalogue" exact>
+                            <NavLink href="/vw/catalogue" exact>
                                 Catálogo de validación
                             </NavLink>
                         </div>
@@ -33,12 +33,12 @@ function Nav() {
                                 Consultar
                                 <ul className={styles.submenu_consultas} style={ShowConsultar ? { display: "flex" } : { display: "none" }}>
                                     <li>
-                                        <NavLink href="/actions/consultas/sae" exact>
+                                        <NavLink href="/vw/query/sae" exact>
                                             Consultar SAE
                                         </NavLink>
                                     </li>
                                     <li>
-                                        <NavLink href="/actions/consultas/artek" exact>
+                                        <NavLink href="/vw/query/artek" exact>
                                             Consultar ARTEK
                                         </NavLink>
                                     </li>
@@ -50,14 +50,14 @@ function Nav() {
                                 Registrar
                                 <ul className={styles.submenu_consultas} style={ShowRegistrar ? { display: "flex" } : { display: "none" }}>
                                     <li>
-                                        <NavLink href="/actions/producto" exact>
+                                        <NavLink href="/act/register" exact>
                                             Registrar producto
                                         </NavLink>
                                     </li>
                                     {
                                         data.user.rol === "administrador" ? 
                                         <li>
-                                        <NavLink href="/signup" exact>
+                                        <NavLink href="/act/signup" exact>
                                             Registrar usuario
                                         </NavLink>
                                     </li>

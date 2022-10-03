@@ -7,6 +7,7 @@ export const isAnyFieldEmpty = (form) => {
     if (form[i].name === "files_att") {
       console.log("Archivo")
     } else {
+      console.log(form[i].value.trim().length, "===", form[i])
       form[i].value.trim().length <= 0 ? isEmpty = true : null;
     }
   }

@@ -34,8 +34,6 @@ export default function Producto() {
     const registerCourse = async (e) => {
         e.preventDefault();
 
-        await saveFilesToAWS();
-
         const producto = Producto;
         producto = { ...producto, creadoPor: session.user.names + ", el " + getTimeStamp() };
         producto = { ...producto, RVOE: producto.RVOE ? producto.RVOE : 'off' };
@@ -47,6 +45,7 @@ export default function Producto() {
             toast.error("Rellena todos los campos");
             return;
         }
+        await saveFilesToAWS();
         await axios.post(`${process.env.NEXT_PUBLIC_ENDPOINT}api/productos/all`, producto,
             {
                 headers: {
@@ -61,8 +60,8 @@ export default function Producto() {
                 setCursos([...Cursos, res.data]);
                 toast.success("Producto creado con éxito");
                 setNotSaved(false);
+                setInstitucion(undefined)
                 e.target.reset();
-                router.push("/view/validacion/" + res.data._id);
             }).catch((err) => {
                 toast.error("Falta información")
             });

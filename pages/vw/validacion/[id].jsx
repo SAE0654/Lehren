@@ -55,7 +55,7 @@ export default function ValidacionView() {
                     'Content-Type': 'application/json'
                 }
             }).then(() => {
-                router.push(`/etapa/validacion/${Producto._id}`);
+                router.push(`/act/stage/validacion/${Producto._id}`);
             }).catch(() => {
                 toast.error("Error al procesar");
             })
@@ -91,7 +91,7 @@ export default function ValidacionView() {
                     'Content-Type': 'application/json'
                 }
             }).then(() => {
-                router.push(`/actions/consultas/${Producto.institucion}`);
+                router.push(`/vw/query/${Producto.institucion}`);
             }).catch(() => {
                 toast.error("Error al procesar");
             })
@@ -140,7 +140,7 @@ export default function ValidacionView() {
                     </div>
                     <br />
                     <button onClick={() => setStatus("Validación")}>
-                        <NavLink href={"/etapa/validacion/" + Producto._id} style={{ color: "#fff" }}>Mandar a proceso de validación</NavLink>
+                        <NavLink href={"/act/stage/validacion/" + Producto._id} style={{ color: "#fff" }}>Mandar a proceso de validación</NavLink>
                     </button>
                     <button onClick={() => setStatus("Pendiente")}>
                         Poner en pendiente

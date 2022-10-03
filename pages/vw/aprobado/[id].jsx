@@ -17,7 +17,6 @@ export default function ViewProduct() {
   const [FilesETP2, setFilesETP2] = useState([]);
 
   const { id } = router.query;
-  const { data: session } = useSession();
 
   useEffect(() => {
     getId();
@@ -73,7 +72,7 @@ export default function ViewProduct() {
 
   return <>
     <Head>
-      <title>{!session ? 'Cargando...' : session.user.username} | Vista de datos </title>
+      <title>Vista de datos </title>
       <meta name="description" content="Login app" />
       <link rel="icon" href="/favicon.ico" />
     </Head>
@@ -81,7 +80,6 @@ export default function ViewProduct() {
       <div className={styles.main_content} style={{ transform: 'translate(0%, -40%)', maxHeight: '200vh' }}>
         <div className={styles.box_container}>
           <h1 className={styles.t_container}>Datos completos del producto</h1>
-          <img src="/img/LOGO2.png" alt="" />
           <div className={styles.info_container}>
             <div className={styles.info_box}>
               <h2 className={styles.title}>Datos generales</h2>
@@ -182,9 +180,9 @@ export default function ViewProduct() {
               </p>
             </div>
           </div>
-          <NavLink href="/" exact>
+          <NavLink href={"/vw/query/" + Producto.institucion} exact>
             <button>
-              Regresar a Inicio
+              Regresar
             </button>
           </NavLink>
         </div>

@@ -1,6 +1,6 @@
 import Head from 'next/head'
 import { useEffect, useState } from 'react'
-import Layout from "../components/Layout";
+import Layout from "../../components/Layout";
 import { FaUserAlt, FaUsers } from "react-icons/fa";
 import { RiLockPasswordFill, RiLockPasswordLine } from "react-icons/ri";
 import { toast } from 'react-toastify';
@@ -8,9 +8,9 @@ import { AiOutlineMail, AiOutlineClose } from 'react-icons/ai';
 import axios from 'axios';
 import { getSession } from 'next-auth/react';
 import { Router, useRouter } from 'next/router';
-import styles from "../styles/pages/login.module.scss";
-import { sessionHasExpired } from '../utils/forms';
-import Search from '../components/Search';
+import styles from "../../styles/pages/login.module.scss";
+import { sessionHasExpired } from '../../utils/forms';
+import Search from '../../components/Search';
 import { useSession } from "next-auth/react"
 
 export default function Login() {

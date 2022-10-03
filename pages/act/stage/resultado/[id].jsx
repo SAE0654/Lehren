@@ -3,9 +3,9 @@ import { getSession, useSession } from "next-auth/react";
 import { useEffect, useState } from 'react'
 import axios from 'axios'
 import Head from 'next/head';
-import Layout from '../../../components/Layout';
-import styles from "../../../styles/pages/ventas.module.scss";
-import { acceptedFiles, getTimeStamp, isAnyFieldEmpty, sessionHasExpired } from '../../../utils/forms';
+import Layout from '../../../../components/Layout';
+import styles from "../../../../styles/pages/ventas.module.scss";
+import { acceptedFiles, getTimeStamp, isAnyFieldEmpty, sessionHasExpired } from '../../../../utils/forms';
 import { toast } from 'react-toastify';
 import { IoMdClose } from "react-icons/io";
 import Swal from 'sweetalert2/dist/sweetalert2';
@@ -24,19 +24,6 @@ export default function Complete() {
   const { data: session } = useSession();
 
   let url_files = [];
-
-  // let herramientas = [
-  //   "Focus Group con estudiantes y docentes",
-  //   "Encuestas de retroalimentación de estudiantes",
-  //   "Encuestas de ex alumnos",
-  //   "Piloto de un prototipo",
-  //   "Encuestas en redes sociales",
-  //   "Sesiones con expertos de la industria",
-  //   "Herramientas digitales (Google Trends)",
-  //   "Master research",
-  //   "Bitácora social",
-  //   "Estudio de mercado con un tercero",
-  //   "Consultor o asesor externo"]
 
   useEffect(() => {
     getId();
@@ -140,7 +127,7 @@ export default function Complete() {
       toast.error("Rellena todos los campos");
       return;
     }
-    if(producto.status === "No aprobado") {
+    if (producto.status === "No aprobado") {
       producto.comentarios = [{
         user: session.user.names,
         comentarios: "Este producto fue aprobado",
@@ -199,7 +186,7 @@ export default function Complete() {
         }
       }).then(() => {
         toast.info("Producto mandado a propuesta");
-        router.push("/actions/consultas/" + producto.institucion)
+        router.push("/vw/query/" + producto.institucion)
       }).catch(() => {
         toast.error("Ocurrió un error inesperado, inténtalo de nuevo")
       });
@@ -360,16 +347,18 @@ export default function Complete() {
                     ))
                 }
               </div>
-              <input type="submit" style={{ top: "100em", bottom: "inherit", left: "5em" }} value="Aprobar este producto" onClick={() => setNotSaved(false)} />
+              <div className="btn_gr">
+                {
+                  Producto.status === "No aprobado" ?
+                    <button type="button" value="Aprobar ya" style={{ backgroundColor: "transparent", opacity: "0.7", cursor: "not-allowed" }}>Ya fue desaprobado</button>
+                    :
+                    <button type="button" value="No aprobar" onClick={() => desaprobarProducto()} style={{ backgroundColor: "transparent" }}>No aprobar </button>
+                }
+                <input type="submit" style={{ top: "100em", bottom: "inherit", left: "5em" }} value="Aprobar este producto" onClick={() => setNotSaved(false)} />
+              </div>
             </div>
 
           </form>
-          {
-            Producto.status === "No aprobado" ? 
-            <button style={{ backgroundColor: "crimson", opacity: "0.7", cursor: "not-allowed" }}>Este producto ya fue desaprobado</button>
-            :
-            <button onClick={() => desaprobarProducto()} style={{ backgroundColor: "crimson" }}>No aprobar este producto</button>
-          }
           <br /><br />
         </div>
       </div>

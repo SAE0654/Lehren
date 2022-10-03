@@ -2,27 +2,27 @@ export const ADMIN = [
     {
         icono: '',
         texto: "Registrar producto",
-        link: "/actions/producto"
+        link: "/act/register"
     },
     {
         icono: '',
         texto: "Consultar SAE",
-        link: "/actions/consultas/sae"
+        link: "/vw/query/sae"
     },
     {
         icono: '',
         texto: "Consultar ARTEK",
-        link: "/actions/consultas/artek"
+        link: "/vw/query/artek"
     },
     {
         icono: '',
         texto: "Registrar usuario",
-        link: "/signup"
+        link: "/act/signup"
     },
     {
         icono: '',
         texto: "Catálogo de validación",
-        link: "/view/catalogue"
+        link: "/vw/catalogue"
     }
 ]
 
@@ -30,11 +30,11 @@ export const STAFF = [
     {
         icono: '',
         texto: "Consultar",
-        link: "/actions/consultas/"
+        link: "/vw/query/artek"
     },
     {
         icono: '',
         texto: "Registrar producto",
-        link: "/actions/producto"
+        link: "/act/register"
     },
 ]

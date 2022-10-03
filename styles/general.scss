@@ -434,6 +434,23 @@ button:disabled {
     transform: scale(0);
 }
 
+.control-radio.valid .control_indicator:after {
+    background: rgb(148, 148, 32);
+}
+.control.valid input:checked~.control_indicator {
+    background: #fff;
+}
+
+.control.valid:hover input~.control_indicator,
+.control.valid:focus input~.control_indicator {
+    background: rgb(104, 145, 58);
+}
+
+.control.valid:hover input:not([disabled]):checked~.control_indicator,
+.control.valid input:checked:focus~.control_indicator {
+    background: #eef6f8;
+}
+
 @keyframes s-ripple {
     0% {
         opacity: 0;
@@ -603,3 +620,23 @@ input[type="file"] {
 input {
     color-scheme: dark;
 }
+
+.btn_gr {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: 1em;
+    margin-top: 3em;
+    button, input[type="submit"] {
+        display: block;
+        width: 75%;
+        margin-top: inherit !important;
+        margin-bottom: inherit !important;
+    }
+    button {
+        border: 1px solid gray;
+        border-radius: 7px;
+    }
+}
+
