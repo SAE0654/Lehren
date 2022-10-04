@@ -4,7 +4,7 @@ import { getSession, useSession } from "next-auth/react";
 import Layout from '../../../components/Layout';
 import { useEffect, useMemo, useState } from 'react';
 import axios from 'axios';
-import { AiOutlineClose, AiTwotoneEdit, AiOutlineEye, AiFillDelete, AiOutlineSave } from 'react-icons/ai';
+import { AiOutlineClose, AiOutlineEye, AiFillDelete } from 'react-icons/ai';
 import { BsSearch } from "react-icons/bs";
 import { toast } from 'react-toastify';
 import { getTimeStamp, sessionHasExpired } from '../../../utils/forms';
@@ -30,6 +30,7 @@ export default function Consultas() {
     const Route = useRouter();
     //CSV
     const [CSV, setCSV] = useState([]);
+    const [CSVChosed, setCSVChosed] = useState(institucion);
 
     const headers = [
         { label: "No.", key: "no" },
@@ -171,10 +172,36 @@ export default function Consultas() {
             })
     }
 
-    const prepareCSV = () => {
-        const productos = Productos;
-        let _CSV = [];
-        productos.map((item, index) => {
+    const prepareCSV = async () => {
+        const inputOptions = {
+            "sae": "SAE",
+            "artek": "ARTEK",
+            "all": "Todo"
+        }
+
+        const { value: institucionAExportar } = await Swal.fire({
+            title: 'Selecciona qué exportar',
+            input: 'radio',
+            inputOptions: inputOptions,
+            confirmButtonText: "Descargar",
+            inputValidator: (value) => {
+                if (!value) {
+                    return '¡Debes elegir algo!'
+                }
+            }
+        })
+
+        if (institucionAExportar) {
+            setCSVChosed(institucionAExportar === "all" ? "todos" : institucionAExportar);
+            await axios(`${process.env.NEXT_PUBLIC_ENDPOINT}api/productos/` + institucionAExportar).then((res) => {
+                setDataToCSV(res.data);
+            });
+        }
+    }
+
+    const setDataToCSV = (data) => {
+        const _CSV = [];
+        data.map((item, index) => {
             _CSV = [..._CSV, {
                 no: index + 1,
                 nombre: item.nombre,
@@ -198,8 +225,7 @@ export default function Consultas() {
         if (CSV.length > 0) {
             document.getElementById("downloadCSV").click();
         }
-    }, [CSV])
-
+    }, [CSV]);
 
     return <>
         <Head>
@@ -246,7 +272,7 @@ export default function Consultas() {
                                     }
                                 </div>
                                 <div className={styles.filters}>
-                                    <CSVLink data={CSV} headers={headers} filename={`${institucion}.csv`} style={{ display: "none" }} id="downloadCSV">Exportar</CSVLink>
+                                    <CSVLink data={CSV} headers={headers} filename={`${CSVChosed}.csv`} style={{ display: "none" }} id="downloadCSV">Exportar</CSVLink>
                                     <a href="#" onClick={() => prepareCSV()}>Exportar CSV</a>
                                 </div>
                             </div>

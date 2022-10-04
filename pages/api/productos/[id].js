@@ -7,6 +7,10 @@ const handler = async (req, res) => {
     await connectMongo();
     switch (req.method) {
         case 'GET':
+            if (id === "all") {
+                const producto = await Producto.find();
+                return res.status(200).json(producto);
+            }
             if (id.length > 10) { // Es un Id de mongo
                 try {
                     const producto = await Producto.findById(id);
@@ -16,7 +20,7 @@ const handler = async (req, res) => {
                 }
             } else {
                 try { // El id aquí representa en realidad la institución
-                    const producto = await Producto.find({institucion: id});
+                    const producto = await Producto.find({ institucion: id });
                     return res.status(200).json(producto);
                 } catch (error) {
                     console.log("Error: ", error);
