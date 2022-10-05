@@ -30,7 +30,7 @@ export default function Consultas() {
     const Route = useRouter();
     //CSV
     const [CSV, setCSV] = useState([]);
-    const [CSVChosed, setCSVChosed] = useState(institucion);
+    const [CSVChosed, setCSVChosed] = useState(null);
 
     const headers = [
         { label: "No.", key: "no" },
