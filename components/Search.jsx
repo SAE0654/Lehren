@@ -32,7 +32,7 @@ export default function Search() {
         const idMsg = toast.loading("Buscando usuario...");
         let nombre = Name;
         nombre = nombre[0].toUpperCase() + nombre.substring(1);
-        axios.get(`${process.env.NEXT_PUBLIC_ENDPOINT}/api/usuario/` + nombre)
+        axios.get(`${process.env.NEXT_PUBLIC_ENDPOINT}api/usuario/` + nombre)
             .then((res) => {
                 if (res.data.length === 0) {
                     toast.info("No existe ningún usuario con este correo");
@@ -40,7 +40,6 @@ export default function Search() {
                     toast.success("Coincidencias encontradas");
                     setResultados(res.data[0]);
                     setInitialData(res.data[0]);
-                    console.log(res.data[0])
                 }
                 toast.dismiss(idMsg);
             });
