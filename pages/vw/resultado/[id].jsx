@@ -37,8 +37,13 @@ export default function ResultadoView() {
         await axios.get(`${process.env.NEXT_PUBLIC_ENDPOINT}api/productos/` + id)
             .then((res) => {
                 setProducto(res.data);
+                if(res.data.status === "No aprobado" || res.data.status === "Aprobado") {
+                    redirect(res.data._id)
+                }
             });
     }
+
+    const redirect = (lId) => router.push('/act/stage/resultado/' + lId)
 
     if (!Producto) {
         return <h1>Cargando...</h1>

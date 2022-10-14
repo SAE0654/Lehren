@@ -39,9 +39,13 @@ export default function ValidacionView() {
         await axios.get(`${process.env.NEXT_PUBLIC_ENDPOINT}api/productos/` + id)
             .then((res) => {
                 setProducto(res.data);
+                if(res.data.etapa === "Validación") {
+                    redirect(res.data._id)
+                }
             });
     }
 
+    const redirect = (lId) => router.push('/act/stage/validacion/' + lId)
 
     const setStatus = async (Status) => {
         const producto = Producto;
@@ -105,14 +109,14 @@ export default function ValidacionView() {
 
     return <>
         <Head>
-            <title>Etapa de validación | {!session ? 'Cargando...' : session.user.names}</title>
+            <title>Etapa de propuesta | {!session ? 'Cargando...' : session.user.names}</title>
             <meta name="description" content="Login app" />
             <link rel="icon" href="/favicon.ico" />
         </Head>
         <Layout>
             <div className={styles.main_content} style={{ transform: 'translate(0%, -40%)', maxHeight: '1000px' }}>
                 <div className={styles.box_container}>
-                    <h1 className={styles.t_container} style={{ marginTop: "10em" }}>Etapa de validación</h1>
+                    <h1 className={styles.t_container} style={{ marginTop: "10em" }}>Etapa de propuesta</h1>
                     <div className={styles.info_container}>
                         <div className={styles.info_box_step2}>
                             <h2 className={styles.title}>Datos registrados</h2>

@@ -3,12 +3,16 @@ import connectMongo from "../../../utils/db";
 
 const handler = async (req, res) => {
     const body = req.body;
-    const { names } = req.query;
+    const { nombre } = req.query;
     await connectMongo();
     switch (req.method) {
         case 'GET':
             try {
-                const user = await User.find({names: {$regex: names}});
+                const user = await User.find( { names : { $regex : nombre, $options: 'i' } } );
+                if(user.length === 0) {
+                    const user = await User.find( { email : { $regex : nombre, $options: 'i' } } );
+                    return res.status(200).json(user);
+                }
                 return res.status(200).json(user);
             } catch (error) {
                 console.log("Error: ", error);
@@ -28,7 +32,7 @@ const handler = async (req, res) => {
             return res.status(401).json({ message: 'Error al actualizar' });
         case 'DELETE':
             try {
-                await User.findByIdAndDelete(names);
+                await User.findByIdAndDelete(nombre);
                 return res.status(200).json({ message: 'Usuario eliminado' });
             } catch (error) {
                 console.log(error);

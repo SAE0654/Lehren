@@ -32,7 +32,7 @@ export default function Search() {
         const idMsg = toast.loading("Buscando usuario...");
         let nombre = Name;
         nombre = nombre[0].toUpperCase() + nombre.substring(1);
-        axios.get(`${process.env.NEXT_PUBLIC_ENDPOINT}api/usuario/` + nombre)
+        axios.get(`${process.env.NEXT_PUBLIC_ENDPOINT}api/usuario/` + Name)
             .then((res) => {
                 if (res.data.length === 0) {
                     toast.info("No existe ningún usuario con este correo");
@@ -41,8 +41,8 @@ export default function Search() {
                     setResultados(res.data[0]);
                     setInitialData(res.data[0]);
                 }
-                toast.dismiss(idMsg);
             });
+        toast.dismiss(idMsg);
     }
 
     const handleChanges = (e) => {
@@ -60,20 +60,20 @@ export default function Search() {
         const idMsg = toast.loading("Actualizando datos...")
         await axios.put("https://www.productoslehren.com/api/usuario/update", Resultados)
             .then(() => {
-                toast.success("Usuario actualizado con éxito");    
+                toast.success("Usuario actualizado con éxito");
             });
-            setShowNewPassword(false);
-            toast.dismiss(idMsg);
+        setShowNewPassword(false);
+        toast.dismiss(idMsg);
     }
 
     const matchPasswords = async () => {
-        if(oldPassword.current.value === Resultados['password']) {
+        if (oldPassword.current.value === Resultados['password']) {
             const encrypted = await bcrypt.genSalt(10);
             bcrypt.hash(Resultados['password'], encrypted)
-            .then((res) => {
-                Resultados['password'] = res;
-                updateBasicInfo();
-            });            
+                .then((res) => {
+                    Resultados['password'] = res;
+                    updateBasicInfo();
+                });
         } else {
             toast.error("Las contraseñas no coinciden")
         }

@@ -149,7 +149,7 @@ export default function StepTwo() {
             }).then((res) => {
                 toast.info(res.data.message);
                 e.target.reset();
-                router.push(`${process.env.NEXT_PUBLIC_ENDPOINT}/`);
+                router.push(`${process.env.NEXT_PUBLIC_ENDPOINT}/vw/query/` + Producto.institucion);
             }).catch(() => {
                 toast.error("Error al completar");
             })
@@ -192,14 +192,14 @@ export default function StepTwo() {
 
     return <>
         <Head>
-            <title>Etapa de validación | {!session ? 'Cargando...' : session.user.names}</title>
+            <title>Etapa de propuesta | {!session ? 'Cargando...' : session.user.names}</title>
             <meta name="description" content="Login app" />
             <link rel="icon" href="/favicon.ico" />
         </Head>
         <Layout>
             <div className={styles.main_content} style={{ transform: 'translate(0%, -40%)', maxHeight: '1000px' }}>
                 <div className={styles.box_container}>
-                    <h1 className={styles.t_container} style={{ marginTop: "10em" }}>Proceso de validación</h1>
+                    <h1 className={styles.t_container} style={{ marginTop: "10em" }}>Proceso de propuesta</h1>
                     <form style={{ flexDirection: 'column', alignItems: 'center' }} onSubmit={(e) => uploadF2(e)}>
                         <div className={styles.form_group} style={{ width: '100%' }}>
                             <div className={styles.container_footer}>
