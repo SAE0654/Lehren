@@ -9,6 +9,7 @@ import { NavLink } from '../../../components/NavLink';
 import { sessionHasExpired } from '../../../utils/forms';
 import { AiTwotoneDelete } from 'react-icons/ai';
 import { toast } from 'react-toastify';
+import Swal from 'sweetalert2/dist/sweetalert2';
 
 export default function ViewProduct() {
   const router = useRouter();
@@ -64,6 +65,30 @@ export default function ViewProduct() {
       .then(() => {
         toast.success("Archivo eliminado")
       });
+  }
+
+  const editOptions = async () => {
+    const inputOptions = {
+      [`/act/register/${Producto._id}`]: "1. Registro",
+      [`/vw/validacion/${Producto._id}`]: "2. Propuesta",
+      [`/vw/resultado/${Producto._id}`]: "3. Resultado"
+    }
+
+    const { value: editChose } = await Swal.fire({
+      title: 'Editar datos del...',
+      input: 'radio',
+      inputOptions: inputOptions,
+      confirmButtonText: "Continuar",
+      inputValidator: (value) => {
+        if (!value) {
+          return '¡Debes elegir algo!'
+        }
+      }
+    })
+
+    if (editChose) {
+      console.log(editChose)
+    }
   }
 
   if (!Producto) {
@@ -136,7 +161,7 @@ export default function ViewProduct() {
               <h2 className={styles.title4}>Herramientas de validación</h2>
               <p><b>Instrumentos de validación empleados:</b></p>
               {Producto.instrumentoValidacion === null ? <p className={styles.right_border}>No se han seleccionado instrumentos de validación</p> : <p className={styles.right_border}>{Producto.instrumentoValidacion.length > 0
-                ? Producto.instrumentoValidacion.map((tool, index) => (Producto.instrumentoValidacion.length - 1) === index ? (index +1) + " .-" + tool.nombre + ". " : (index +1) + " .-" + tool.nombre + ", ")
+                ? Producto.instrumentoValidacion.map((tool, index) => (Producto.instrumentoValidacion.length - 1) === index ? (index + 1) + " .-" + tool.nombre + ". " : (index + 1) + " .-" + tool.nombre + ", ")
                 : null}
               </p>}
               <p className={styles.last_row}><b>Comentarios:</b></p>
@@ -180,10 +205,11 @@ export default function ViewProduct() {
               </p>
             </div>
           </div>
+          <button className={styles.editar_btn} onClick={() => editOptions()}>
+            Actualizar información
+          </button>
           <NavLink href={"/vw/query/" + Producto.institucion} exact>
-            <button>
-              Regresar
-            </button>
+            Regresar
           </NavLink>
         </div>
       </div>

@@ -35,26 +35,32 @@
         h2 {
             font-family: "Poppins", sans-serif;
             color: #ffffff;
+            text-align: center;
         }
 
-        img {
-            max-width: 300px;
-            position: absolute;
-            top: 1em;
-            right: 1em;
-        }
-
-        button {
+        button,a  {
             padding: 1em;
             font-family: "Poppins", sans-serif;
             background-color: #000;
+            width: 95%;
             color: #fff;
             margin-top: 3em;
             margin-bottom: 3em;
+            text-align: center;
+            width: 95%;
+            max-width: 250px;
 
             &:hover {
                 background-color: rgba(0, 0, 0, 0.815);
             }
+        }
+
+        a {
+            font-size: 0.9rem;
+        }
+
+        .editar_btn {
+            background-color: #121516
         }
 
         form {
@@ -465,123 +471,6 @@
                 }
             }
         }
-
-        .filters {
-            position: relative;
-
-            button {
-                display: block;
-                width: 50%;
-                padding: 1em;
-                background-color: #1a2225d2;
-                color: rgb(255, 255, 255);
-                font-size: 1.1rem;
-                border-radius: 10px;
-                font-weight: bold;
-
-                &:hover {
-                    background-color: #1a2225;
-                }
-            }
-
-            .fields_options {
-                position: absolute;
-                width: 80%;
-                top: 110%;
-                background-color: #1a2225;
-                margin-bottom: 2em;
-                padding: 1em;
-                max-height: 80vh;
-                overflow-y: scroll;
-                border-radius: 10px;
-                z-index: 3;
-
-                form {
-                    display: block;
-                    width: 100%;
-                    margin: auto;
-                    background-color: transparent;
-                    box-shadow: none;
-
-                    h1 {
-                        text-align: center;
-                        font-size: 1.3rem;
-                        color: #fff;
-                    }
-
-                    .box_wrapper_checkbox {
-                        display: flex;
-                        flex-direction: row;
-                        flex-wrap: wrap;
-                        align-items: flex-start;
-                        justify-content: flex-start;
-                        gap: 1em;
-                        width: 95%;
-                        margin: auto;
-                        font-family: "Poppins", sans-serif;
-
-                        input[type="checkbox"] {
-                            position: absolute;
-                            opacity: 0;
-                            z-index: -1;
-                        }
-
-                        label {
-                            position: relative;
-                            padding-left: 2em;
-                            padding-right: 1em;
-                            line-height: 2;
-                            color: rgba(255, 255, 255, 0.808);
-                            cursor: pointer;
-
-                            &:before {
-                                box-sizing: border-box;
-                                content: " ";
-                                position: absolute;
-                                top: 0.3em;
-                                left: 0;
-                                display: block;
-                                width: 1.4em;
-                                height: 1.4em;
-                                border-radius: 0.25em;
-                                z-index: 4;
-                            }
-
-                            &,
-                            &::before {
-                                -webkit-transition: 0.25s all ease;
-                                -o-transition: 0.25s all ease;
-                                transition: 0.25s all ease;
-                            }
-                        }
-
-                        input[type="checkbox"]:checked+label {
-                            padding-left: 1em;
-                            border: 1px solid #ffffffd2;
-
-                            &:before {
-                                top: 0;
-                                width: 100%;
-                                height: 2em;
-
-                            }
-                        }
-                    }
-
-
-                    button {
-                        background-color: #53899c;
-                        color: #fff;
-                        margin-top: 2em;
-                        transition: 250ms ease;
-
-                        &:hover {
-                            background-color: #53899cbb;
-                        }
-                    }
-                }
-            }
-        }
     }
 
     table {
@@ -826,8 +715,6 @@
             display: flex;
             flex-direction: column;
             width: 90%;
-
-
             background-color: #000;
             border-radius: 10px;
 

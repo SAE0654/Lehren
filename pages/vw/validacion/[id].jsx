@@ -39,7 +39,7 @@ export default function ValidacionView() {
         await axios.get(`${process.env.NEXT_PUBLIC_ENDPOINT}api/productos/` + id)
             .then((res) => {
                 setProducto(res.data);
-                if(res.data.etapa === "Validación") {
+                if (res.data.etapa === "Validación") {
                     redirect(res.data._id)
                 }
             });
@@ -51,18 +51,18 @@ export default function ValidacionView() {
         const producto = Producto;
         producto.status = Status === "Validación" ? "Elección" : "Revisión";
         producto.etapa = Status;
-        if(Status === "Validación") {
+        if (Status === "Validación") {
             await axios.put(`${process.env.NEXT_PUBLIC_ENDPOINT}api/productos/` + id, producto,
-            {
-                headers: {
-                    accept: '*/*',
-                    'Content-Type': 'application/json'
-                }
-            }).then(() => {
-                router.push(`/act/stage/validacion/${Producto._id}`);
-            }).catch(() => {
-                toast.error("Error al procesar");
-            })
+                {
+                    headers: {
+                        accept: '*/*',
+                        'Content-Type': 'application/json'
+                    }
+                }).then(() => {
+                    router.push(`/act/stage/validacion/${Producto._id}`);
+                }).catch(() => {
+                    toast.error("Error al procesar");
+                })
             return;
         }
         await Swal.fire({
@@ -89,16 +89,16 @@ export default function ValidacionView() {
                 createdAt: getTimeStamp()
             }];
             await axios.put(`${process.env.NEXT_PUBLIC_ENDPOINT}api/productos/` + id, producto,
-            {
-                headers: {
-                    accept: '*/*',
-                    'Content-Type': 'application/json'
-                }
-            }).then(() => {
-                router.push(`/vw/query/${Producto.institucion}`);
-            }).catch(() => {
-                toast.error("Error al procesar");
-            })
+                {
+                    headers: {
+                        accept: '*/*',
+                        'Content-Type': 'application/json'
+                    }
+                }).then(() => {
+                    router.push(`/vw/query/${Producto.institucion}`);
+                }).catch(() => {
+                    toast.error("Error al procesar");
+                })
         })
     }
 
@@ -143,9 +143,7 @@ export default function ValidacionView() {
                         </div>
                     </div>
                     <br />
-                    <button onClick={() => setStatus("Validación")}>
-                        <NavLink href={"/act/stage/validacion/" + Producto._id} style={{ color: "#fff" }}>Mandar a proceso de validación</NavLink>
-                    </button>
+                    <NavLink href={"/act/stage/validacion/" + Producto._id} style={{ color: "#fff" }} onClick={() => setStatus("Validación")}>Mandar a proceso de validación</NavLink>
                     <button onClick={() => setStatus("Pendiente")}>
                         Poner en pendiente
                     </button>

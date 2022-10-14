@@ -1,6 +1,5 @@
 import styles from "../styles/pages/search.module.scss";
-import { useSession } from "next-auth/react";
-import { useEffect, useState, useRef } from "react";
+import { useState, useRef } from "react";
 import { BiSearchAlt } from "react-icons/bi";
 import axios from 'axios';
 import { toast } from 'react-toastify';
@@ -14,12 +13,6 @@ export default function Search() {
     const [ShowNewPassword, setShowNewPassword] = useState(false);
 
     const oldPassword = useRef(null);
-
-    const { data: session } = useSession();
-
-    useEffect(() => {
-        console.log(session)
-    }, []);
 
     const searchUser = async () => {
         setShowNewPassword(false);
