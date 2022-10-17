@@ -10,6 +10,7 @@ import { sessionHasExpired } from '../../../utils/forms';
 import { AiTwotoneDelete } from 'react-icons/ai';
 import { toast } from 'react-toastify';
 import Swal from 'sweetalert2/dist/sweetalert2';
+import { getProductoById } from '../../../utils/api';
 
 export default function ViewProduct() {
   const router = useRouter();
@@ -22,7 +23,7 @@ export default function ViewProduct() {
   useEffect(() => {
     getId();
     if (!Producto) {
-      getProductoById();
+      callProduct();
     }
     document.querySelector("body").className = '';
     document.querySelector("body").classList.add("consultas_bg");
@@ -36,13 +37,11 @@ export default function ViewProduct() {
     localStorage.setItem("Id", id);
   }
 
-  const getProductoById = async () => {
-    await axios.get(`${process.env.NEXT_PUBLIC_ENDPOINT}api/productos/` + id)
-      .then((res) => {
-        setProducto(res.data);
-        setFilesETP1(res.data.archivosETP1);
-        setFilesETP2(res.data.archivosETP2);
-      });
+  const callProduct = async () => {
+    const data = await getProductoById(id);
+    setProducto(data);
+    setFilesETP1(data.archivosETP1);
+    setFilesETP2(data.archivosETP2)
   }
 
   const deleteFile = async (fileName, etapa) => {
@@ -69,9 +68,9 @@ export default function ViewProduct() {
 
   const editOptions = async () => {
     const inputOptions = {
-      [`/act/register/${Producto._id}`]: "1. Registro",
-      [`/vw/validacion/${Producto._id}`]: "2. Propuesta",
-      [`/vw/resultado/${Producto._id}`]: "3. Resultado"
+      [`act/register/${Producto._id}`]: "1. Registro",
+      // [`vw/validacion/${Producto._id}`]: "2. Propuesta",
+      // [`vw/resultado/${Producto._id}`]: "3. Resultado"
     }
 
     const { value: editChose } = await Swal.fire({
@@ -87,7 +86,7 @@ export default function ViewProduct() {
     })
 
     if (editChose) {
-      console.log(editChose)
+      router.push(`${process.env.NEXT_PUBLIC_ENDPOINT}` + editChose)
     }
   }
 
@@ -118,6 +117,8 @@ export default function ViewProduct() {
               <p className={styles.right_border}>{Producto.areaV}</p>
               <p><b>Persona que propone el producto:</b></p>
               <p className={styles.right_border}>{Producto.quienPropone}</p>
+              <p><b>Responsable:</b></p>
+              <p className={styles.right_border}>{Producto.responsable}</p>
               <p className={styles.last_row}><b>Prioridad:</b></p>
               <p className={styles.right_bottom_border}>{Producto.prioridad ? Producto.prioridad : "baja"}</p>
               <h2 className={styles.title2}>Análisis académico</h2>

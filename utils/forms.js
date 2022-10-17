@@ -25,7 +25,7 @@ export const getTimeStamp = () => {
 
 export const sessionHasExpired = () => {
   if (!localStorage.getItem('L')) {
-    const expiryDate = (Number(getTimeStamp().split(' ')[7].split(':')[0]) + 3) + ':' + getTimeStamp().split(' ')[7].split(':')[1]; // Seteamos la fecha de expiración
+    const expiryDate = (Number(getTimeStamp().split(' ')[7].split(':')[0]) + 1) + ':' + getTimeStamp().split(' ')[7].split(':')[1]; // Seteamos la fecha de expiración
     localStorage.setItem('L', expiryDate);
   } else {
     const expiryHour = Number(localStorage.getItem('L').split(':')[0]);
@@ -35,6 +35,7 @@ export const sessionHasExpired = () => {
     if (currentHour >= expiryHour && currentMinutes >= expiryMinutes) {
       localStorage.removeItem('L');
       signOut();
+      console.error("Expired")
     }
   }
 }

@@ -19,7 +19,7 @@ export default function Search() {
         setResultados(null);
         setInitialData({})
         if (Name === null || Name.trim().length === 0) {
-            toast.info("Escribe algo para continuar")
+            toast.info("Escribe algo para continuar");
             return
         }
         const idMsg = toast.loading("Buscando usuario...");

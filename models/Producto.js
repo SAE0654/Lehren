@@ -15,7 +15,6 @@ const productoSchema = new Schema({
     institucion: { type: String, required: true },
     creadoPor: { type: String, required: true },
     lastUpdate: { type: String, default: 'Sin actualizaciones' },
-    modifiedBy: { type: String, default: 'Sin actualizaciones' },
     status: { type: String, default: 'Revisión'},
     etapa: {type: String, default: 'Propuesta'},
     aprobadoPor: { type: String, default: 'No ha sido aprobado' },
@@ -38,7 +37,8 @@ const productoSchema = new Schema({
     prioridad: { type: String, default: "baja" },
     generalComments: { type: String },
     fechaEjecucion: { type: String},
-    fechaEntrega: { type: String }
+    fechaEntrega: { type: String },
+    responsable: { type: String }
 })
 
 const Producto = models.Producto || model('Producto', productoSchema);

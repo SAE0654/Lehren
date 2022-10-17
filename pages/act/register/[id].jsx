@@ -1,13 +1,14 @@
 import Head from 'next/head';
 import { getSession, useSession } from "next-auth/react";
-import styles from "../../styles/pages/ventas.module.scss";
-import Layout from '../../components/Layout';
+import styles from "../../../styles/pages/ventas.module.scss";
+import Layout from '../../../components/Layout';
 import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
-import { acceptedFiles, getTimeStamp, isAnyFieldEmpty, sessionHasExpired } from '../../utils/forms';
+import { acceptedFiles, getTimeStamp, isAnyFieldEmpty, sessionHasExpired } from '../../../utils/forms';
 import { useRouter } from 'next/router';
 import { IoMdClose } from "react-icons/io";
+import { getProductoById } from '../../../utils/api';
 
 const BUCKET_URI = "https://sae-files.s3.amazonaws.com/";
 
@@ -21,6 +22,7 @@ export default function Producto() {
     const [Files, setFiles] = useState([]);
 
     const router = useRouter();
+    const { id } = router.query;
     const { data: session } = useSession();
 
     let url_files = [];
@@ -29,6 +31,8 @@ export default function Producto() {
         document.querySelector("body").className = '';
         document.querySelector("body").classList.add("registro_bg");
         sessionHasExpired();
+        if (id === "new") return;
+        callProduct();
     }, []);
 
     const registerCourse = async (e) => {
@@ -45,7 +49,6 @@ export default function Producto() {
             toast.error("Rellena todos los campos");
             return;
         }
-        await saveFilesToAWS();
         await axios.post(`${process.env.NEXT_PUBLIC_ENDPOINT}api/productos/all`, producto,
             {
                 headers: {
@@ -62,9 +65,10 @@ export default function Producto() {
                 setNotSaved(false);
                 setInstitucion(undefined)
                 e.target.reset();
-            }).catch((err) => {
+            }).catch(() => {
                 toast.error("Falta información")
             });
+        await saveFilesToAWS();
     }
 
     const setProductoItem = (e) => {
@@ -148,6 +152,30 @@ export default function Producto() {
         setFiles([]);
     }
 
+    // Funciones de editado
+
+    const callProduct = async () => {
+        const data = await getProductoById(id);
+        setProducto(data)
+        setInstitucion(data.institucion)
+        console.log(data)
+    }
+
+    const updateCourse = async (e) => {
+        e.preventDefault();
+        const producto = Producto;
+        producto.lastUpdate = "El " + getTimeStamp() + " por " + session.user.names;
+        await axios.put(`${process.env.NEXT_PUBLIC_ENDPOINT}api/productos/` + Producto._id, producto)
+        .then(() => {
+            toast.success("Producto actualizado con éxito");
+            router.push(`${process.env.NEXT_PUBLIC_ENDPOINT}vw/aprobado/` + producto._id);
+        })
+    }
+
+    if (!Producto) {
+        return <h1>Cargando...</h1>
+    }
+
     return <>
         <Head>
             <title>{!session ? 'Cargando...' : session.user.names} | Alta de producto </title>
@@ -156,51 +184,52 @@ export default function Producto() {
         </Head>
         <Layout>
             <div className={styles.main_content}>
-                <h1>Genera un producto</h1>
+                <h1>{id === 'new' ? 'Genera un producto' : 'Actualiza el producto'}</h1>
                 <div className={styles.box_container}>
-                    <form onSubmit={(e) => registerCourse(e)}>
+                    <form onSubmit={(e) => id === "new" ? registerCourse(e) : updateCourse(e)}>
                         <div className={styles.form_group}>
                             <h2>Datos generales</h2>
                             <input
                                 type="text"
                                 name="nombre"
                                 placeholder="Propuesta del nombre del producto"
+                                defaultValue={Producto.nombre}
                                 onChange={(e) => setProductoItem(e)} />
                             <div className="radio_ck_section">
                                 <h3>Tipo de oferta</h3>
                                 <label className="control control-radio">
                                     Diplomado
-                                    <input type="radio" name="tipo" value="Diplomado" onChange={(e) => setProductoItem(e)} />
+                                    <input type="radio" name="tipo" value="Diplomado" checked={Producto.tipo === 'Diplomado' ? true : false} onChange={(e) => setProductoItem(e)} />
                                     <div className="control_indicator"></div>
                                 </label>
                                 <label className="control control-radio">
                                     Especialidad
-                                    <input type="radio" name="tipo" value="Especialidad" onChange={(e) => setProductoItem(e)} />
+                                    <input type="radio" name="tipo" value="Especialidad" checked={Producto.tipo === 'Especialidad'} onChange={(e) => setProductoItem(e)} />
                                     <div className="control_indicator"></div>
                                 </label>
                                 <label className="control control-radio">
                                     Licenciatura
-                                    <input type="radio" name="tipo" value="Licenciatura" onChange={(e) => setProductoItem(e)} />
+                                    <input type="radio" name="tipo" value="Licenciatura" checked={Producto.tipo === 'Licenciatura'} onChange={(e) => setProductoItem(e)} />
                                     <div className="control_indicator"></div>
                                 </label>
                                 <label className="control control-radio">
                                     Maestría
-                                    <input type="radio" name="tipo" value="Maestría" onChange={(e) => setProductoItem(e)} />
+                                    <input type="radio" name="tipo" value="Maestría" checked={Producto.tipo === 'Maestría'} onChange={(e) => setProductoItem(e)} />
                                     <div className="control_indicator"></div>
                                 </label>
                                 <label className="control control-radio">
                                     Taller
-                                    <input type="radio" name="tipo" value="Taller" onChange={(e) => setProductoItem(e)} />
+                                    <input type="radio" name="tipo" value="Taller" checked={Producto.tipo === 'Taller'} onChange={(e) => setProductoItem(e)} />
                                     <div className="control_indicator"></div>
                                 </label>
                                 <label className="control control-radio">
                                     Curso
-                                    <input type="radio" name="tipo" value="Curso" onChange={(e) => setProductoItem(e)} />
+                                    <input type="radio" name="tipo" value="Curso" checked={Producto.tipo === 'Curso'} onChange={(e) => setProductoItem(e)} />
                                     <div className="control_indicator"></div>
                                 </label>
                                 <label className="control control-radio">
                                     Certificado
-                                    <input type="radio" name="tipo" value="Certificado" onChange={(e) => setProductoItem(e)} />
+                                    <input type="radio" name="tipo" value="Certificado" checked={Producto.tipo === 'Certificado'} onChange={(e) => setProductoItem(e)} />
                                     <div className="control_indicator"></div>
                                 </label>
                             </div>
@@ -208,26 +237,26 @@ export default function Producto() {
                                 <h3>Modalidad de oferta</h3>
                                 <label className="control control-radio">
                                     Presencial
-                                    <input type="radio" name="modalidad" value="Presencial" onChange={(e) => setProductoItem(e)} />
+                                    <input type="radio" name="modalidad" value="Presencial" checked={Producto.modalidad === 'Presencial'} onChange={(e) => setProductoItem(e)} />
                                     <div className="control_indicator"></div>
                                 </label>
                                 <label className="control control-radio">
                                     Mixto
-                                    <input type="radio" name="modalidad" value="Mixto" onChange={(e) => setProductoItem(e)} />
+                                    <input type="radio" name="modalidad" value="Mixto" checked={Producto.modalidad === 'Mixto'} onChange={(e) => setProductoItem(e)} />
                                     <div className="control_indicator"></div>
                                 </label>
                                 <label className="control control-radio">
                                     En línea asincrónico
-                                    <input type="radio" name="modalidad" value="En línea asincrónico" onChange={(e) => setProductoItem(e)} />
+                                    <input type="radio" name="modalidad" value="En línea asincrónico" checked={Producto.modalidad === 'En línea asincrónico'} onChange={(e) => setProductoItem(e)} />
                                     <div className="control_indicator"></div>
                                 </label>
                                 <label className="control control-radio">
                                     En línea sincrónico
-                                    <input type="radio" name="modalidad" value="En línea sincrónico" onChange={(e) => setProductoItem(e)} />
+                                    <input type="radio" name="modalidad" value="En línea sincrónico" checked={Producto.modalidad === 'En línea sincrónico'} onChange={(e) => setProductoItem(e)} />
                                     <div className="control_indicator"></div>
                                 </label>
                             </div>
-                            <select name="institucion" id="institucion" onChange={(e) => setProductoItem(e)} >
+                            <select name="institucion" id="institucion" value={Producto.institucion} onChange={(e) => setProductoItem(e)} >
                                 <option value="default">Selecciona una institución</option>
                                 <option value="sae">SAE</option>
                                 <option value="artek">Artek</option>
@@ -239,37 +268,37 @@ export default function Producto() {
                                             <h3>Área a la que se víncula</h3>
                                             <label className="control control-radio">
                                                 Cine digital
-                                                <input type="radio" name="areaV" value="Cine digital" onChange={(e) => setProductoItem(e)} />
+                                                <input type="radio" name="areaV" value="Cine digital" checked={Producto.areaV === 'Cine digital'} onChange={(e) => setProductoItem(e)} />
                                                 <div className="control_indicator"></div>
                                             </label>
                                             <label className="control control-radio">
                                                 Animación y efectos visuales
-                                                <input type="radio" name="areaV" value="Animación y efectos visuales" onChange={(e) => setProductoItem(e)} />
+                                                <input type="radio" name="areaV" value="Animación y efectos visuales" checked={Producto.areaV === 'Animación y efectos visuales'} onChange={(e) => setProductoItem(e)} />
                                                 <div className="control_indicator"></div>
                                             </label>
                                             <label className="control control-radio">
                                                 Comunicación
-                                                <input type="radio" name="areaV" value="Comunicación" onChange={(e) => setProductoItem(e)} />
+                                                <input type="radio" name="areaV" value="Comunicación" checked={Producto.areaV === 'Comunicación'} onChange={(e) => setProductoItem(e)} />
                                                 <div className="control_indicator"></div>
                                             </label>
                                             <label className="control control-radio">
                                                 Diseño de videojuegos
-                                                <input type="radio" name="areaV" value="Diseño de videojuegos" onChange={(e) => setProductoItem(e)} />
+                                                <input type="radio" name="areaV" value="Diseño de videojuegos" checked={Producto.areaV === 'Diseño de videojuegos'} onChange={(e) => setProductoItem(e)} />
                                                 <div className="control_indicator"></div>
                                             </label>
                                             <label className="control control-radio">
                                                 Ingeniería de audio
-                                                <input type="radio" name="areaV" value="Ingeniería de audio" onChange={(e) => setProductoItem(e)} />
+                                                <input type="radio" name="areaV" value="Ingeniería de audio" checked={Producto.areaV === 'Ingeniería de audio'} onChange={(e) => setProductoItem(e)} />
                                                 <div className="control_indicator"></div>
                                             </label>
                                             <label className="control control-radio">
                                                 Negocios de la música
-                                                <input type="radio" name="areaV" value="Negocios de la música" onChange={(e) => setProductoItem(e)} />
+                                                <input type="radio" name="areaV" value="Negocios de la música" checked={Producto.areaV === 'Negocios de la música'} onChange={(e) => setProductoItem(e)} />
                                                 <div className="control_indicator"></div>
                                             </label>
                                             <label className="control control-radio">
                                                 Programación de videojuegos
-                                                <input type="radio" name="areaV" value="Programación de videojuegos" onChange={(e) => setProductoItem(e)} />
+                                                <input type="radio" name="areaV" value="Programación de videojuegos" checked={Producto.areaV === 'Programación de videojuegos'} onChange={(e) => setProductoItem(e)} />
                                                 <div className="control_indicator"></div>
                                             </label>
                                         </div>
@@ -277,33 +306,33 @@ export default function Producto() {
                                             <h3>Área a la que se víncula</h3>
                                             <label className="control control-radio">
                                                 Gestión Tecnológica
-                                                <input type="radio" name="areaV" value="Gestión tecnológica" onChange={(e) => setProductoItem(e)} />
+                                                <input type="radio" name="areaV" value="Gestión tecnológica" checked={Producto.areaV === 'Gestión tecnológica'} onChange={(e) => setProductoItem(e)} />
                                                 <div className="control_indicator"></div>
                                             </label>
                                             <label className="control control-radio">
                                                 Desarrollo de Software
-                                                <input type="radio" name="areaV" value="Desarrollo de software" onChange={(e) => setProductoItem(e)} />
+                                                <input type="radio" name="areaV" value="Desarrollo de software" checked={Producto.areaV === 'Desarrollo de software'} onChange={(e) => setProductoItem(e)} />
                                                 <div className="control_indicator"></div>
                                             </label>
                                             <label className="control control-radio">
                                                 Ciencia de Datos
-                                                <input type="radio" name="areaV" value="Ciencia de datos" onChange={(e) => setProductoItem(e)} />
+                                                <input type="radio" name="areaV" value="Ciencia de datos" checked={Producto.areaV === 'Ciencia de datos'} onChange={(e) => setProductoItem(e)} />
                                                 <div className="control_indicator"></div>
                                             </label>
                                             <label className="control control-radio">
                                                 Ciberseguridad
-                                                <input type="radio" name="areaV" value="Ciberseguridad" onChange={(e) => setProductoItem(e)} />
+                                                <input type="radio" name="areaV" value="Ciberseguridad" checked={Producto.areaV === 'Ciberseguridad'} onChange={(e) => setProductoItem(e)} />
                                                 <div className="control_indicator"></div>
                                             </label>
                                             <label className="control control-radio">
                                                 Inteligencia Artificial
-                                                <input type="radio" name="areaV" value="Inteligencia artificial" onChange={(e) => setProductoItem(e)} />
+                                                <input type="radio" name="areaV" value="Inteligencia artificial" checked={Producto.areaV === 'Inteligencia artificial'} onChange={(e) => setProductoItem(e)} />
                                                 <div className="control_indicator"></div>
                                             </label>
                                         </div>
                                     </>
                             }
-                            <div className={styles.files_zone}>
+                            <div className={styles.files_zone} style={id !== "new" ? { display: "none" } : { display: "block" }}>
                                 <label className={styles.form_files}>
                                     <input type="file" name="files_att" id="fileUpload" onChange={(e) => verifyFiles(e)} multiple />
                                     Subir archivos
@@ -348,20 +377,17 @@ export default function Producto() {
                         </div>
                         <div className={styles.form_group}>
                             <h2>Descripción general</h2>
-                            <input
-                                type="text"
-                                name="quienPropone"
-                                placeholder="Persona o área que propone el producto"
-                                onChange={(e) => setProductoItem(e)} />
-                            <textarea name="razon" maxLength="500" placeholder='Razón o necesidad de la propuesta' onChange={(e) => setProductoItem(e)}></textarea>
-                            <input type="text" name="poblacionObj" placeholder="A quién va dirigido" onChange={(e) => setProductoItem(e)} />
-                            <textarea name="descripcion" maxLength="500" placeholder="Descripción general" onChange={(e) => setProductoItem(e)}></textarea>
+                            <input type="text" name="quienPropone" placeholder="Persona o área que propone el producto" defaultValue={Producto.quienPropone} onChange={(e) => setProductoItem(e)} />
+                            <textarea name="razon" maxLength="500" placeholder='Razón o necesidad de la propuesta' defaultValue={Producto.razon} onChange={(e) => setProductoItem(e)}></textarea>
+                            <input type="text" name="poblacionObj" placeholder="A quién va dirigido" defaultValue={Producto.poblacionObj} onChange={(e) => setProductoItem(e)} />
+                            <textarea name="descripcion" maxLength="500" placeholder="Descripción general" defaultValue={Producto.descripcion} onChange={(e) => setProductoItem(e)}></textarea>
+                            <input type="text" name="responsable" placeholder="Responsable del programa" defaultValue={Producto.responsable} onChange={(e) => setProductoItem(e)} maxLength={40} />
                             <div className={styles.container_footer}>
                                 <label className={styles.form_control}>
-                                    <input type="checkbox" name="RVOE" id="RVOE" onChange={(e) => setProductoItem(e)} />
+                                    <input type="checkbox" name="RVOE" id="RVOE" checked={Producto.RVOE === 'on' ? true : false} onChange={(e) => setProductoItem(e)} />
                                     RVOE
                                 </label>
-                                <input type="submit" value="Registrar producto" />
+                                <input type="submit" value={id === 'new' ? "Registrar producto" : "Actualizar producto"} />
                             </div>
                         </div>
                     </form>

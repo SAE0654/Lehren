@@ -50,7 +50,7 @@ function Nav() {
                                 Registrar
                                 <ul className={styles.submenu_consultas} style={ShowRegistrar ? { display: "flex" } : { display: "none" }}>
                                     <li>
-                                        <NavLink href="/act/register" exact>
+                                        <NavLink href="/act/register/new" exact>
                                             Registrar producto
                                         </NavLink>
                                     </li>

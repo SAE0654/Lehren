@@ -35,6 +35,7 @@ export default function Consultas() {
     const headers = [
         { label: "No.", key: "no" },
         { label: "Nombre del producto", key: "nombre" },
+        { label: "Responsable", key: "responsable" },
         { label: "Estatus", key: "status" },
         { label: "Tipo", key: "tipo" },
         { label: "Modalidad", key: "modalidad" },
@@ -201,11 +202,13 @@ export default function Consultas() {
 
     const setDataToCSV = (data) => {
         const _CSV = [];
+        console.log(data);
         data.map((item, index) => {
             _CSV = [..._CSV, {
                 no: index + 1,
                 nombre: item.nombre,
                 status: item.status,
+                responsable: item.responsable ? item.responsable : "No ha sido asignado",
                 tipo: item.tipo,
                 modalidad: item.modalidad,
                 areaV: item.areaV,
@@ -283,19 +286,20 @@ export default function Consultas() {
                                             <tr>
                                                 <th>No. </th>
                                                 <th className="medium">Etapa</th>
-                                                {TempProductos[0].status ? <th>Estatus</th> : null}
-                                                {TempProductos[0].nombre ? <th>Nombre del producto</th> : null}
-                                                {TempProductos[0].tipo ? <th>Tipo de oferta</th> : null}
-                                                {TempProductos[0].modalidad ? <th>Modalidad</th> : null}
-                                                {TempProductos[0].areaV ? <th>Área vinculada</th> : null}
-                                                {TempProductos[0].quienPropone ? <th>Persona o área que propone</th> : null}
-                                                {TempProductos[0].razon ? <th>Razón</th> : null}
-                                                {TempProductos[0].poblacionObj ? <th>Población objetivo</th> : null}
-                                                {TempProductos[0].descripcion ? <th>Descripción</th> : null}
-                                                {TempProductos[0].institucion ? <th>Institución</th> : null}
-                                                {TempProductos[0].creadoPor ? <th>Creado por</th> : null}
-                                                {TempProductos[0].aprobadoPor ? <th>Aprobado por</th> : null}
-                                                {TempProductos[0].modifiedBy ? <th>Modificado por</th> : null}
+                                                <th>Estatus</th>
+                                                <th>Nombre del producto</th>
+                                                <th className="medium">Responsable</th>
+                                                <th>Tipo de oferta</th>
+                                                <th>Modalidad</th>
+                                                <th>Área vinculada</th>
+                                                <th>Persona o área que propone</th>
+                                                <th>Razón</th>
+                                                <th>Población objetivo</th>
+                                                <th>Descripción</th>
+                                                <th>Institución</th>
+                                                <th>Creado por</th>
+                                                <th>Aprobado por</th>
+                                                <th>Última actualización</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -342,13 +346,12 @@ export default function Consultas() {
                                                                                 </NavLink>
                                                                             </div>
                                                                         : null
-
-
                                                                 }
                                                             </div>
                                                         </td>
                                                         {producto.status ? <td className="short"> {producto.status} </td> : null}
                                                         {producto.nombre ? <td className="long"> {producto.nombre} </td> : null}
+                                                        {producto.responsable ? <td className="medium"> {producto.responsable} </td> : <td>No ha sido asignado</td>}
                                                         {producto.tipo ? <td className="short">{producto.tipo}</td> : null}
                                                         {producto.modalidad ? <td className="medium">{producto.modalidad}</td> : null}
                                                         {producto.areaV ? <td className="medium">{producto.areaV}</td> : null}
@@ -379,8 +382,8 @@ export default function Consultas() {
                                                         {producto.creadoPor ? <td className="long">{producto.creadoPor}</td> : null}
                                                         {producto.aprobadoPor ? <td className="medium">{producto.aprobadoPor}</td> : null}
                                                         {
-                                                            producto.modifiedBy ? <td className="long">
-                                                                {producto.modifiedBy !== "Sin actualizaciones" ? <>{producto.modifiedBy}, el {producto.lastUpdate}</> : "No ha sido actualizado "}
+                                                            producto.lastUpdate ? <td className="long">
+                                                                {producto.lastUpdate !== "Sin actualizaciones" ? <>{producto.lastUpdate}</> : "No ha sido actualizado "}
                                                             </td> : null
                                                         }
                                                     </tr>
