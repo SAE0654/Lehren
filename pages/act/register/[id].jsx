@@ -13,7 +13,6 @@ import { getProductoById } from '../../../utils/api';
 const BUCKET_URI = "https://sae-files.s3.amazonaws.com/";
 
 export default function Producto() {
-    const [Cursos, setCursos] = useState([]);
     const [Producto, setProducto] = useState({});
     // Función de cambios sin guardar
     const [notSaved, setNotSaved] = useState(false);
@@ -33,7 +32,15 @@ export default function Producto() {
         sessionHasExpired();
         if (id === "new") return;
         callProduct();
-    }, []);
+    }, [id]);
+
+    useEffect(() => {
+        if(id === "new") {
+            setProducto({});
+            setInstitucion(undefined);
+        }
+    }, [id])
+    
 
     const registerCourse = async (e) => {
         e.preventDefault();
@@ -60,7 +67,6 @@ export default function Producto() {
                     toast.info("Este producto ya existe");
                     return;
                 }
-                setCursos([...Cursos, res.data]);
                 toast.success("Producto creado con éxito");
                 setNotSaved(false);
                 setInstitucion(undefined)
@@ -163,13 +169,24 @@ export default function Producto() {
 
     const updateCourse = async (e) => {
         e.preventDefault();
+        if (!notSaved) {
+            toast.info("Debes modificar la información")
+            return;
+        }
         const producto = Producto;
+        if (isAnyFieldEmpty(e.target)
+            || producto.institucion === 'default'
+            || typeof producto.institucion === 'undefined'
+            || typeof producto.areaV === 'undefined') { // Si true, campos vacíos
+            toast.error("Rellena todos los campos");
+            return;
+        }
         producto.lastUpdate = "El " + getTimeStamp() + " por " + session.user.names;
         await axios.put(`${process.env.NEXT_PUBLIC_ENDPOINT}api/productos/` + Producto._id, producto)
-        .then(() => {
-            toast.success("Producto actualizado con éxito");
-            router.push(`${process.env.NEXT_PUBLIC_ENDPOINT}vw/aprobado/` + producto._id);
-        })
+            .then(() => {
+                toast.success("Producto actualizado con éxito");
+                router.push(`${process.env.NEXT_PUBLIC_ENDPOINT}vw/aprobado/` + producto._id);
+            })
     }
 
     if (!Producto) {
