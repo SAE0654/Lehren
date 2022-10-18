@@ -38,6 +38,7 @@ export default function Producto() {
         if(id === "new") {
             setProducto({});
             setInstitucion(undefined);
+            setFiles([])
         }
     }, [id])
     
@@ -67,12 +68,14 @@ export default function Producto() {
                     toast.info("Este producto ya existe");
                     return;
                 }
-                toast.success("Producto creado con éxito");
+                toast.success("Producto registrado con éxito")
                 setNotSaved(false);
-                setInstitucion(undefined)
+                setProducto({});
+                setInstitucion(undefined);
+                setFiles([]);
                 e.target.reset();
             }).catch(() => {
-                toast.error("Falta información")
+                toast.error("Falta información");
             });
         await saveFilesToAWS();
     }

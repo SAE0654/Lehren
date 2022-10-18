@@ -9,6 +9,7 @@ import { acceptedFiles, isAnyFieldEmpty, sessionHasExpired } from '../../../../u
 import { IoMdClose } from "react-icons/io";
 import { toast } from 'react-toastify';
 import ValidationToolsForm from '../../../../components/validationTools/validation_tools';
+import Swal from 'sweetalert2/dist/sweetalert2';
 
 const BUCKET_URI = "https://sae-files.s3.amazonaws.com/";
 
@@ -146,8 +147,12 @@ export default function StepTwo() {
                     accept: '*/*',
                     'Content-Type': 'application/json'
                 }
-            }).then((res) => {
-                toast.info(res.data.message);
+            }).then(() => {
+                Swal.fire(
+                    'Datos guardados',
+                    'Etapa de validación',
+                    'success'
+                  )
                 e.target.reset();
                 router.push(`${process.env.NEXT_PUBLIC_ENDPOINT}/vw/query/` + Producto.institucion);
             }).catch(() => {
