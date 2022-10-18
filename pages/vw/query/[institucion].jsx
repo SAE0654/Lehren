@@ -2,9 +2,9 @@ import Head from 'next/head';
 import styles from "../../../styles/pages/ventas.module.scss";
 import { getSession, useSession } from "next-auth/react";
 import Layout from '../../../components/Layout';
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import axios from 'axios';
-import { AiOutlineClose, AiOutlineEye, AiFillDelete } from 'react-icons/ai';
+import { AiOutlineClose, AiOutlineEye, AiFillDelete, AiOutlineSave } from 'react-icons/ai';
 import { BsSearch } from "react-icons/bs";
 import { toast } from 'react-toastify';
 import { getTimeStamp, sessionHasExpired } from '../../../utils/forms';
@@ -15,6 +15,7 @@ import { MdAddComment } from 'react-icons/md';
 import Swal from 'sweetalert2/dist/sweetalert2';
 import Comment from '../../../components/Comment';
 import { CSVLink } from 'react-csv';
+import { BiEdit } from "react-icons/bi"
 
 let pageSize = 4;
 
@@ -49,8 +50,12 @@ export default function Consultas() {
         { label: "RVOE", key: "RVOE" }
     ];
 
-    const { institucion } = Route.query;
+    //Editado
+    const [CurrentId, setCurrentId] = useState(null);
+    const [editInputResponsable, setEditInputResponsable] = useState(false);
+    const [InputResponsableValue, setInputResponsableValue] = useState(null);
 
+    const { institucion } = Route.query;
     const { data: session } = useSession();
 
     useEffect(() => {
@@ -230,6 +235,25 @@ export default function Consultas() {
         }
     }, [CSV]);
 
+    const updateResponsable = async (id) => {
+        if(InputResponsableValue === null || InputResponsableValue === '') {
+            toast.info("Debes escribir algo");
+            return;
+        }
+        const producto = Productos.filter((_producto) => _producto._id === id);
+        console.log(producto)
+        if(InputResponsableValue === producto[0].responsable) {
+            toast.info("El valor no puede ser el mismo");
+            return;
+        }
+        producto[0].responsable = InputResponsableValue;
+        await axios.put(`${process.env.NEXT_PUBLIC_ENDPOINT}api/productos/` + producto[0]._id, producto[0]).then(() => {
+            toast.success("Campo actualizado con éxito");
+        });
+        setEditInputResponsable(false);
+        setCurrentId(null);
+    }
+
     return <>
         <Head>
             <title>{!session ? 'Cargando...' : session.user.names} | Consultas </title>
@@ -349,13 +373,30 @@ export default function Consultas() {
                                                                 }
                                                             </div>
                                                         </td>
-                                                        {producto.status ? <td className="short"> {producto.status} </td> : null}
-                                                        {producto.nombre ? <td className="long"> {producto.nombre} </td> : null}
-                                                        {producto.responsable ? <td className="medium"> {producto.responsable} </td> : <td>No ha sido asignado</td>}
-                                                        {producto.tipo ? <td className="short">{producto.tipo}</td> : null}
-                                                        {producto.modalidad ? <td className="medium">{producto.modalidad}</td> : null}
-                                                        {producto.areaV ? <td className="medium">{producto.areaV}</td> : null}
-                                                        {producto.quienPropone ? <td className="medium">{producto.quienPropone}</td> : null}
+                                                        <td className="short"> {producto.status} </td>
+                                                        <td className="long"> {producto.nombre} </td>
+                                                        <td className="medium" style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
+                                                            <input type="text"
+                                                                name="responsable"
+                                                                defaultValue={producto.responsable}
+                                                                disabled={!editInputResponsable}
+                                                                onChange={(e) => setInputResponsableValue(e.target.value)}
+                                                                id={producto._id}
+                                                                style={{ width: '50%', minWidth: 'inherit', color: editInputResponsable && CurrentId === producto._id ? 'yellow' : 'white' }} />
+                                                            {
+                                                                editInputResponsable && CurrentId === producto._id ?
+                                                                    <>
+                                                                        <AiOutlineSave className="btn" onClick={() => updateResponsable(producto._id)} /> &nbsp;&nbsp;
+                                                                        <AiOutlineClose className="btn" onClick={() => (setEditInputResponsable(false), document.getElementById(producto._id).value = producto.responsable)} />
+                                                                    </> :
+                                                                    <BiEdit onClick={() => (setEditInputResponsable(true), setCurrentId(producto._id))} />
+                                                            }
+
+                                                        </td>
+                                                        <td className="short">{producto.tipo}</td>
+                                                        <td className="medium">{producto.modalidad}</td>
+                                                        <td className="medium">{producto.areaV}</td>
+                                                        <td className="medium">{producto.quienPropone}</td>
                                                         {producto.razon ?
                                                             <td className="long">
                                                                 <textarea
