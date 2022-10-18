@@ -5,8 +5,7 @@ import { AiOutlineUser } from "react-icons/ai";
 import { AiOutlinePoweroff, AiFillHome } from "react-icons/ai";
 // Custom hooks
 import { NavLink } from './NavLink';
-import { ADMIN, STAFF } from "../utils/roles";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 function Nav() {
     const [ShowConsultar, setShowConsultar] = useState(false);

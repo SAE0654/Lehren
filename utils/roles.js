@@ -2,7 +2,7 @@ export const ADMIN = [
     {
         icono: '',
         texto: "Registrar producto",
-        link: "/act/register"
+        link: "/act/register/new"
     },
     {
         icono: '',
@@ -35,6 +35,6 @@ export const STAFF = [
     {
         icono: '',
         texto: "Registrar producto",
-        link: "/act/register"
+        link: "/act/register/new"
     },
 ]
