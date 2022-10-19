@@ -42,6 +42,7 @@ export default function ViewProduct() {
     setProducto(data);
     setFilesETP1(data.archivosETP1);
     setFilesETP2(data.archivosETP2)
+    console.log(data)
   }
 
   const deleteFile = async (fileName, etapa) => {
@@ -181,9 +182,9 @@ export default function ViewProduct() {
                 {
                   Producto.archivosETP1 && FilesETP1.length > 0 ?
                     FilesETP1.map((item, index) => (
-                      <div className={styles.container_file} key={index}>
+                      <div className={styles.container_file} key={index} style={{minWidth: '200px', alignItems: 'center'}}>
                         <AiTwotoneDelete className={styles.btn_delete} onClick={() => deleteFile(item, "archivosETP1")} />
-                        <a href={item} target="_blank" rel="noopener noreferrer">
+                        <a href={item} target="_blank" rel="noopener noreferrer" style={{marginTop: 'inherit', marginBottom: 'inherit', width: '40%'}}>
                           {item.split("https://sae-files.s3.amazonaws.com/")}
                         </a>
                       </div>
