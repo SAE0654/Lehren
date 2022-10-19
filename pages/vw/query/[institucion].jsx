@@ -207,7 +207,6 @@ export default function Consultas() {
 
     const setDataToCSV = (data) => {
         const _CSV = [];
-        console.log(data);
         data.map((item, index) => {
             _CSV = [..._CSV, {
                 no: index + 1,
@@ -241,12 +240,12 @@ export default function Consultas() {
             return;
         }
         const producto = Productos.filter((_producto) => _producto._id === id);
-        console.log(producto)
         if(InputResponsableValue === producto[0].responsable) {
             toast.info("El valor no puede ser el mismo");
             return;
         }
         producto[0].responsable = InputResponsableValue;
+        producto[0].lastUpdate = getTimeStamp() + " por " + session.user.names;
         await axios.put(`${process.env.NEXT_PUBLIC_ENDPOINT}api/productos/` + producto[0]._id, producto[0]).then(() => {
             toast.success("Campo actualizado con éxito");
         });

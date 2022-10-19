@@ -35,13 +35,15 @@ export default function Producto() {
     }, [id]);
 
     useEffect(() => {
-        if(id === "new") {
+        if (id === "new") {
             setProducto({});
             setInstitucion(undefined);
             setFiles([])
+            document.getElementById("razon").value = "";
+            document.getElementById("descripcion").value = "";
         }
     }, [id])
-    
+
 
     const registerCourse = async (e) => {
         e.preventDefault();
@@ -68,12 +70,14 @@ export default function Producto() {
                     toast.info("Este producto ya existe");
                     return;
                 }
-                toast.success("Producto registrado con éxito")
+                toast.success("Producto registrado con éxito");
                 setNotSaved(false);
                 setProducto({});
                 setInstitucion(undefined);
                 setFiles([]);
                 e.target.reset();
+                document.getElementById("razon").value = "";
+                document.getElementById("descripcion").value = "";
             }).catch(() => {
                 toast.error("Falta información");
             });
@@ -85,6 +89,13 @@ export default function Producto() {
         if (e.target.name === 'institucion') {
             setInstitucion(e.target.value);
             Producto.areaV = undefined;
+        }
+        if(e.target.name === 'RVOE') {
+            setProducto({
+                ...Producto,
+                [e.target.name]: e.target.checked ? 'on' : 'off'
+            });
+            return;
         }
 
         setProducto({
@@ -168,6 +179,7 @@ export default function Producto() {
         setProducto(data)
         setInstitucion(data.institucion)
         console.log(data)
+        document.getElementById("RVOE").checked = data.RVOE === 'on' ? true : false;
     }
 
     const updateCourse = async (e) => {
@@ -398,13 +410,13 @@ export default function Producto() {
                         <div className={styles.form_group}>
                             <h2>Descripción general</h2>
                             <input type="text" name="quienPropone" placeholder="Persona o área que propone el producto" defaultValue={Producto.quienPropone} onChange={(e) => setProductoItem(e)} />
-                            <textarea name="razon" maxLength="500" placeholder='Razón o necesidad de la propuesta' defaultValue={Producto.razon} onChange={(e) => setProductoItem(e)}></textarea>
+                            <textarea name="razon" id="razon" maxLength="500" placeholder='Razón o necesidad de la propuesta' defaultValue={Producto.razon} onChange={(e) => setProductoItem(e)}></textarea>
                             <input type="text" name="poblacionObj" placeholder="A quién va dirigido" defaultValue={Producto.poblacionObj} onChange={(e) => setProductoItem(e)} />
-                            <textarea name="descripcion" maxLength="500" placeholder="Descripción general" defaultValue={Producto.descripcion} onChange={(e) => setProductoItem(e)}></textarea>
+                            <textarea name="descripcion" id="descripcion" maxLength="500" placeholder="Descripción general" defaultValue={Producto.descripcion} onChange={(e) => setProductoItem(e)}></textarea>
                             <input type="text" name="responsable" placeholder="Responsable del programa" defaultValue={Producto.responsable} onChange={(e) => setProductoItem(e)} maxLength={40} />
                             <div className={styles.container_footer}>
                                 <label className={styles.form_control}>
-                                    <input type="checkbox" name="RVOE" id="RVOE" checked={Producto.RVOE === 'on' ? true : false} onChange={(e) => setProductoItem(e)} />
+                                    <input type="checkbox" name="RVOE" id="RVOE" onChange={(e) => setProductoItem(e)} />
                                     RVOE
                                 </label>
                                 <input type="submit" value={id === 'new' ? "Registrar producto" : "Actualizar producto"} />

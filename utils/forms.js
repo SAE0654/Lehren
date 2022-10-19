@@ -18,7 +18,7 @@ export const getTimeStamp = () => {
   let meses = new Array("Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre");
   let date = new Date();
   let fecha = date.getDate() + " de " + meses[date.getMonth()] + " del " + date.getFullYear();
-  const time = date.getHours() + ":" + date.getMinutes();
+  const time = date.getHours() + ":" + (date.getMinutes() < 10 ? "0" + date.getMinutes() : date.getMinutes());
   const timeStamp = fecha + " a las " + time;
   return timeStamp;
 }
