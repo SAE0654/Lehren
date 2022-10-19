@@ -387,7 +387,7 @@ export default function Consultas() {
                                                                 editInputResponsable && CurrentId === producto._id ?
                                                                     <>
                                                                         <AiOutlineSave className="btn" onClick={() => updateResponsable(producto._id)} /> &nbsp;&nbsp;
-                                                                        <AiOutlineClose className="btn" onClick={() => (setEditInputResponsable(false), document.getElementById(producto._id).value = producto.responsable)} />
+                                                                        <AiOutlineClose className="btn" onClick={() => (setEditInputResponsable(false), document.getElementById(producto._id).value = producto.responsable || '')} />
                                                                     </> :
                                                                     <BiEdit onClick={() => (setEditInputResponsable(true), setCurrentId(producto._id))} />
                                                             }
