@@ -38,7 +38,10 @@ const productoSchema = new Schema({
     generalComments: { type: String },
     fechaEjecucion: { type: String},
     fechaEntrega: { type: String },
-    responsable: { type: String }
+    responsable: { type: String },
+    // Likes y dislikes
+    likes: [],
+    dislikes: []
 })
 
 const Producto = models.Producto || model('Producto', productoSchema);

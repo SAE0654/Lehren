@@ -2,9 +2,9 @@ import Head from 'next/head';
 import styles from "../../../styles/pages/ventas.module.scss";
 import { getSession, useSession } from "next-auth/react";
 import Layout from '../../../components/Layout';
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import axios from 'axios';
-import { AiOutlineClose, AiOutlineEye, AiFillDelete, AiOutlineSave } from 'react-icons/ai';
+import { AiOutlineClose, AiOutlineEye, AiFillDelete, AiOutlineSave} from 'react-icons/ai';
 import { BsSearch } from "react-icons/bs";
 import { toast } from 'react-toastify';
 import { getTimeStamp, sessionHasExpired } from '../../../utils/forms';
@@ -15,7 +15,8 @@ import { MdAddComment } from 'react-icons/md';
 import Swal from 'sweetalert2/dist/sweetalert2';
 import Comment from '../../../components/Comment';
 import { CSVLink } from 'react-csv';
-import { BiEdit } from "react-icons/bi"
+import { BiEdit, BiSad } from "react-icons/bi"
+import VotosComponent from '../../../components/VotosComponent';
 
 let pageSize = 4;
 
@@ -90,6 +91,7 @@ export default function Consultas() {
             setTempProductos(res.data);
             setLoading(false);
             computePages(res.data);
+            console.log(res.data)
         });
     }
 
@@ -235,12 +237,12 @@ export default function Consultas() {
     }, [CSV]);
 
     const updateResponsable = async (id) => {
-        if(InputResponsableValue === null || InputResponsableValue === '') {
+        if (InputResponsableValue === null || InputResponsableValue === '') {
             toast.info("Debes escribir algo");
             return;
         }
         const producto = Productos.filter((_producto) => _producto._id === id);
-        if(InputResponsableValue === producto[0].responsable) {
+        if (InputResponsableValue === producto[0].responsable) {
             toast.info("El valor no puede ser el mismo");
             return;
         }
@@ -264,8 +266,8 @@ export default function Consultas() {
                 Productos.length <= 0 && !Loading ?
                     <div className="badge_info">
                         <h1>No hay consultas</h1>
-                        <img src="/img/sad.jpg" alt="" />
-                        <NavLink href="/act/register">Carga tu primer producto</NavLink>
+                        <BiSad className="icon" />
+                        <NavLink href="/act/register/new">Carga tu primer producto</NavLink>
                     </div> :
                     <>
                         <div className={styles.main_content}>
@@ -310,6 +312,7 @@ export default function Consultas() {
                                                 <th>No. </th>
                                                 <th className="medium">Etapa</th>
                                                 <th>Estatus</th>
+                                                <th>Votación</th>
                                                 <th>Nombre del producto</th>
                                                 <th className="medium">Responsable</th>
                                                 <th>Tipo de oferta</th>
@@ -329,7 +332,9 @@ export default function Consultas() {
                                             {
                                                 TempProductos.map((producto, index) => (
                                                     <tr key={index}>
-                                                        <td>{(lastPage - pageSize) + index + 1}</td>
+                                                        <td>
+                                                            {(lastPage - pageSize) + index + 1}
+                                                        </td>
                                                         <td>
                                                             <div className={styles.action_by_id}>
                                                                 <NavLink href={"/vw/aprobado/" + producto._id} exact>
@@ -373,6 +378,9 @@ export default function Consultas() {
                                                             </div>
                                                         </td>
                                                         <td className="short"> {producto.status} </td>
+                                                        <td>
+                                                            <VotosComponent id={producto._id} likes={producto.likes} dislikes={producto.dislikes} />
+                                                        </td>
                                                         <td className="long"> {producto.nombre} </td>
                                                         <td className="medium" style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
                                                             <input type="text"
@@ -396,31 +404,30 @@ export default function Consultas() {
                                                         <td className="medium">{producto.modalidad}</td>
                                                         <td className="medium">{producto.areaV}</td>
                                                         <td className="medium">{producto.quienPropone}</td>
-                                                        {producto.razon ?
-                                                            <td className="long">
-                                                                <textarea
-                                                                    className="scroll"
-                                                                    placeholder={producto.razon}
-                                                                    disabled={true} />
-                                                            </td> : null}
-                                                        {producto.poblacionObj ?
-                                                            <td className="long">
-                                                                <textarea
-                                                                    className="scroll"
-                                                                    placeholder={producto.poblacionObj}
-                                                                    disabled={true}>
-                                                                </textarea>
-                                                            </td> : null}
-                                                        {producto.descripcion ?
-                                                            <td className="long">
-                                                                <textarea
-                                                                    className="scroll"
-                                                                    placeholder={producto.descripcion}
-                                                                    disabled={true} />
-                                                            </td> : null}
-                                                        {producto.institucion ? <td>{producto.institucion}</td> : null}
-                                                        {producto.creadoPor ? <td className="long">{producto.creadoPor}</td> : null}
-                                                        {producto.aprobadoPor ? <td className="medium">{producto.aprobadoPor}</td> : null}
+
+                                                        <td className="long">
+                                                            <textarea
+                                                                className="scroll"
+                                                                placeholder={producto.razon}
+                                                                disabled={true} />
+                                                        </td>
+
+                                                        <td className="long">
+                                                            <textarea
+                                                                className="scroll"
+                                                                placeholder={producto.poblacionObj}
+                                                                disabled={true}>
+                                                            </textarea>
+                                                        </td>
+                                                        <td className="long">
+                                                            <textarea
+                                                                className="scroll"
+                                                                placeholder={producto.descripcion}
+                                                                disabled={true} />
+                                                        </td>
+                                                        <td>{producto.institucion}</td>
+                                                        <td className="long">{producto.creadoPor}</td>
+                                                        <td className="medium">{producto.aprobadoPor}</td>
                                                         {
                                                             producto.lastUpdate ? <td className="long">
                                                                 {producto.lastUpdate !== "Sin actualizaciones" ? <>{producto.lastUpdate}</> : "No ha sido actualizado "}
