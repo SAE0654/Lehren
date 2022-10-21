@@ -48,7 +48,9 @@ export default function Consultas() {
         { label: "Descripción", key: "descripcion" },
         { label: "Institución", key: "institucion" },
         { label: "Creado por", key: "creadoPor" },
-        { label: "RVOE", key: "RVOE" }
+        { label: "RVOE", key: "RVOE" },
+        { label: "Me gusta", key: "meGusta" },
+        { label: "No me gusta", key: "noMeGusta" }
     ];
 
     //Editado
@@ -227,7 +229,9 @@ export default function Consultas() {
                 descripcion: item.descripcion,
                 institucion: item.institucion,
                 creadoPor: item.creadoPor,
-                RVOE: item.RVOE === "off" ? "No tiene RVOE" : "Tiene RVOE"
+                RVOE: item.RVOE === "off" ? "No tiene RVOE" : "Tiene RVOE",
+                meGusta: item.likes.length || 0,
+                noMeGusta: item.dislikes.length || 0
             }]
         });
         setCSV(_CSV);
