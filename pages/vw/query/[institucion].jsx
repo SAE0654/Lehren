@@ -69,8 +69,11 @@ export default function Consultas() {
     }, []);
 
     useEffect(() => {
+        setCurrentId(null);
+        setEditInputResponsable(false);
+        setInputResponsableValue(null);
         getProductos();
-    }, [institucion])
+    }, [institucion]);
 
     const computePages = (data) => {
         const firstPageIndex = (currentPage - 1) * pageSize;
@@ -382,7 +385,9 @@ export default function Consultas() {
                                                             <VotosComponent id={producto._id} likes={producto.likes} dislikes={producto.dislikes} />
                                                         </td>
                                                         <td className="long"> {producto.nombre} </td>
-                                                        <td className="medium" style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
+                                                        <td className="medium" style={{ padding: '4em', display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>
+                                                            {
+                                                            editInputResponsable && CurrentId === producto._id ?
                                                             <input type="text"
                                                                 name="responsable"
                                                                 defaultValue={producto.responsable}
@@ -390,11 +395,14 @@ export default function Consultas() {
                                                                 onChange={(e) => setInputResponsableValue(e.target.value)}
                                                                 id={producto._id}
                                                                 style={{ width: '50%', minWidth: 'inherit', color: editInputResponsable && CurrentId === producto._id ? 'yellow' : 'white' }} />
+                                                                : producto.responsable
+                                                            }
+                                                            &nbsp;&nbsp;&nbsp;&nbsp;
                                                             {
                                                                 editInputResponsable && CurrentId === producto._id ?
                                                                     <>
                                                                         <AiOutlineSave className="btn" onClick={() => updateResponsable(producto._id)} /> &nbsp;&nbsp;
-                                                                        <AiOutlineClose className="btn" onClick={() => (setEditInputResponsable(false), document.getElementById(producto._id).value = producto.responsable || '')} />
+                                                                        <AiOutlineClose className="btn" onClick={() => (setEditInputResponsable(false), document.getElementById(producto._id).value = producto.responsable || 'No asignado')} />
                                                                     </> :
                                                                     <BiEdit onClick={() => (setEditInputResponsable(true), setCurrentId(producto._id))} />
                                                             }
