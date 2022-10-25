@@ -10,6 +10,7 @@ import { IoMdClose } from "react-icons/io";
 import { toast } from 'react-toastify';
 import ValidationToolsForm from '../../../../components/validationTools/validation_tools';
 import Swal from 'sweetalert2/dist/sweetalert2';
+import VotosComponent from '../../../../components/VotosComponent';
 
 const BUCKET_URI = "https://sae-files.s3.amazonaws.com/";
 
@@ -222,6 +223,7 @@ export default function StepTwo() {
                                         <input type="radio" name="prioridad" value="baja" style={{ color: "green" }} onChange={(e) => handleChange(e)} />
                                         Baja
                                     </label>
+                                    <VotosComponent id={Producto._id} likes={Producto.likes} dislikes={Producto.dislikes} />
                                 </div>
                             </div>
                             <div className="radio_ck_section">
