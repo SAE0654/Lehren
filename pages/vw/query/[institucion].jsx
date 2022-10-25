@@ -383,7 +383,7 @@ export default function Consultas() {
                                                                         : null
                                                                 }
                                                             </div>
-                                                        </td>
+                                                        </td> 
                                                         <td className="short"> {producto.status} </td>
                                                         <td>
                                                             <VotosComponent id={producto._id} likes={producto.likes} dislikes={producto.dislikes} />
