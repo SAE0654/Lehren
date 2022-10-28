@@ -7,8 +7,9 @@
     width: 100%;
     max-width: 1300px;
     margin: auto;
+    margin-top: 0.5em;
     background-color: transparent;
-    border-bottom: 1px solid rgba(227, 216, 216, 0.216);
+    border: 1px solid rgba(227, 216, 216, 0.216);
     img {
         width: 17vw;
         max-width: 200px;
@@ -92,13 +93,20 @@
                 align-items: center;
                 justify-content: center;
                 gap: 1em;
-                border-radius: 150px;
-                border: 1px solid #fff;
+                border-radius: 15px;
+                border: 1px solid rgb(143, 125, 125);
                 color: #fff;
-                padding: 1em;
+                padding: 0.4em;
                 font-weight: 500;
-                font-size: 2.5rem;
+                font-size: 1.5rem;
                 background-color: transparent;
+                margin-right: 2em;
+                span {
+                    font-size: 0.8rem;
+                }
+                &:hover {
+                    border: 1px solid #fff;
+                }
             }
             ul {
                 display: none;

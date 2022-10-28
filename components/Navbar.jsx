@@ -54,13 +54,13 @@ function Nav() {
                                         </NavLink>
                                     </li>
                                     {
-                                        data.user.rol === "administrador" ? 
-                                        <li>
-                                        <NavLink href="/act/signup" exact>
-                                            Registrar usuario
-                                        </NavLink>
-                                    </li>
-                                    : null
+                                        data.user.rol === "administrador" ?
+                                            <li>
+                                                <NavLink href="/act/signup" exact>
+                                                    Registrar usuario
+                                                </NavLink>
+                                            </li>
+                                            : null
                                     }
                                 </ul>
                             </button>
@@ -68,6 +68,7 @@ function Nav() {
                     </li>
                     <li>
                         <button>
+                            <span>{data.user.names}</span>
                             <AiOutlineUser />
                         </button>
                         <ul>
