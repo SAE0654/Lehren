@@ -19,6 +19,8 @@ export default function Producto() {
     // Función de institución para opciones y validacion tools
     const [Institucion, setInstitucion] = useState(undefined);
     const [Files, setFiles] = useState([]);
+    // Tipo de oferta, campo opción Otro
+    const [Otro, setOtro] = useState('');
 
     const router = useRouter();
     const { id } = router.query;
@@ -38,7 +40,8 @@ export default function Producto() {
         if (id === "new") {
             setProducto({});
             setInstitucion(undefined);
-            setFiles([])
+            setFiles([]);
+            setOtro(null);
             document.getElementById("razon").value = "";
             document.getElementById("descripcion").value = "";
         }
@@ -50,14 +53,24 @@ export default function Producto() {
         const producto = Producto;
         producto = { ...producto, creadoPor: session.user.names + ", el " + getTimeStamp() };
         producto = { ...producto, RVOE: producto.RVOE ? producto.RVOE : 'off' };
-        
+
         if (isAnyFieldEmpty(e.target)
             || producto.institucion === 'default'
             || typeof producto.institucion === 'undefined'
             || typeof producto.areaV === 'undefined') { // Si true, campos vacíos
             toast.error("Rellena todos los campos");
+            console.log(e.target)
             return;
         }
+        if((producto.tipo === 'Otro' && Otro === null) || Otro?.trim() === '') {
+            toast.error("El campo Otro no puede estar vacío");
+            return;
+        }
+        if(producto.tipo === 'Otro') {
+            producto.tipo = Otro;
+        }
+        console.log("Otro: ", Otro)
+
         await saveFilesToAWS();
         producto = { ...producto, archivosETP1: url_files }
         await axios.post(`${process.env.NEXT_PUBLIC_ENDPOINT}api/productos/all`, producto,
@@ -82,7 +95,7 @@ export default function Producto() {
             }).catch(() => {
                 toast.error("Falta información");
             });
-       
+
     }
 
     const setProductoItem = (e) => {
@@ -91,7 +104,7 @@ export default function Producto() {
             setInstitucion(e.target.value);
             Producto.areaV = undefined;
         }
-        if(e.target.name === 'RVOE') {
+        if (e.target.name === 'RVOE') {
             setProducto({
                 ...Producto,
                 [e.target.name]: e.target.checked ? 'on' : 'off'
@@ -178,9 +191,9 @@ export default function Producto() {
     const callProduct = async () => {
         const data = await getProductoById(id);
         setProducto(data)
-        setInstitucion(data.institucion)
-        console.log(data)
+        setInstitucion(data.institucion);
         document.getElementById("RVOE").checked = data.RVOE === 'on' ? true : false;
+        document.getElementById("otro").value = data.tipo;
     }
 
     const updateCourse = async (e) => {
@@ -265,6 +278,23 @@ export default function Producto() {
                                     <input type="radio" name="tipo" value="Certificado" checked={Producto.tipo === 'Certificado'} onChange={(e) => setProductoItem(e)} />
                                     <div className="control_indicator"></div>
                                 </label>
+                                <label className="control control-radio">
+                                    <span>Libro</span>
+                                    <input type="radio" name="tipo" value="Libro" checked={Producto.tipo === 'Libro'} onChange={(e) => setProductoItem(e)} />
+                                    <div className="control_indicator"></div>
+                                </label>
+                                <label className="control control-radio">
+                                    <span>Otro</span>
+                                    <input type="radio" name="tipo" id="tipoField" value="Otro" checked={Producto.tipo === 'Otro'} onChange={(e) => setProductoItem(e)} />
+                                    <div className="control_indicator"></div>
+                                </label>
+                                <input 
+                                type="text" 
+                                placeholder="Valor del campo (Otro)"
+                                name="tipo"
+                                id="otro"
+                                style={Producto.tipo === 'Otro' ? { maxWidth: '95%' } : { display: 'none'}}
+                                onChange={(e) => setOtro(e.target.value)} />
                             </div>
                             <div className="radio_ck_section">
                                 <h3>Modalidad de oferta</h3>

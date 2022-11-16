@@ -96,7 +96,6 @@ export default function Consultas() {
             setTempProductos(res.data);
             setLoading(false);
             computePages(res.data);
-            console.log(res.data)
         });
     }
 
