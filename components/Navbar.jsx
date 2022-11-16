@@ -67,7 +67,7 @@ function Nav() {
                         </div>
                     </li>
                     <li>
-                        <button class={styles.btn_signOut}>
+                        <button className={styles.btn_signOut}>
                             <span>{data.user.names}</span>
                             <AiOutlineUser />
                         </button>
