@@ -352,6 +352,22 @@ button:disabled {
     font-family: "Quicksand", sans-serif;
 }
 
+.box_radios {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    .control {
+        display: flex;
+        align-items: flex-start;
+        justify-content: flex-start;
+        span {
+            margin-top: 0.4em;
+        }
+    }
+}
+
 .control input {
     position: absolute;
     z-index: -1;
