@@ -7,15 +7,16 @@ import { AiOutlinePoweroff, AiFillHome } from "react-icons/ai";
 import { NavLink } from './NavLink';
 import { useState } from "react";
 
-function Nav() {
+function Nav({ShowNavbar}) {
     const [ShowConsultar, setShowConsultar] = useState(false);
     const [ShowRegistrar, setShowRegistrar] = useState(false);
     const { data } = useSession();
 
     return (
         data ? (
-            <nav className={styles.navbar}>
+            <nav className={styles.navbar} style={!ShowNavbar ? {left: '-100vw'} : {left: '0'}}>
                 <img src="/img/Logo_horizontal.svg" alt="" />
+
                 <ul data-animation="center">
                     <li>
                         <NavLink href="/" exact>

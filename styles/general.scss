@@ -690,3 +690,11 @@ input {
         }
     }
 }
+
+@media (max-width: 900px) {
+    .login_btn {
+        width: 80%;
+        margin: auto;
+        margin-top: 2em;
+    }
+}

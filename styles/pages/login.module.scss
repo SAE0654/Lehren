@@ -225,3 +225,27 @@
         background: transparent;
     }
 }
+
+@media (max-width: 900px) {
+    .login_container {
+        h1 {
+            text-align: center;
+            letter-spacing: 0px;
+        }
+        form {
+            .input_box {
+                flex-direction: column;
+                align-items: flex-end;
+                margin-left: -2em;
+                .icon {
+                    position: relative;
+                    right: 0;
+                    color: #fff;
+                    margin-bottom: -2.6em;
+                    z-index: 5;
+                    font-size: 1.8rem;
+                }
+            }
+        }
+    }
+}

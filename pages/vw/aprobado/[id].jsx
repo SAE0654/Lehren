@@ -4,12 +4,15 @@ import { useEffect, useState } from 'react'
 import axios from 'axios';
 import Head from 'next/head';
 import Layout from '../../../components/Layout';
+// Estilos
 import styles from "../../../styles/pages/ventas.module.scss";
-import { NavLink } from '../../../components/NavLink';
-import { sessionHasExpired } from '../../../utils/forms';
 import { AiTwotoneDelete } from 'react-icons/ai';
 import { toast } from 'react-toastify';
 import Swal from 'sweetalert2/dist/sweetalert2';
+// Componentes
+import { NavLink } from '../../../components/NavLink';
+// Funciones externas
+import { sessionHasExpired } from '../../../utils/forms';
 import { getProductoById } from '../../../utils/api';
 
 export default function ViewProduct() {

@@ -56,3 +56,20 @@
 
     }
 }
+
+@media (max-width: 900px) {
+    .quest_next {
+        h1 {
+            margin-top: 2em;
+            text-align: center;
+            text-transform: uppercase;
+        }
+        .options {
+            flex-direction: column;
+            div {
+                width: 95%;
+                margin: auto;
+            }
+        }
+    }
+}
