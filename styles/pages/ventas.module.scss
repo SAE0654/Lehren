@@ -420,7 +420,6 @@
                 color: rgb(255, 255, 255);
                 border: 1px solid rgba(158, 141, 141, 0.575);
                 font-size: 1rem;
-                border-radius: 7px;
                 text-align: center;
                 &:active {
                     scale: 0.9;
@@ -788,4 +787,45 @@
     }
 }
 
-
+@media (max-width: 900px) {
+    .main_content {
+        margin-top: 4em;
+        h1 {
+            margin-top: 3em;
+            text-align: center;
+            margin-bottom: 0em;
+            padding-bottom: 0em;
+        }
+        .action_bar {
+            flex-direction: column;
+            gap: 1em;
+            .search, 
+            .filters {
+                width: 95%;
+                margin: auto;
+                a {
+                    width: 75%;
+                }
+            }
+            .search {
+                input[type="text"] {
+                    border-radius: 0px;
+                }
+                .search_icon {
+                    display: none;
+                }
+            }
+        }
+        .box_container {
+            form {
+                flex-direction: column;
+                .form_group {
+                    width: 100%;
+                    padding: 0em;
+                    padding-bottom: 1em;
+                    padding-top: 1em;
+                }
+            }
+        }
+    }
+}

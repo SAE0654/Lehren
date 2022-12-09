@@ -73,3 +73,9 @@
       }
     }
   }
+
+  @media (max-width: 900px) {
+    .pagination_container {
+      padding: 0em;
+    }
+  }
