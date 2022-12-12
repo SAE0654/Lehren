@@ -1,8 +1,12 @@
 import * as dynamoose from "dynamoose";
+import { makeid } from "../utils/forms";
 
 const SchemaProduct = new dynamoose.Schema({
-    // Datos generales
     "nombre": String,
+    "_id": {
+        type: String,
+        default: makeid(16)
+    },
     "tipo": String,
     "modalidad": String,
     "areaV": String,
@@ -46,45 +50,51 @@ const SchemaProduct = new dynamoose.Schema({
         type: String,
         default: null
     },
-        "instrumentoValidacion": {
-            type: Array,
-            schema: [String]
-        },
-        "datosSustentan": {
-            type: String,
-            default: null
-        },
-        "competencia": {
-            type: String,
-            default: null
-        },
-        "mercado": {
-            type: String,
-            default: null
-        },
-        "ROI": {
-            type: String,
-            default: null
-        },
-        "comentarios": Array,
-        "archivosETP1": {
-            type: Array,
-            schema: [String]
-        },
-        "archivosETP2": {
-            type: Array,
-            schema: [String]
-        },
-        "prioridad": {
-            type: String,
-            default: "baja"
-        },
-        "generalComments": String,
-        "fechaEjecucion": String,
-        "fechaEntrega": String,
-        "responsable": String,
-        "likes": Array,
-        "dislikes": Array
+    "instrumentoValidacion": {
+        type: Array,
+        schema: [String]
+    },
+    "datosSustentan": {
+        type: String,
+        default: null
+    },
+    "competencia": {
+        type: String,
+        default: null
+    },
+    "mercado": {
+        type: String,
+        default: null
+    },
+    "ROI": {
+        type: String,
+        default: null
+    },
+    "comentarios": Array,
+    "archivosETP1": {
+        type: Array,
+        schema: [String]
+    },
+    "archivosETP2": {
+        type: Array,
+        schema: [String]
+    },
+    "prioridad": {
+        type: String,
+        default: "baja"
+    },
+    "generalComments": String,
+    "fechaEjecucion": String,
+    "fechaEntrega": String,
+    "responsable": String,
+    "likes": {
+        type: Array,
+        schema: [String]
+    },
+    "dislikes": {
+        type: Array,
+        schema: [String]
+    }
 });
 
 const Product = dynamoose.model("P1_Productos", SchemaProduct);

@@ -5,7 +5,7 @@ import Layout from '../../../components/Layout';
 import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
-import { acceptedFiles, getTimeStamp, isAnyFieldEmpty, sessionHasExpired } from '../../../utils/forms';
+import { acceptedFiles, getTimeStamp, isAnyFieldEmpty, makeid, sessionHasExpired } from '../../../utils/forms';
 import { useRouter } from 'next/router';
 import { IoMdClose } from "react-icons/io";
 import { getProductoById } from '../../../utils/api';
@@ -62,15 +62,20 @@ export default function Producto() {
             console.log(e.target)
             return;
         }
-        if((producto.tipo === 'Otro' && Otro === null) || Otro?.trim() === '') {
+        if ((producto.tipo === 'Otro' && Otro === null) || Otro?.trim() === '') {
             toast.error("El campo Otro no puede estar vacío");
             return;
         }
-        if(producto.tipo === 'Otro') {
+        if (producto.tipo === 'Otro') {
             producto.tipo = Otro;
         }
         await saveFilesToAWS();
-        producto = { ...producto, archivosETP1: url_files }
+        producto = {
+            ...producto,
+            archivosETP1: url_files,
+            likes: [],
+            dislikes: []
+        }
         console.log(producto)
         await axios.post(`${process.env.NEXT_PUBLIC_ENDPOINT}api/productos/all`, producto,
             {
@@ -79,10 +84,6 @@ export default function Producto() {
                     'Content-Type': 'application/json'
                 }
             }).then((res) => {
-                if (res.data.message) {
-                    toast.info("Este producto ya existe");
-                    return;
-                }
                 toast.success("Producto registrado con éxito");
                 setNotSaved(false);
                 setProducto({});
@@ -91,8 +92,8 @@ export default function Producto() {
                 e.target.reset();
                 document.getElementById("razon").value = "";
                 document.getElementById("descripcion").value = "";
-            }).catch(() => {
-                toast.error("Falta información");
+            }).catch((res) => {
+                toast.error(res.response.data.message);
             });
 
     }
@@ -180,6 +181,7 @@ export default function Producto() {
                     autoClose: 3000
                 })
             });
+
             url_files.push(BUCKET_URI + Files[i].name);
         }
         setFiles([]);
@@ -287,13 +289,13 @@ export default function Producto() {
                                     <input type="radio" name="tipo" id="tipoField" value="Otro" checked={Producto.tipo === 'Otro'} onChange={(e) => setProductoItem(e)} />
                                     <div className="control_indicator"></div>
                                 </label>
-                                <input 
-                                type="text" 
-                                placeholder="Valor del campo (Otro)"
-                                name="tipo"
-                                id="otro"
-                                style={Producto.tipo === 'Otro' ? { maxWidth: '95%' } : { display: 'none'}}
-                                onChange={(e) => setOtro(e.target.value)} />
+                                <input
+                                    type="text"
+                                    placeholder="Valor del campo (Otro)"
+                                    name="tipo"
+                                    id="otro"
+                                    style={Producto.tipo === 'Otro' ? { maxWidth: '95%' } : { display: 'none' }}
+                                    onChange={(e) => setOtro(e.target.value)} />
                             </div>
                             <div className="radio_ck_section">
                                 <h3>Modalidad de oferta</h3>

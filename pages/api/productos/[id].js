@@ -1,4 +1,5 @@
 import Producto from "../../../models/Producto";
+import { GetProductosByIndexDB } from "../../../utils/dynamoOps";
 
 const handler = async (req, res) => {
     const body = req.body;
@@ -9,7 +10,7 @@ const handler = async (req, res) => {
                 const producto = await Producto.find();
                 return res.status(200).json(producto);
             }
-            if (id.length > 10) { // Es un Id de mongo
+            if (id.length > 15) { // Es un Id de Dynamo
                 try {
                     const producto = await Producto.findById(id);
                     return res.status(200).json(producto);
@@ -17,9 +18,9 @@ const handler = async (req, res) => {
                     console.log("Error: ", error);
                 }
             } else {
-                try { // El id aquí representa en realidad la institución
-                    const producto = await Producto.find({ institucion: id });
-                    return res.status(200).json(producto);
+                try {
+                    const producto = await GetProductosByIndexDB('institucion-index', 'institucion', id); // El id aquí representa en realidad la institución (artek, sae)
+                    return res.status(200).json(producto['Items']);
                 } catch (error) {
                     console.log("Error: ", error);
                 }
@@ -29,9 +30,8 @@ const handler = async (req, res) => {
             try {
                 const producto = await Producto.query("nombre").eq(body.nombre).exec();
                 if (producto['count'] > 0) {
-                    return res.status(400).json({ message: "Este correo ya fue registrado" });
+                    return res.status(400).json({ message: "Este producto ya fue registrado" });
                 }
-
                 const newProduct = new Producto(body);
                 try {
                     await newProduct.save();
@@ -40,7 +40,7 @@ const handler = async (req, res) => {
                     console.log("Error: ", error);
                 }
             } catch (error) {
-                return res.status(401).json({ message: 'Error' });
+                return res.status(400).json({ message: 'Ha ocurrido un error inesperado. Recarga la página' });
             }
         case 'PUT':
             try {

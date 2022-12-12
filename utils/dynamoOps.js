@@ -32,5 +32,20 @@ export async function UpdateUserField(email, rol, password, names, camposACambia
             throw new Error(error)
         }
     })
+}
 
+export async function GetProductosByIndexDB(indexCampo, campo, valor) {
+    const params = {
+        TableName: 'P1_Productos',
+        IndexName: indexCampo,
+        KeyConditionExpression: `${campo} = :${campo}`,
+        ExpressionAttributeValues: { [':' + campo]: valor }
+    };
+
+    try {
+        const data = await db.query(params).promise();
+        return data;
+    } catch (error) {
+        return []
+    }
 }
