@@ -34,6 +34,10 @@ export async function UpdateUserField(email, rol, password, names, camposACambia
     })
 }
 
+/*
+############### OPERACIONES DE PRODUCTOS ##################
+*/
+
 export async function GetProductosByIndexDB(indexCampo, campo, valor) {
     const params = {
         TableName: 'P1_Productos',
@@ -47,5 +51,26 @@ export async function GetProductosByIndexDB(indexCampo, campo, valor) {
         return data;
     } catch (error) {
         return []
+    }
+}
+
+export async function updateResponsable(nombre, nuevoResponsable, ultimaActualizacion) {
+
+    const params = {
+        TableName: 'P1_Productos',
+        Key: {
+            nombre: nombre
+        },
+        UpdateExpression: 'set responsable = :r, lastUpdate = :l',
+        ExpressionAttributeValues: {
+            ':r': nuevoResponsable,
+            ':l': ultimaActualizacion
+        },
+    }
+    try {
+        const _data = await db.update(params).promise();
+        return _data;
+    } catch (error) {
+        throw new Error(error)
     }
 }

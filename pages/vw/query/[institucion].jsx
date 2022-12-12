@@ -254,7 +254,7 @@ export default function Consultas() {
         }
         producto[0].responsable = InputResponsableValue;
         producto[0].lastUpdate = getTimeStamp() + " por " + session.user.names;
-        await axios.put(`${process.env.NEXT_PUBLIC_ENDPOINT}api/productos/` + producto[0]._id, producto[0]).then(() => {
+        await axios.put(`${process.env.NEXT_PUBLIC_ENDPOINT}api/productos/${producto[0].nombre}=updateResponsable`, producto[0]).then(() => {
             toast.success("Campo actualizado con éxito");
         });
         setEditInputResponsable(false);

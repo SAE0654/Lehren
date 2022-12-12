@@ -1,5 +1,5 @@
 import Producto from "../../../models/Producto";
-import { GetProductosByIndexDB } from "../../../utils/dynamoOps";
+import { GetProductosByIndexDB, updateResponsable } from "../../../utils/dynamoOps";
 
 const handler = async (req, res) => {
     const body = req.body;
@@ -44,10 +44,9 @@ const handler = async (req, res) => {
             }
         case 'PUT':
             try {
-                await Producto.findByIdAndUpdate(
-                    id,
-                    req.body
-                );
+                if(id.split("=")[1] === "updateResponsable") {
+                    await updateResponsable(id.split("=")[0], req.body.responsable, req.body.lastUpdate)
+                }
                 return res.status(200).json({ message: 'Actualizado con éxito' });
             } catch (error) {
                 console.log(error)

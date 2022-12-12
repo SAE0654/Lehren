@@ -2,11 +2,11 @@ import * as dynamoose from "dynamoose";
 import { makeid } from "../utils/forms";
 
 const SchemaProduct = new dynamoose.Schema({
-    "nombre": String,
     "_id": {
         type: String,
         default: makeid(16)
     },
+    "nombre": String,
     "tipo": String,
     "modalidad": String,
     "areaV": String,
