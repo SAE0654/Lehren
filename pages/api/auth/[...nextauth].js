@@ -27,7 +27,6 @@ const providers = [
                 }
             } catch (e) {
                 // Redirecting to the login page with error messsage in the URL
-                console.log(e)
                 throw new Error(e.response.data.message);
             }
         }

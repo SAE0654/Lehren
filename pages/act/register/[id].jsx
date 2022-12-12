@@ -69,10 +69,9 @@ export default function Producto() {
         if(producto.tipo === 'Otro') {
             producto.tipo = Otro;
         }
-        console.log("Otro: ", Otro)
-
         await saveFilesToAWS();
         producto = { ...producto, archivosETP1: url_files }
+        console.log(producto)
         await axios.post(`${process.env.NEXT_PUBLIC_ENDPOINT}api/productos/all`, producto,
             {
                 headers: {

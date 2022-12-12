@@ -1,10 +1,8 @@
 import Producto from "../../../models/Producto";
-import connectMongo from "../../../utils/db";
 
 const handler = async (req, res) => {
     const body = req.body;
     const { id } = req.query;
-    await connectMongo();
     switch (req.method) {
         case 'GET':
             if (id === "all") {
@@ -28,19 +26,22 @@ const handler = async (req, res) => {
             }
             return res.status(404).json({ message: "Not found" });
         case 'POST':
-            const newProduct = new Producto(body);
-            console.log(body)
-            const productExists = await Producto.find({ nombre: body.nombre });
-            if (productExists.length >= 1) {
-                return res.status(200).json({ message: 'Producto ya existente' })
-            }
             try {
-                await newProduct.save();
-                return res.status(200).json(newProduct);
+                const producto = await Producto.query("nombre").eq(body.nombre).exec();
+                if (producto['count'] > 0) {
+                    return res.status(400).json({ message: "Este correo ya fue registrado" });
+                }
+
+                const newProduct = new Producto(body);
+                try {
+                    await newProduct.save();
+                    return res.status(200).json(newProduct);
+                } catch (error) {
+                    console.log("Error: ", error);
+                }
             } catch (error) {
-                console.log("Error: ", error);
+                return res.status(401).json({ message: 'Error' });
             }
-            return res.status(401).json({ message: 'Error' });
         case 'PUT':
             try {
                 await Producto.findByIdAndUpdate(

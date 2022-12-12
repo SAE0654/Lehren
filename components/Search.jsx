@@ -28,7 +28,7 @@ export default function Search() {
         axios.get(`${process.env.NEXT_PUBLIC_ENDPOINT}api/usuario/` + Name)
             .then((res) => {
                 if (res.data.length === 0) {
-                    toast.info("No existe ningún usuario con este correo");
+                    toast.info("No se encontró una coincidencia");
                 } else {
                     toast.success("Coincidencias encontradas");
                     setResultados(res.data[0]);
@@ -46,12 +46,23 @@ export default function Search() {
     }
 
     const updateBasicInfo = async () => {
-        if (Resultados.names === InitialData.names && Resultados.rol === InitialData.rol && !ShowNewPassword) {
+        const camposACambiar = [];
+        if(Resultados.names !== InitialData.names) {
+            camposACambiar.push("names");
+        }
+        if(Resultados.rol !== InitialData.rol) {
+            camposACambiar.push("rol")
+        }
+        if(ShowNewPassword) {
+            camposACambiar.push("password");
+        }
+        if (camposACambiar.length === 0) {
             toast.info("Cambia algo, antes de continuar");
             return;
         }
-        const idMsg = toast.loading("Actualizando datos...")
-        await axios.put("https://www.productoslehren.com/api/usuario/update", Resultados)
+        const idMsg = toast.loading("Actualizando datos...");
+        console.log(camposACambiar)
+        await axios.put(`${process.env.NEXT_PUBLIC_ENDPOINT}api/usuario/` + camposACambiar, Resultados)
             .then(() => {
                 toast.success("Usuario actualizado con éxito");
             });
