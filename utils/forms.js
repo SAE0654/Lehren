@@ -1,4 +1,5 @@
 import { signOut } from "next-auth/react";
+const bcrypt = require('bcryptjs');
 
 export const isAnyFieldEmpty = (form) => {
   let isEmpty = false;
@@ -71,4 +72,13 @@ export const makeid = (length) => {
   return result;
 }
 
+const SALT_WORK_FACTOR = 10;
+export const encryptPassword = async (password) => {
+    const encrypted = await bcrypt.genSalt(SALT_WORK_FACTOR);
+    const hash = bcrypt.hash(password, encrypted);
+    return hash;
+}
 
+export const matchPassword = async (password1, password2) => {
+  return await bcrypt.compare(password1, password2)
+}

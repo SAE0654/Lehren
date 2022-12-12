@@ -1,26 +1,26 @@
 import User from "../../models/User";
-import connectMongo from "../../utils/db";
+import { encryptPassword } from "../../utils/forms";
 
 const handler = async (req, res) => {
     const { email, names, rol, password } = req.body;
     if (req.method == 'POST') {
         try {
-            await connectMongo();
-            const userRes = await User.findOne({ email: email });
-            if(userRes) {
+            const user = await User.query("email").eq(email).exec();
+            if(user['count'] > 0) {
                 return res.status(400).json({message: "Este correo ya fue registrado"});
             }
             const newUser = new User({
-                email: email,
-                names: names, 
-                rol: rol,
-                password: password
+                "email": email,
+                "password": password,
+                "rol": rol,
+                "names": names
             });
-            newUser.password = await newUser.encryptPassword(password);
+            newUser.password = await encryptPassword(password);
             await newUser.save();
-            return res.status(200).json({message: "Usuario registrado"});
+
+            return res.status(200).json({message: "Success"})
         } catch (error) {
-            console.log("Something went wrong: ", error)
+            console.log("ERRORSOTE: ", error)
         }
     }
 }

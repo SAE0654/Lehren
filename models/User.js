@@ -1,25 +1,30 @@
-import { Schema, model, models } from 'mongoose';
+import * as dynamoose from "dynamoose";
 const bcrypt = require('bcryptjs');
 
-const SALT_WORK_FACTOR = 10;
-
-const userSchema = new Schema({
-    email: { type: String, required: true },
-    names: { type: String, required: true},
-    password: { type: String, required: true },
-    rol: { type: String, required: true }
+const SchemaUser = new dynamoose.Schema({
+    "email": String,
+    "password": String,
+    "rol": String,
+    "names": String
 });
 
-userSchema.methods.encryptPassword = async (password) => {
-    const encrypted = await bcrypt.genSalt(SALT_WORK_FACTOR);
-    const hash = bcrypt.hash(password, encrypted);
-    return hash;
-}
-
-userSchema.methods.matchPassword = async function(password) {
-    return await bcrypt.compare(password, this.password) 
-}
-
-const User = models.User || model('User', userSchema);
+const User = dynamoose.model("Productos_Usuarios", SchemaUser);
 
 export default User;
+
+// import { Schema, model, models } from 'mongoose';
+// const bcrypt = require('bcryptjs');
+
+
+
+// const userSchema = new Schema({
+//     email: { type: String, required: true },
+//     names: { type: String, required: true},
+//     password: { type: String, required: true },
+//     rol: { type: String, required: true }
+// });
+
+
+// const User = models.User || model('User', userSchema);
+
+// export default User;

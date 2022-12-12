@@ -7,7 +7,7 @@ const providers = [
         name: 'Credentials',
         authorize: async (credentials) => {
             try {
-                const user = await axios.post('https://www.productoslehren.com/api/login',
+                const user = await axios.post('http://localhost:3000/api/login',
                 {
                   user: {
                     password: credentials.password,

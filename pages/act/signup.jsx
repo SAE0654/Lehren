@@ -13,7 +13,7 @@ import { sessionHasExpired } from '../../utils/forms';
 import Search from '../../components/Search';
 import { useSession } from "next-auth/react"
 
-export default function Login() {
+export default function SignUp() {
     const [Data, setData] = useState({});
     const [Password, setPassword] = useState(null);
     // Función de cambios sin guardar
@@ -52,7 +52,7 @@ export default function Login() {
         };
     }, [notSaved, GoToNext]);
 
-    const handleLogin = (e) => {
+    const registrarUsuario = (e) => {
         e.preventDefault();
         const payload = Object.entries(Data);
         if (Data.rol === 'default' || typeof Data.rol === 'undefined') {
@@ -113,7 +113,7 @@ export default function Login() {
                         </button>
                     </>
                     : null}
-                <form onSubmit={(e) => handleLogin(e)}>
+                <form onSubmit={(e) => registrarUsuario(e)}>
                     <br />
                     <img src="/img/Logo_Vertical.svg" alt="" />
                     <h1>Registro de usuario</h1>
