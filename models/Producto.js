@@ -2,10 +2,6 @@ import * as dynamoose from "dynamoose";
 import { makeid } from "../utils/forms";
 
 const SchemaProduct = new dynamoose.Schema({
-    "_id": {
-        type: String,
-        default: makeid(16)
-    },
     "nombre": String,
     "tipo": String,
     "modalidad": String,
@@ -70,7 +66,10 @@ const SchemaProduct = new dynamoose.Schema({
         type: String,
         default: null
     },
-    "comentarios": Array,
+    "comentarios": {
+        type: Array,
+        schema: [String]
+    },
     "archivosETP1": {
         type: Array,
         schema: [String]

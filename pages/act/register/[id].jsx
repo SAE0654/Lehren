@@ -74,7 +74,8 @@ export default function Producto() {
             ...producto,
             archivosETP1: url_files,
             likes: [],
-            dislikes: []
+            dislikes: [],
+            comentarios: []
         }
         console.log(producto)
         await axios.post(`${process.env.NEXT_PUBLIC_ENDPOINT}api/productos/all`, producto,

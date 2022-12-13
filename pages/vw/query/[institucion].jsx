@@ -1,21 +1,25 @@
+// CORE
 import Head from 'next/head';
-import styles from "../../../styles/pages/ventas.module.scss";
-import { getSession, useSession } from "next-auth/react";
-import Layout from '../../../components/Layout';
 import { useEffect, useMemo, useState } from 'react';
+import { useRouter } from 'next/router';
 import axios from 'axios';
-import { AiOutlineClose, AiOutlineEye, AiFillDelete, AiOutlineSave} from 'react-icons/ai';
+// SESSION
+import { getSession, useSession } from "next-auth/react";
+// ESTILOS
+import styles from "../../../styles/pages/ventas.module.scss";
+import { AiOutlineClose, AiOutlineEye, AiFillDelete, AiOutlineSave } from 'react-icons/ai';
 import { BsSearch } from "react-icons/bs";
+import { MdAddComment } from 'react-icons/md';
 import { toast } from 'react-toastify';
+import Swal from 'sweetalert2/dist/sweetalert2';
+import { BiEdit, BiSad } from "react-icons/bi"
+// COMPONENTES Y FUNCIONES EXTERNAS
+import Layout from '../../../components/Layout';
 import { getTimeStamp, sessionHasExpired } from '../../../utils/forms';
 import { NavLink } from '../../../components/NavLink';
-import { useRouter } from 'next/router';
 import Pagination from '../../../components/Pagination';
-import { MdAddComment } from 'react-icons/md';
-import Swal from 'sweetalert2/dist/sweetalert2';
 import Comment from '../../../components/Comment';
 import { CSVLink } from 'react-csv';
-import { BiEdit, BiSad } from "react-icons/bi"
 import VotosComponent from '../../../components/VotosComponent';
 
 let pageSize = 4;
@@ -96,6 +100,7 @@ export default function Consultas() {
             setTempProductos(res.data);
             setLoading(false);
             computePages(res.data);
+            console.log(res.data)
         });
     }
 
@@ -120,7 +125,7 @@ export default function Consultas() {
         setTempProductos(productos);
     }
 
-    const deleteProduct = async (Id) => {
+    const deleteProduct = async (nombre) => {
         Swal.fire({
             title: '¿Borrar producto?',
             text: "Esta acción no se puede deshacer",
@@ -132,7 +137,7 @@ export default function Consultas() {
             cancelButtonText: 'Cancelar'
         }).then(async (result) => {
             if (result.isConfirmed) {
-                await axios.delete(`${process.env.NEXT_PUBLIC_ENDPOINT}api/productos/` + Id)
+                await axios.delete(`${process.env.NEXT_PUBLIC_ENDPOINT}api/productos/` + nombre)
                     .then(() => {
                         Swal.fire(
                             'Eliminado',
@@ -145,7 +150,7 @@ export default function Consultas() {
         })
     }
 
-    const displayCommentSection = async (pId, commentario) => {
+    const displayCommentSection = async (nombre, commentario) => {
         const hasAlreadyAComment = commentario === null || commentario.length === 0 ? false : true;
         await Swal.fire({
             input: 'textarea',
@@ -166,18 +171,18 @@ export default function Consultas() {
                 displayCommentSection()
                 return;
             }
-            saveComment(res.value, pId, hasAlreadyAComment);
+            saveComment(res.value, nombre, hasAlreadyAComment);
         })
     }
 
-    const saveComment = async (comentario, pId, alreadyAdded) => {
-        const producto = Productos.filter((item) => item._id === pId);
+    const saveComment = async (comentario, nombre, alreadyAdded) => {
+        const producto = Productos.filter((item) => item.nombre === nombre);
         producto[0].comentarios = [{
             user: session.user.names,
             comentarios: comentario,
             createdAt: getTimeStamp()
         }];
-        await axios.put(`${process.env.NEXT_PUBLIC_ENDPOINT}api/productos/` + pId, producto[0])
+        await axios.put(`${process.env.NEXT_PUBLIC_ENDPOINT}api/productos/${producto[0].nombre}=updateComment`, producto[0])
             .then(() => {
                 toast.success(alreadyAdded ? "Comentario actualizado" : "Comentario agregado");
                 getProductos()
@@ -205,7 +210,7 @@ export default function Consultas() {
 
         if (institucionAExportar) {
             setCSVChosed(institucionAExportar === "all" ? "todos" : institucionAExportar);
-            await axios(`${process.env.NEXT_PUBLIC_ENDPOINT}api/productos/` + institucionAExportar).then((res) => {
+            await axios(`${process.env.NEXT_PUBLIC_ENDPOINT}api/csv/` + institucionAExportar).then((res) => {
                 setDataToCSV(res.data);
             });
         }
@@ -349,12 +354,12 @@ export default function Consultas() {
                                                                     </button>
                                                                 </NavLink>
                                                                 <button
-                                                                    onClick={() => deleteProduct(producto._id)}>
+                                                                    onClick={() => deleteProduct(producto.nombre)}>
                                                                     <AiFillDelete />
                                                                 </button>
                                                                 <button
                                                                     className="comment_card"
-                                                                    onClick={() => displayCommentSection(producto._id, producto.comentarios)}>
+                                                                    onClick={() => displayCommentSection(producto.nombre, producto.comentarios)}>
                                                                     <MdAddComment />
                                                                 </button>
                                                                 <Comment comments={producto.comentarios} />
@@ -382,23 +387,23 @@ export default function Consultas() {
                                                                         : null
                                                                 }
                                                             </div>
-                                                        </td> 
+                                                        </td>
                                                         <td className="short"> {producto.status} </td>
                                                         <td>
-                                                            <VotosComponent id={producto._id} likes={producto.likes} dislikes={producto.dislikes} />
+                                                            <VotosComponent nombre={producto.nombre} likes={producto.likes} dislikes={producto.dislikes} />
                                                         </td>
                                                         <td className="long"> {producto.nombre} </td>
                                                         <td className="medium" style={{ padding: '4em', display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>
                                                             {
-                                                            editInputResponsable && CurrentId === producto._id ?
-                                                            <input type="text"
-                                                                name="responsable"
-                                                                defaultValue={producto.responsable}
-                                                                disabled={!editInputResponsable}
-                                                                onChange={(e) => setInputResponsableValue(e.target.value)}
-                                                                id={producto._id}
-                                                                style={{ width: '50%', minWidth: 'inherit', color: editInputResponsable && CurrentId === producto._id ? 'yellow' : 'white' }} />
-                                                                : producto.responsable
+                                                                editInputResponsable && CurrentId === producto._id ?
+                                                                    <input type="text"
+                                                                        name="responsable"
+                                                                        defaultValue={producto.responsable}
+                                                                        disabled={!editInputResponsable}
+                                                                        onChange={(e) => setInputResponsableValue(e.target.value)}
+                                                                        id={producto._id}
+                                                                        style={{ width: '50%', minWidth: 'inherit', color: editInputResponsable && CurrentId === producto._id ? 'yellow' : 'white' }} />
+                                                                    : producto.responsable
                                                             }
                                                             &nbsp;&nbsp;&nbsp;&nbsp;
                                                             {

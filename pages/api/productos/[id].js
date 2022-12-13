@@ -1,15 +1,11 @@
 import Producto from "../../../models/Producto";
-import { GetProductosByIndexDB, updateResponsable } from "../../../utils/dynamoOps";
+import { DeleteProductoByName, GetProductosByIndexDB, UpdateComment, UpdateResponsable } from "../../../utils/dynamoOps";
 
 const handler = async (req, res) => {
     const body = req.body;
     const { id } = req.query;
     switch (req.method) {
         case 'GET':
-            if (id === "all") {
-                const producto = await Producto.find();
-                return res.status(200).json(producto);
-            }
             if (id.length > 15) { // Es un Id de Dynamo
                 try {
                     const producto = await Producto.findById(id);
@@ -44,17 +40,20 @@ const handler = async (req, res) => {
             }
         case 'PUT':
             try {
-                if(id.split("=")[1] === "updateResponsable") {
-                    await updateResponsable(id.split("=")[0], req.body.responsable, req.body.lastUpdate)
+                const tipoDeOperacion = id.split("=")[1];
+                if(tipoDeOperacion === "updateResponsable") {
+                    await UpdateResponsable(id.split("=")[0], req.body.responsable, req.body.lastUpdate)
+                }
+                if(tipoDeOperacion === "updateComment") {
+                    await UpdateComment(req.body.nombre, req.body.comentarios[0]);
                 }
                 return res.status(200).json({ message: 'Actualizado con éxito' });
             } catch (error) {
-                console.log(error)
+                return res.status(401).json({ message: 'Error al actualizar' });
             }
-            return res.status(401).json({ message: 'Error al actualizar' });
         case 'DELETE':
             try {
-                await Producto.findByIdAndDelete(id);
+                await DeleteProductoByName(id); // Aquí el id = nombre
                 return res.status(200).json({ message: 'Eliminado con éxito' });
             } catch (error) {
                 console.log(error);

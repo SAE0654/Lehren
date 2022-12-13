@@ -3,7 +3,7 @@ import { useSession } from 'next-auth/react';
 import { useEffect, useState } from 'react';
 import { AiOutlineLike, AiOutlineDislike, AiFillLike, AiFillDislike } from 'react-icons/ai';
 
-const VotosComponent = ({ id, likes, dislikes }) => {
+const VotosComponent = ({ nombre, likes, dislikes }) => {
     const [NumberLikes, setNumberLikes] = useState(0);
     const [NumberDislikes, setNumberDislikes] = useState(0);
     const [HasBeenLiked, setHasBeenLiked] = useState(false);
@@ -13,7 +13,8 @@ const VotosComponent = ({ id, likes, dislikes }) => {
     useEffect(() => {
         setNumberDislikes(dislikes.length);
         setNumberLikes(likes.length);
-    }, [id]);
+        console.log(nombre)
+    }, [nombre]);
 
     useEffect(() => {
         likeOrDisliked();
@@ -46,7 +47,7 @@ const VotosComponent = ({ id, likes, dislikes }) => {
         if (isInDislikes !== -1) {
             quitarDislike(isInDislikes);
         }
-        axios.put(`${process.env.NEXT_PUBLIC_ENDPOINT}api/votacion/like=` + id, likes)
+        axios.put(`${process.env.NEXT_PUBLIC_ENDPOINT}api/votacion/likes=` + nombre, likes)
             .then(() => {
                 setNumberLikes(likes.length);
                 setNumberDislikes(dislikes.length);
@@ -55,7 +56,7 @@ const VotosComponent = ({ id, likes, dislikes }) => {
 
     const quitarDislike = (index) => {
         dislikes.splice(index, 1);
-        axios.put(`${process.env.NEXT_PUBLIC_ENDPOINT}api/votacion/dislike=` + id, dislikes)
+        axios.put(`${process.env.NEXT_PUBLIC_ENDPOINT}api/votacion/dislikes=` + nombre, dislikes)
             .then(() => {
                 setNumberLikes(likes.length);
                 setNumberDislikes(dislikes.length);
@@ -64,7 +65,7 @@ const VotosComponent = ({ id, likes, dislikes }) => {
 
     const quitarLike = (index) => {
         likes.splice(index, 1);
-        axios.put(`${process.env.NEXT_PUBLIC_ENDPOINT}api/votacion/like=` + id, likes)
+        axios.put(`${process.env.NEXT_PUBLIC_ENDPOINT}api/votacion/likes=` + nombre, likes)
             .then(() => {
                 setNumberLikes(likes.length);
                 setNumberDislikes(dislikes.length);
@@ -85,7 +86,7 @@ const VotosComponent = ({ id, likes, dislikes }) => {
         if (isInLikes !== -1) {
             quitarLike(isInLikes);
         }
-        axios.put(`${process.env.NEXT_PUBLIC_ENDPOINT}api/votacion/dislike=` + id, dislikes)
+        axios.put(`${process.env.NEXT_PUBLIC_ENDPOINT}api/votacion/dislikes=` + nombre, dislikes)
             .then(() => {
                 setNumberLikes(likes.length);
                 setNumberDislikes(dislikes.length);

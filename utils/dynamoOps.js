@@ -54,8 +54,23 @@ export async function GetProductosByIndexDB(indexCampo, campo, valor) {
     }
 }
 
-export async function updateResponsable(nombre, nuevoResponsable, ultimaActualizacion) {
+export async function DeleteProductoByName(nombre) {
+    var params = {
+        Key: {
+            nombre: nombre
+        },
+        TableName: 'P1_Productos'
+    };
 
+    try {
+        await db.delete(params).promise();
+    } catch (error) {
+        console.log(error)
+        throw new Error(error)
+    }
+}
+
+export async function UpdateResponsable(nombre, nuevoResponsable, ultimaActualizacion) {
     const params = {
         TableName: 'P1_Productos',
         Key: {
@@ -67,6 +82,49 @@ export async function updateResponsable(nombre, nuevoResponsable, ultimaActualiz
             ':l': ultimaActualizacion
         },
     }
+    try {
+        const _data = await db.update(params).promise();
+        return _data;
+    } catch (error) {
+        throw new Error(error)
+    }
+}
+
+export async function UpdateComment(nombre, comentario) {
+    const comentarios = [{
+        comentarios: comentario.comentarios,
+        createdAt: comentario.createdAt,
+        user: comentario.user
+    }]
+    const params = {
+        TableName: 'P1_Productos',
+        Key: {
+            nombre: nombre
+        },
+        UpdateExpression: 'set comentarios = :c',
+        ExpressionAttributeValues: {
+            ':c': comentarios,
+        },
+    }
+    return executar(params);
+}
+
+export async function VoteProduct(nombre, tipo, carga) {
+    const params = {
+        TableName: 'P1_Productos',
+        Key: {
+            nombre: nombre
+        },
+        UpdateExpression: `set ${tipo} = :voto`,
+        ExpressionAttributeValues: {
+            ':voto': carga,
+        },
+    }
+    return executar(params);
+}
+
+
+async function executar(params) {
     try {
         const _data = await db.update(params).promise();
         return _data;
