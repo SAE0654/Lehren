@@ -12,15 +12,19 @@
     position: relative;
 
     h1 {
-        @include mix.fontTitle(2.5rem);
+        @include mix.fontTitle(2.2rem);
+        width: 45%;
+        margin: auto;
         text-align: left;
         margin-top: 1em;
         margin-bottom: 1em;
         font-family: "Poppins", sans-serif;
         color: #ffffff;
-        border-bottom: 1px solid gray;
-        padding-bottom: 1em;
+        border-bottom: 1px solid rgba(111, 100, 100, 0.601);
+        padding-bottom: 0em;
         letter-spacing: 3px;
+        text-transform: uppercase;
+        text-align: center;
     }
 
     .controls {
@@ -51,7 +55,7 @@
         width: 100%;
         max-width: 1200px;
         overflow-x: scroll;
-        background-color: rgba(24, 22, 22, 0.582);
+        background-color: rgba(0, 0, 0, 0.734);
         margin-top: 2em;
         grid-template-areas:
             ". . . . . . . . . . . . . . ." // 1

@@ -2,7 +2,6 @@ import { getSession } from 'next-auth/react';
 import Head from 'next/head';
 import Layout from '../../components/Layout';
 import styles from "../../styles/pages/catalogo.module.scss";
-import { FaChevronLeft, FaChevronRight } from "react-icons/fa"
 import { useEffect, useRef } from 'react';
 import { sessionHasExpired } from '../../utils/forms';
 

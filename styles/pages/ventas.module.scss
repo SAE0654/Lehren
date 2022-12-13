@@ -12,15 +12,19 @@
     position: relative;
 
     h1 {
-        @include mix.fontTitle(2.5rem);
+        @include mix.fontTitle(2.2rem);
+        margin: auto;
+        width: 45%;
         text-align: left;
         margin-top: 1em;
         margin-bottom: 1em;
         font-family: "Poppins", sans-serif;
         color: #ffffff;
-        border-bottom: 1px solid gray;
-        padding-bottom: 1em;
+        border-bottom: 1px solid rgba(89, 83, 83, 0.527);
+        padding-bottom: 0em;
         letter-spacing: 3px;
+        text-align: center;
+        text-transform: uppercase;
     }
 
     .box_container {
@@ -78,7 +82,7 @@
                 display: block;
                 width: 95%;
                 max-width: 200px;
-                background-color: #53899c;
+                background-color: #292323d2;
                 padding: 1em;
                 font-weight: bold;
                 color: #fff;
@@ -89,7 +93,7 @@
                 @include mix.flexBox(column, center, flex-start);
                 width: 50%;
                 padding: 1.5em;
-                background-color: #1a2225bb;
+                background-color: #100e0ebb;
 
                 input,
                 select {
@@ -100,7 +104,7 @@
                     margin-top: 0.5em;
                     margin-bottom: 0.5em;
                     font-family: "Quicksand", sans-serif;
-                    background-color: color.$bg_input;
+                    background-color: #0c0c0cd2;
                     color: rgb(255, 255, 255);
                     border-radius: 5px;
                     border: 1px solid gray;
@@ -142,7 +146,7 @@
                     padding: 1em;
                     outline: none;
                     font-family: "Quicksand", sans-serif;
-                    background-color: color.$bg_input;
+                    background-color: #0c0c0cd2;
                     border: none;
                     color: #fff;
                     border: 1px solid gray;
@@ -186,7 +190,7 @@
                         display: grid;
                         grid-template-columns: 3em auto;
                         gap: 0.5em;
-                        background-color: color.$bg_input;
+                        background-color: #0c0c0cd2;
                         color: #fff;
                         cursor: pointer;
 
@@ -216,7 +220,7 @@
                                 transition: 120ms transform ease-in-out;
                                 box-shadow: inset 1em 1em #fff;
                                 /* Windows High Contrast Mode */
-                                background-color: CanvasText;
+                                background-color: #0c0c0cd2;
                             }
 
                             &:checked::before {
@@ -416,9 +420,9 @@
                 display: block;
                 width: 50%;
                 padding: 1em;
-                background-color: #1a2225d2;
+                background-color: #110f0fd2;
                 color: rgb(255, 255, 255);
-                border: 1px solid rgba(158, 141, 141, 0.575);
+                border: 1px solid rgba(44, 39, 39, 0.575);
                 font-size: 1rem;
                 text-align: center;
                 &:active {
@@ -435,9 +439,8 @@
                 display: block;
                 width: 100%;
                 padding: 1em;
-                background-color: #1a2225d2;
+                background-color: #0c0c0cd2;
                 color: rgb(255, 255, 255);
-                border-radius: 150px;
                 border: none;
                 font-size: 1rem;
 
@@ -480,7 +483,7 @@
         margin-top: 1em;
         overflow-x: scroll;
         border: none;
-        background-color: #1a2225d2;
+        background-color: #0c0c0cd2;
         text-align: center;
         border-collapse: collapse;
         min-height: 50vh;
@@ -686,7 +689,7 @@
         padding: 1em;
         color: #fff;
         border: 1px solid gray;
-        background-color: #1a2225;
+        background-color: #0c0c0cd2;
         width: 40%;
         margin: auto;
         font-weight: bold;

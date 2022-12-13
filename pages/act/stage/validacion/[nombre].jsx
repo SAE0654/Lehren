@@ -142,7 +142,6 @@ export default function StepTwo() {
         }
         producto.objetivo = Objetivos;
         producto.instrumentoValidacion = HerramientasValidacion;
-        console.log(producto);
         await axios.post(`${process.env.NEXT_PUBLIC_ENDPOINT}api/producto/` + nombre, producto,
             {
                 headers: {
@@ -206,7 +205,7 @@ export default function StepTwo() {
         <Layout>
             <div className={styles.main_content} style={{ transform: 'translate(0%, -40%)', maxHeight: '1000px' }}>
                 <div className={styles.box_container}>
-                    <h1 className={styles.t_container} style={{ marginTop: "10em" }}>Proceso de propuesta</h1>
+                    <h1 className={styles.t_container} style={{ marginTop: "13em" }}>Proceso de propuesta</h1>
                     <form style={{ flexDirection: 'column', alignItems: 'center' }} onSubmit={(e) => uploadF2(e)}>
                         <div className={styles.form_group} style={{ width: '100%' }}>
                             <div className={styles.container_footer}>

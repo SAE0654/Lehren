@@ -29,7 +29,12 @@ export const ADMIN = [
 export const STAFF = [
     {
         icono: '',
-        texto: "Consultar",
+        texto: "Consultar SAE",
+        link: "/vw/query/sae"
+    },
+    {
+        icono: '',
+        texto: "Consultar ARTEK",
         link: "/vw/query/artek"
     },
     {

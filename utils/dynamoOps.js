@@ -53,20 +53,23 @@ export async function GetProductosByIndexDB(indexCampo, campo, valor) {
     }
 }
 
-export async function UpdateCamposFaseValidacion({nombre, prioridad, objetivo, instrumentoValidacion, generalComments, fechaEntrega, fechaEjecucion}) {
+export async function UpdateCamposFaseValidacion({nombre, prioridad, objetivo, instrumentoValidacion, generalComments, fechaEntrega, fechaEjecucion, etapa, statusProducto, archivosETP2}) {
     const params = {
         TableName: 'P1_Productos',
         Key: {
             nombre: nombre
         },
-        UpdateExpression: 'set prioridad = :p, objetivo = :o, instrumentoValidacion = :i, generalComments = :g, fechaEntrega = :fEntrega, fechaEjecucion = :fEjecucion',
+        UpdateExpression: 'set prioridad = :p, objetivo = :o, instrumentoValidacion = :i, generalComments = :g, fechaEntrega = :fEntrega, fechaEjecucion = :fEjecucion, etapa = :e, statusProducto = :s, archivosETP2 = :a',
         ExpressionAttributeValues: {
             ':p': prioridad,
             ':o': objetivo,
             ':i': instrumentoValidacion,
             ':g': generalComments,
             ':fEntrega': fechaEntrega,
-            ':fEjecucion': fechaEjecucion
+            ':fEjecucion': fechaEjecucion,
+            ':e': etapa,
+            's': statusProducto,
+            'a': archivosETP2
         },
     }
     return executar(params);
@@ -84,6 +87,20 @@ export async function UpdateToNoAprobado({ nombre, statusProducto, etapa, aproba
             ':e': etapa,
             ':a': aprobadoPor,
             ':c': comentarios
+        },
+    }
+    return executar(params);
+}
+
+export async function UpdateUrlETP(nombre, carga, etapa) {
+    const params = {
+        TableName: 'P1_Productos',
+        Key: {
+            nombre: nombre
+        },
+        UpdateExpression: `set ${etapa} = :e`,
+        ExpressionAttributeValues: {
+            ':e': carga
         },
     }
     return executar(params);

@@ -1,5 +1,6 @@
 import Head from 'next/head';
-import { AiOutlineFileSearch, AiOutlineFolderAdd } from "react-icons/ai";
+import { AiOutlineFileAdd, AiOutlineFileSearch } from "react-icons/ai";
+import { BsFolderPlus } from "react-icons/bs"
 import { BiBookContent } from "react-icons/bi"
 import { MdPersonAdd } from "react-icons/md";
 import { NavLink } from '../components/NavLink';
@@ -25,7 +26,7 @@ export default function Home() {
   const setRolInterface = () => {
     switch (data.user.rol) {
       case 'administrador':
-        ADMIN[0].icono = <AiOutlineFolderAdd className="icon_button" />;
+        ADMIN[0].icono = <AiOutlineFileAdd className="icon_button" />;
         ADMIN[1].icono = <AiOutlineFileSearch className="icon_button" />;
         ADMIN[2].icono = <AiOutlineFileSearch className="icon_button" />;
         ADMIN[3].icono = <MdPersonAdd className="icon_button" />
@@ -34,12 +35,14 @@ export default function Home() {
         break;
       case 'staff':
         STAFF[1].icono = <AiOutlineFileSearch className="icon_button" />;
-        STAFF[0].icono = <AiOutlineFolderAdd className="icon_button" />;
+        STAFF[0].icono = <AiOutlineFileSearch className="icon_button" />;
+        STAFF[2].icono = <BsFolderPlus className="icon_button" />;
         setInterface(STAFF);
         break;
       case 'docente':
         STAFF[1].icono = <AiOutlineFileSearch className="icon_button" />;
-        STAFF[0].icono = <AiOutlineFolderAdd className="icon_button" />;
+        STAFF[0].icono = <AiOutlineFileSearch className="icon_button" />;
+        STAFF[2].icono = <BsFolderPlus className="icon_button" />;
         setInterface(STAFF);
         break;
       default:

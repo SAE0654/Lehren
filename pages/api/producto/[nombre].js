@@ -1,5 +1,5 @@
 import Product from "../../../models/Producto";
-import { UpdateCamposFaseValidacion, UpdateStatus, UpdateToNoAprobado } from "../../../utils/dynamoOps";
+import { UpdateCamposFaseValidacion, UpdateStatus, UpdateToNoAprobado, UpdateUrlETP } from "../../../utils/dynamoOps";
 
 const handler = async (req, res) => {
     const body = req.body;
@@ -8,7 +8,6 @@ const handler = async (req, res) => {
         case 'GET':
             try {
                 const producto = await Product.query("nombre").eq(nombre).exec();
-                console.log(producto)
                 return res.status(200).json(producto.toJSON()[0])
             } catch (error) {
                 console.log(error)
@@ -35,6 +34,10 @@ const handler = async (req, res) => {
                 if(nombre.split("=")[0] === 'updateToNoAprobado') {
                     await UpdateToNoAprobado(body);
                     return res.status(200).json({message: "Producto no aprobado"});
+                }
+                if(nombre.split("=")[0] === 'updateETP12') {
+                    await UpdateUrlETP(nombre.split("=")[1], body[0], body[1]); // nombre, carga, etapaArchivos
+                    return res.status(200).json({message: "Archivo eliminado"});
                 }
                 console.log(body)
                 const updateProduct = new Product(body);
