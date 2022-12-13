@@ -17,7 +17,7 @@ const SchemaProduct = new dynamoose.Schema({
         type: String,
         default: 'Jamás ha sido actualizado'
     },
-    "status": {
+    "statusProducto": {
         type: String,
         default: 'Revisión'
     },

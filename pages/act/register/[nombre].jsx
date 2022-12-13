@@ -214,7 +214,7 @@ export default function Producto() {
             return;
         }
         producto.lastUpdate = "El " + getTimeStamp() + " por " + session.user.names;
-        await axios.put(`${process.env.NEXT_PUBLIC_ENDPOINT}api/producto/updateFase1=` + Producto.nombre, producto)
+        await axios.put(`${process.env.NEXT_PUBLIC_ENDPOINT}api/producto/` + Producto.nombre, producto)
             .then(() => {
                 toast.success("Producto actualizado con éxito");
                 router.push(`${process.env.NEXT_PUBLIC_ENDPOINT}vw/aprobado/` + producto.nombre);

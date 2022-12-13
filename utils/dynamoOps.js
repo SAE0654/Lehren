@@ -87,6 +87,20 @@ export async function UpdateComment(nombre, comentario) {
     return executar(params);
 }
 
+export async function UpdateStatus(nombre, nuevoStatus) {
+    const params = {
+        TableName: 'P1_Productos',
+        Key: {
+            nombre: nombre
+        },
+        UpdateExpression: 'set statusProducto = :s',
+        ExpressionAttributeValues: {
+            ':s': nuevoStatus,
+        },
+    }
+    return executar(params);
+}
+
 export async function VoteProduct(nombre, tipo, carga) {
     const params = {
         TableName: 'P1_Productos',
@@ -126,10 +140,3 @@ async function executar(params) {
     }
 }
 
-/*
-=== Operaciones de un producto individual ===
-*/
-
-export async function UpdateWholeProduct(nombre, producto) {
-    
-}

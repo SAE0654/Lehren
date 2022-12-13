@@ -23,7 +23,7 @@ export default function StepTwo() {
     // Función de cambios sin guardar
     const [notSaved, setNotSaved] = useState(false);
 
-    const { id } = router.query;
+    const { nombre } = router.query;
     const { data: session } = useSession();
 
     let url_files = [];
@@ -31,7 +31,7 @@ export default function StepTwo() {
     useEffect(() => {
         getId();
         if (!Producto) {
-            getProductoById();
+            getProductoByNombre();
         }
         document.querySelector("body").className = '';
         document.querySelector("body").classList.add("consultas_bg");
@@ -39,14 +39,14 @@ export default function StepTwo() {
     }, []);
 
     const getId = () => {
-        if (typeof id === 'undefined') {
-            id = localStorage.getItem("Id");
+        if (typeof nombre === 'undefined') {
+            nombre = localStorage.getItem("Nombre");
         }
-        localStorage.setItem("Id", id);
+        localStorage.setItem("Nombre", nombre);
     }
 
-    const getProductoById = async () => {
-        await axios.get(`${process.env.NEXT_PUBLIC_ENDPOINT}api/productos/` + id)
+    const getProductoByNombre = async () => {
+        await axios.get(`${process.env.NEXT_PUBLIC_ENDPOINT}api/producto/` + nombre)
             .then((res) => {
                 setProducto(res.data);
             });
@@ -126,7 +126,7 @@ export default function StepTwo() {
         await saveFilesToAWS();
         const producto = Producto;
         producto.archivosETP2 = url_files;
-        producto.status = "Recolección";
+        producto.statusProducto = "Recolección";
         producto.etapa = "Resultado"
         if (isAnyFieldEmpty(e.target) || typeof producto.prioridad === 'undefined') { // Si true, campos vacíos
             toast.error("Rellena todos los campos");
@@ -142,7 +142,7 @@ export default function StepTwo() {
         }
         producto.objetivo = Objetivos;
         producto.instrumentoValidacion = HerramientasValidacion;
-        await axios.put(`${process.env.NEXT_PUBLIC_ENDPOINT}api/productos/` + id, producto,
+        await axios.put(`${process.env.NEXT_PUBLIC_ENDPOINT}api/productos/` + nombre, producto,
             {
                 headers: {
                     accept: '*/*',
@@ -223,7 +223,7 @@ export default function StepTwo() {
                                         <input type="radio" name="prioridad" value="baja" style={{ color: "green" }} onChange={(e) => handleChange(e)} />
                                         Baja
                                     </label>
-                                    <VotosComponent id={Producto._id} likes={Producto.likes} dislikes={Producto.dislikes} />
+                                    <VotosComponent nombre={Producto.nombre} likes={Producto.likes} dislikes={Producto.dislikes} />
                                 </div>
                             </div>
                             <div className="radio_ck_section">

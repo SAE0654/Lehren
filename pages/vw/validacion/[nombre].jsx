@@ -39,7 +39,7 @@ export default function ValidacionView() {
         await axios.get(`${process.env.NEXT_PUBLIC_ENDPOINT}api/producto/` + nombre)
             .then((res) => {
                 setProducto(res.data);
-                if (res.data.etapa === "Validación") {
+                if (res.data.etapa === "Propuesta") {
                     redirect(res.data.nombre)
                 }
             }).catch((res) => {
@@ -51,10 +51,10 @@ export default function ValidacionView() {
 
     const setStatus = async (Status) => {
         const producto = Producto;
-        producto.status = Status === "Validación" ? "Elección" : "Revisión";
+        producto.statusProducto = Status === "Validación" ? "Elección" : "Revisión";
         producto.etapa = Status;
         if (Status === "Validación") {
-            await axios.put(`${process.env.NEXT_PUBLIC_ENDPOINT}api/productos/` + nombre, producto,
+            await axios.put(`${process.env.NEXT_PUBLIC_ENDPOINT}api/producto/updateStatus=${nombre}`, producto.statusProducto,
                 {
                     headers: {
                         accept: '*/*',
@@ -109,6 +109,8 @@ export default function ValidacionView() {
         return <h1>Cargando...</h1>
     }
 
+    console.log(Producto)
+
     return <>
         <Head>
             <title>Etapa de propuesta | {!session ? 'Cargando...' : session.user.names}</title>
@@ -125,7 +127,7 @@ export default function ValidacionView() {
                             <p><b>Nombre del producto: </b></p>
                             <p className={styles.right_border}>{Producto.nombre}</p>
                             <p><b>Estatus: </b></p>
-                            <p className={styles.right_border}>{Producto.status}</p>
+                            <p className={styles.right_border}>{Producto.statusProducto}</p>
                             <p className={styles.last_row}><b>Tipo de oferta:</b></p>
                             <p className={styles.right_bottom_border}>{Producto.tipo}</p>
                             <p><b>Modalidad de oferta: </b></p>
@@ -145,7 +147,7 @@ export default function ValidacionView() {
                         </div>
                     </div>
                     <br />
-                    <NavLink href={"/act/stage/validacion/" + Producto._id} style={{ color: "#fff" }} onClick={() => setStatus("Validación")}>Mandar a proceso de validación</NavLink>
+                    <NavLink href={"/act/stage/validacion/" + Producto.nombre} style={{ color: "#fff" }} onClick={() => setStatus("Validación")}>Mandar a proceso de validación</NavLink>
                     <button onClick={() => setStatus("Pendiente")}>
                         Poner en pendiente
                     </button>

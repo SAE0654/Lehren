@@ -42,7 +42,7 @@ export default function Consultas() {
         { label: "No.", key: "no" },
         { label: "Nombre del producto", key: "nombre" },
         { label: "Responsable", key: "responsable" },
-        { label: "Estatus", key: "status" },
+        { label: "Estatus", key: "statusProducto" },
         { label: "Tipo", key: "tipo" },
         { label: "Modalidad", key: "modalidad" },
         { label: "Area vinculada", key: "areaV" },
@@ -221,7 +221,7 @@ export default function Consultas() {
             _CSV = [..._CSV, {
                 no: index + 1,
                 nombre: item.nombre,
-                status: item.status,
+                statusProducto: item.statusProducto,
                 responsable: item.responsable ? item.responsable : "No ha sido asignado",
                 tipo: item.tipo,
                 modalidad: item.modalidad,
@@ -387,7 +387,7 @@ export default function Consultas() {
                                                                 }
                                                             </div>
                                                         </td>
-                                                        <td className="short"> {producto.status} </td>
+                                                        <td className="short"> {producto.statusProducto} </td>
                                                         <td>
                                                             <VotosComponent nombre={producto.nombre} likes={producto.likes} dislikes={producto.dislikes} />
                                                         </td>
