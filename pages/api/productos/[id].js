@@ -1,4 +1,4 @@
-import Producto from "../../../models/Producto";
+import Product from "../../../models/Producto";
 import { DeleteProductoByName, GetProductosByIndexDB, UpdateComment, UpdateResponsable } from "../../../utils/dynamoOps";
 
 const handler = async (req, res) => {
@@ -15,11 +15,11 @@ const handler = async (req, res) => {
             return res.status(404).json({ message: "Not found" });
         case 'POST':
             try {
-                const producto = await Producto.query("nombre").eq(body.nombre).exec();
+                const producto = await Product.query("nombre").eq(body.nombre).exec();
                 if (producto['count'] > 0) {
                     return res.status(400).json({ message: "Este producto ya fue registrado" });
                 }
-                const newProduct = new Producto(body);
+                const newProduct = new Product(body);
                 try {
                     await newProduct.save();
                     return res.status(200).json(newProduct);

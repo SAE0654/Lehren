@@ -1,5 +1,4 @@
 import * as dynamoose from "dynamoose";
-import { makeid } from "../utils/forms";
 
 const SchemaProduct = new dynamoose.Schema({
     "nombre": String,
@@ -51,7 +50,20 @@ const SchemaProduct = new dynamoose.Schema({
     },
     "instrumentoValidacion": {
         type: Array,
-        schema: [Object]
+        schema: [{
+            type: Object,
+            schema: {
+                nombre: String,
+                duracionActividad: String,
+                evidencia: String,
+                id: String,
+                medioCanal: String,
+                numeroParticipantes: String,
+                quienDirigido: String,
+                responsable: String,
+                tipoServicio: String
+            }
+        }]
     },
     "datosSustentan": {
         type: String,
@@ -71,7 +83,14 @@ const SchemaProduct = new dynamoose.Schema({
     },
     "comentarios": {
         type: Array,
-        schema: [Object]
+        schema: [{
+            type: Object,
+            schema: {
+                comentarios: String,
+                createdAt: String,
+                user: String
+            }
+        }]
     },
     "archivosETP1": {
         type: Array,

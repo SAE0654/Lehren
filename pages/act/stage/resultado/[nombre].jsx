@@ -20,15 +20,15 @@ export default function Complete() {
   const [notSaved, setNotSaved] = useState(false);
   const [GoToNext, setGoToNext] = useState(false);
   const [Files, setFiles] = useState([]);
-  const { id } = router.query;
+  const { nombre } = router.query;
   const { data: session } = useSession();
 
   let url_files = [];
 
   useEffect(() => {
-    getId();
+    getNombre();
     if (!Producto) {
-      getProductoById();
+      getProductoByNombre();
     }
     document.querySelector("body").className = '';
     document.querySelector("body").classList.add("consultas_bg");
@@ -82,15 +82,15 @@ export default function Complete() {
   }
 
 
-  const getId = () => {
-    if (typeof id === 'undefined') {
-      id = localStorage.getItem("Id");
+  const getNombre = () => {
+    if (typeof nombre === 'undefined') {
+      nombre = localStorage.getItem("Nombre");
     }
-    localStorage.setItem("Id", id);
+    localStorage.setItem("Nombre", nombre);
   }
 
-  const getProductoById = async () => {
-    await axios.get(`${process.env.NEXT_PUBLIC_ENDPOINT}api/productos/` + id)
+  const getProductoByNombre = async () => {
+    await axios.get(`${process.env.NEXT_PUBLIC_ENDPOINT}api/producto/` + nombre)
       .then((res) => {
         setProducto(res.data);
       });
@@ -120,30 +120,31 @@ export default function Complete() {
     await saveFilesToAWS();
     const producto = Producto;
     producto.archivosETP2 = url_files;
-    producto.status = "Validado";
+    producto.statusProducto = "Validado";
     producto.etapa = "Aprobado";
     producto.aprobadoPor = session.user.names;
     if (isAnyFieldEmpty(e.target)) { // Si true, campos vacíos
       toast.error("Rellena todos los campos");
       return;
     }
-    if (producto.status === "No aprobado") {
+    if (producto.statusProducto === "No aprobado") {
       producto.comentarios = [{
         user: session.user.names,
         comentarios: "Este producto fue aprobado",
         createdAt: getTimeStamp()
       }];
     }
-    await axios.put(`${process.env.NEXT_PUBLIC_ENDPOINT}api/productos/` + id, producto,
+    await axios.put(`${process.env.NEXT_PUBLIC_ENDPOINT}api/producto/` + nombre, producto,
       {
         headers: {
           accept: '*/*',
           'Content-Type': 'application/json'
         }
-      }).then((res) => {
+      }).then(async (res) => {
         toast.info(res.data.message);
         e.target.reset();
         setNotSaved(false);
+        await axios.put(`${process.env.NEXT_PUBLIC_ENDPOINT}api/productos/${producto.nombre}=updateComment`, producto);
         router.push(`${process.env.NEXT_PUBLIC_ENDPOINT}`);
       }).catch((err) => {
         toast.error("Error al completar")
@@ -171,7 +172,7 @@ export default function Complete() {
         return;
       }
       const producto = Producto;
-      producto.status = 'No aprobado';
+      producto.statusProducto = 'No aprobado';
       producto.etapa = "Resultado"
       producto.aprobadoPor = 'Producto no aprobado';
       producto.comentarios = [{
@@ -179,7 +180,7 @@ export default function Complete() {
         comentarios: "NO APROBADO: " + res.value,
         createdAt: getTimeStamp()
       }];
-      await axios.put(`${process.env.NEXT_PUBLIC_ENDPOINT}api/productos/` + producto._id, producto, {
+      await axios.put(`${process.env.NEXT_PUBLIC_ENDPOINT}api/producto/updateToNoAprobado=${producto.nombre}`, producto, {
         headers: {
           accept: '*/*',
           'Content-Type': 'application/json'
@@ -349,7 +350,7 @@ export default function Complete() {
               </div>
               <div className="btn_gr">
                 {
-                  Producto.status === "No aprobado" ?
+                  Producto.statusProducto === "No aprobado" ?
                     <button type="button" value="Aprobar ya" style={{ backgroundColor: "transparent", opacity: "0.7", cursor: "not-allowed" }}>Ya fue desaprobado</button>
                     :
                     <button type="button" value="No aprobar" onClick={() => desaprobarProducto()} style={{ backgroundColor: "transparent" }}>No aprobar </button>

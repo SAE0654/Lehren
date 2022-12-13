@@ -39,7 +39,7 @@ export default function ValidacionView() {
         await axios.get(`${process.env.NEXT_PUBLIC_ENDPOINT}api/producto/` + nombre)
             .then((res) => {
                 setProducto(res.data);
-                if (res.data.etapa === "Propuesta") {
+                if (res.data.etapa === "Validación") {
                     redirect(res.data.nombre)
                 }
             }).catch((res) => {
@@ -54,7 +54,7 @@ export default function ValidacionView() {
         producto.statusProducto = Status === "Validación" ? "Elección" : "Revisión";
         producto.etapa = Status;
         if (Status === "Validación") {
-            await axios.put(`${process.env.NEXT_PUBLIC_ENDPOINT}api/producto/updateStatus=${nombre}`, producto.statusProducto,
+            await axios.put(`${process.env.NEXT_PUBLIC_ENDPOINT}api/producto/updateStatus=${nombre}`, [producto.statusProducto, producto.etapa],
                 {
                     headers: {
                         accept: '*/*',

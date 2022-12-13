@@ -142,7 +142,8 @@ export default function StepTwo() {
         }
         producto.objetivo = Objetivos;
         producto.instrumentoValidacion = HerramientasValidacion;
-        await axios.put(`${process.env.NEXT_PUBLIC_ENDPOINT}api/productos/` + nombre, producto,
+        console.log(producto);
+        await axios.post(`${process.env.NEXT_PUBLIC_ENDPOINT}api/producto/` + nombre, producto,
             {
                 headers: {
                     accept: '*/*',

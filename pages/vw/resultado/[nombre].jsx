@@ -13,37 +13,37 @@ export default function ResultadoView() {
     const [Producto, setProducto] = useState(null);
     // Función de cambios sin guardar
 
-    const { id } = router.query;
+    const { nombre } = router.query;
     const { data: session } = useSession();
 
     useEffect(() => {
-        getId();
+        getNombre();
         if (!Producto) {
-            getProductoById();
+            getProductoByNombre();
         }
         document.querySelector("body").className = '';
         document.querySelector("body").classList.add("consultas_bg");
         sessionHasExpired();
     }, []);
 
-    const getId = () => {
-        if (typeof id === 'undefined') {
-            id = localStorage.getItem("Id");
+    const getNombre = () => {
+        if (typeof nombre === 'undefined') {
+            nombre = localStorage.getItem("Nombre");
         }
-        localStorage.setItem("Id", id);
+        localStorage.setItem("Nombre", nombre);
     }
 
-    const getProductoById = async () => {
-        await axios.get(`${process.env.NEXT_PUBLIC_ENDPOINT}api/productos/` + id)
+    const getProductoByNombre = async () => {
+        await axios.get(`${process.env.NEXT_PUBLIC_ENDPOINT}api/producto/` + nombre)
             .then((res) => {
                 setProducto(res.data);
                 if(res.data.status === "No aprobado" || res.data.status === "Aprobado") {
-                    redirect(res.data._id)
+                    redirect(res.data.nombre)
                 }
             });
     }
 
-    const redirect = (lId) => router.push('/act/stage/resultado/' + lId)
+    const redirect = (lNombre) => router.push('/act/stage/resultado/' + lNombre)
 
     if (!Producto) {
         return <h1>Cargando...</h1>
@@ -65,7 +65,7 @@ export default function ResultadoView() {
                             <p><b>Nombre del producto: </b></p>
                             <p className={styles.right_border}>{Producto.nombre}</p>
                             <p><b>Estatus: </b></p>
-                            <p className={styles.right_border}>{Producto.status}</p>
+                            <p className={styles.right_border}>{Producto.statusProducto}</p>
                             <p className={styles.last_row}><b>Tipo de oferta:</b></p>
                             <p className={styles.right_bottom_border}>{Producto.tipo}</p>
                             <p><b>Modalidad de oferta: </b></p>
@@ -88,11 +88,12 @@ export default function ResultadoView() {
                             <p><b>Prioridad: </b></p>
                             <p className={styles.right_border}>{Producto.prioridad}</p>
                             <p><b>Objetivos: </b></p>
-                            <p className={styles.right_border}>{Producto.objetivo === null ? "Sin objetivos" : Producto.objetivo.map((item, index) => (item + ((index + 1) >= Producto.objetivo.length ? "." : ", ")))}</p>
+                            <p className={styles.right_border}>{Producto.objetivo.length === 0 ? "Sin objetivos" : Producto.objetivo.map((item, index) => (item + ((index + 1) >= Producto.objetivo.length ? "." : ", ")))}</p>
                             <p className={styles.last_row}><b>Herramientas de validación:</b></p>
                             {Producto.instrumentoValidacion === null ?
                                 <p className={styles.right_border}>No se han seleccionado instrumentos de validación</p> :
-                                <p className={styles.right_border}>{Producto.instrumentoValidacion.length > 0
+                                <p className={styles.right_border}>
+                                    {Producto.instrumentoValidacion.length > 0
                                     ? Producto.instrumentoValidacion.map((tool, index) => (Producto.instrumentoValidacion.length - 1) === index ? (index +1) + " .-" + tool.nombre + ". " : (index +1) + " .-" + tool.nombre + ", ")
                                     : null}
                                 </p>}
@@ -106,7 +107,7 @@ export default function ResultadoView() {
                     </div>
                     <br />
                     <button>
-                        <NavLink href={"/act/stage/resultado/" + Producto._id} style={{ color: "#fff" }}>Ir al último paso</NavLink>
+                        <NavLink href={"/act/stage/resultado/" + Producto.nombre} style={{ color: "#fff" }}>Ir al último paso</NavLink>
                     </button>
                 </div>
             </div>

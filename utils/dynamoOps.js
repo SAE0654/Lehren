@@ -53,6 +53,42 @@ export async function GetProductosByIndexDB(indexCampo, campo, valor) {
     }
 }
 
+export async function UpdateCamposFaseValidacion({nombre, prioridad, objetivo, instrumentoValidacion, generalComments, fechaEntrega, fechaEjecucion}) {
+    const params = {
+        TableName: 'P1_Productos',
+        Key: {
+            nombre: nombre
+        },
+        UpdateExpression: 'set prioridad = :p, objetivo = :o, instrumentoValidacion = :i, generalComments = :g, fechaEntrega = :fEntrega, fechaEjecucion = :fEjecucion',
+        ExpressionAttributeValues: {
+            ':p': prioridad,
+            ':o': objetivo,
+            ':i': instrumentoValidacion,
+            ':g': generalComments,
+            ':fEntrega': fechaEntrega,
+            ':fEjecucion': fechaEjecucion
+        },
+    }
+    return executar(params);
+}
+
+export async function UpdateToNoAprobado({ nombre, statusProducto, etapa, aprobadoPor, comentarios}) {
+    const params = {
+        TableName: 'P1_Productos',
+        Key: {
+            nombre: nombre
+        },
+        UpdateExpression: 'set statusProducto = :s, etapa = :e, aprobadoPor = :a, comentarios = :c',
+        ExpressionAttributeValues: {
+            ':s': statusProducto,
+            ':e': etapa,
+            ':a': aprobadoPor,
+            ':c': comentarios
+        },
+    }
+    return executar(params);
+}
+
 export async function UpdateResponsable(nombre, nuevoResponsable, ultimaActualizacion) {
     const params = {
         TableName: 'P1_Productos',
@@ -87,15 +123,16 @@ export async function UpdateComment(nombre, comentario) {
     return executar(params);
 }
 
-export async function UpdateStatus(nombre, nuevoStatus) {
+export async function UpdateStatus(nombre, nuevoStatus, nuevaEtapa) {
     const params = {
         TableName: 'P1_Productos',
         Key: {
             nombre: nombre
         },
-        UpdateExpression: 'set statusProducto = :s',
+        UpdateExpression: 'set statusProducto = :s, etapa = :e',
         ExpressionAttributeValues: {
             ':s': nuevoStatus,
+            ':e': nuevaEtapa
         },
     }
     return executar(params);
@@ -136,6 +173,7 @@ async function executar(params) {
         const _data = await db.update(params).promise();
         return _data;
     } catch (error) {
+        console.log(error)
         throw new Error(error)
     }
 }
