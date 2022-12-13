@@ -8,8 +8,6 @@ const handler = async (req, res) => {
         case 'PUT':
             const tipo = nombre.split("=")[0];
             const _nombre = nombre.split("=")[1];
-            console.log(tipo);
-            console.log(_nombre);
             try {
                 await VoteProduct(_nombre, tipo, body);
                 return res.status(200).json({ message: 'Actualizado con éxito' });

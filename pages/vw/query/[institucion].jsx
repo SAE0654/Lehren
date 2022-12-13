@@ -100,7 +100,6 @@ export default function Consultas() {
             setTempProductos(res.data);
             setLoading(false);
             computePages(res.data);
-            console.log(res.data)
         });
     }
 
@@ -348,7 +347,7 @@ export default function Consultas() {
                                                         </td>
                                                         <td>
                                                             <div className={styles.action_by_id}>
-                                                                <NavLink href={"/vw/aprobado/" + producto._id} exact>
+                                                                <NavLink href={"/vw/aprobado/" + producto.nombre} exact>
                                                                     <button>
                                                                         <AiOutlineEye />
                                                                     </button>
@@ -368,7 +367,7 @@ export default function Consultas() {
                                                                         producto.etapa === "Aprobado" ?
                                                                             <div className={styles.etapa2} style={{ backgroundColor: "green" }}>
                                                                                 <NavLink
-                                                                                    href={"/vw/aprobado/" + producto._id}
+                                                                                    href={"/vw/aprobado/" + producto.nombre}
                                                                                     exact>
                                                                                     {producto.etapa}
                                                                                 </NavLink>
@@ -379,7 +378,7 @@ export default function Consultas() {
                                                                                     href={
                                                                                         `/vw/${producto.etapa === "Propuesta" || producto.etapa === "Validación" || producto.etapa === "Pendiente"
                                                                                             ? "validacion" :
-                                                                                            producto.etapa.toLowerCase()}/` + producto._id}
+                                                                                            producto.etapa.toLowerCase()}/` + producto.nombre}
                                                                                     exact>
                                                                                     {producto.etapa}
                                                                                 </NavLink>

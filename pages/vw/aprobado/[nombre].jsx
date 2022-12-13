@@ -13,7 +13,6 @@ import Swal from 'sweetalert2/dist/sweetalert2';
 import { NavLink } from '../../../components/NavLink';
 // Funciones externas
 import { sessionHasExpired } from '../../../utils/forms';
-import { getProductoById } from '../../../utils/api';
 
 export default function ViewProduct() {
   const router = useRouter();
@@ -21,7 +20,7 @@ export default function ViewProduct() {
   const [FilesETP1, setFilesETP1] = useState([]);
   const [FilesETP2, setFilesETP2] = useState([]);
 
-  const { id } = router.query;
+  const { nombre } = router.query;
 
   useEffect(() => {
     getId();
@@ -34,18 +33,18 @@ export default function ViewProduct() {
   }, []);
 
   const getId = () => {
-    if (typeof id === 'undefined') {
-      id = localStorage.getItem("Id");
+    if (typeof nombre === 'undefined') {
+      nombre = localStorage.getItem("Nombre");
     }
-    localStorage.setItem("Id", id);
+    localStorage.setItem("Nombre", nombre);
   }
 
   const callProduct = async () => {
-    const data = await getProductoById(id);
-    setProducto(data);
-    setFilesETP1(data.archivosETP1);
-    setFilesETP2(data.archivosETP2)
-    console.log(data)
+    const res = await axios.get(`${process.env.NEXT_PUBLIC_ENDPOINT}api/producto/` + nombre);
+    setProducto(res.data);
+    setFilesETP1(res.data.archivosETP1);
+    setFilesETP2(res.data.archivosETP2)
+    console.log(res.data)
   }
 
   const deleteFile = async (fileName, etapa) => {
@@ -72,7 +71,7 @@ export default function ViewProduct() {
 
   const editOptions = async () => {
     const inputOptions = {
-      [`act/register/${Producto._id}`]: "1. Registro",
+      [`act/register/${Producto.nombre}`]: "1. Registro",
       // [`vw/validacion/${Producto._id}`]: "2. Propuesta",
       // [`vw/resultado/${Producto._id}`]: "3. Resultado"
     }

@@ -6,20 +6,11 @@ const handler = async (req, res) => {
     const { id } = req.query;
     switch (req.method) {
         case 'GET':
-            if (id.length > 15) { // Es un Id de Dynamo
-                try {
-                    const producto = await Producto.findById(id);
-                    return res.status(200).json(producto);
-                } catch (error) {
-                    console.log("Error: ", error);
-                }
-            } else {
-                try {
-                    const producto = await GetProductosByIndexDB('institucion-index', 'institucion', id); // El id aquí representa en realidad la institución (artek, sae)
-                    return res.status(200).json(producto['Items']);
-                } catch (error) {
-                    console.log("Error: ", error);
-                }
+            try {
+                const producto = await GetProductosByIndexDB('institucion-index', 'institucion', id); // El id aquí representa en realidad la institución (artek, sae)
+                return res.status(200).json(producto['Items']);
+            } catch (error) {
+                console.log("Error: ", error);
             }
             return res.status(404).json({ message: "Not found" });
         case 'POST':
@@ -41,10 +32,10 @@ const handler = async (req, res) => {
         case 'PUT':
             try {
                 const tipoDeOperacion = id.split("=")[1];
-                if(tipoDeOperacion === "updateResponsable") {
+                if (tipoDeOperacion === "updateResponsable") {
                     await UpdateResponsable(id.split("=")[0], req.body.responsable, req.body.lastUpdate)
                 }
-                if(tipoDeOperacion === "updateComment") {
+                if (tipoDeOperacion === "updateComment") {
                     await UpdateComment(req.body.nombre, req.body.comentarios[0]);
                 }
                 return res.status(200).json({ message: 'Actualizado con éxito' });

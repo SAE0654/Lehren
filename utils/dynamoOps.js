@@ -45,28 +45,11 @@ export async function GetProductosByIndexDB(indexCampo, campo, valor) {
         KeyConditionExpression: `${campo} = :${campo}`,
         ExpressionAttributeValues: { [':' + campo]: valor }
     };
-
     try {
         const data = await db.query(params).promise();
         return data;
     } catch (error) {
         return []
-    }
-}
-
-export async function DeleteProductoByName(nombre) {
-    var params = {
-        Key: {
-            nombre: nombre
-        },
-        TableName: 'P1_Productos'
-    };
-
-    try {
-        await db.delete(params).promise();
-    } catch (error) {
-        console.log(error)
-        throw new Error(error)
     }
 }
 
@@ -82,12 +65,7 @@ export async function UpdateResponsable(nombre, nuevoResponsable, ultimaActualiz
             ':l': ultimaActualizacion
         },
     }
-    try {
-        const _data = await db.update(params).promise();
-        return _data;
-    } catch (error) {
-        throw new Error(error)
-    }
+    return executar(params);
 }
 
 export async function UpdateComment(nombre, comentario) {
@@ -123,6 +101,21 @@ export async function VoteProduct(nombre, tipo, carga) {
     return executar(params);
 }
 
+export async function DeleteProductoByName(nombre) {
+    var params = {
+        Key: {
+            nombre: nombre
+        },
+        TableName: 'P1_Productos'
+    };
+
+    try {
+        await db.delete(params).promise();
+    } catch (error) {
+        console.log(error)
+        throw new Error(error)
+    }
+}
 
 async function executar(params) {
     try {
@@ -131,4 +124,12 @@ async function executar(params) {
     } catch (error) {
         throw new Error(error)
     }
+}
+
+/*
+=== Operaciones de un producto individual ===
+*/
+
+export async function UpdateWholeProduct(nombre, producto) {
+    
 }

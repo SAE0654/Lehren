@@ -8,7 +8,6 @@ import { toast } from 'react-toastify';
 import { acceptedFiles, getTimeStamp, isAnyFieldEmpty, makeid, sessionHasExpired } from '../../../utils/forms';
 import { useRouter } from 'next/router';
 import { IoMdClose } from "react-icons/io";
-import { getProductoById } from '../../../utils/api';
 
 const BUCKET_URI = "https://sae-files.s3.amazonaws.com/";
 
@@ -23,7 +22,7 @@ export default function Producto() {
     const [Otro, setOtro] = useState('');
 
     const router = useRouter();
-    const { id } = router.query;
+    const { nombre } = router.query;
     const { data: session } = useSession();
 
     let url_files = [];
@@ -32,12 +31,12 @@ export default function Producto() {
         document.querySelector("body").className = '';
         document.querySelector("body").classList.add("registro_bg");
         sessionHasExpired();
-        if (id === "new") return;
+        if (nombre === "new") return;
         callProduct();
-    }, [id]);
+    }, [nombre]);
 
     useEffect(() => {
-        if (id === "new") {
+        if (nombre === "new") {
             setProducto({});
             setInstitucion(undefined);
             setFiles([]);
@@ -45,7 +44,7 @@ export default function Producto() {
             document.getElementById("razon").value = "";
             document.getElementById("descripcion").value = "";
         }
-    }, [id])
+    }, [nombre])
 
 
     const registerCourse = async (e) => {
@@ -73,9 +72,11 @@ export default function Producto() {
         producto = {
             ...producto,
             archivosETP1: url_files,
+            objetivo: [],
             likes: [],
             dislikes: [],
-            comentarios: []
+            comentarios: [],
+            instrumentoValidacion: []
         }
         console.log(producto)
         await axios.post(`${process.env.NEXT_PUBLIC_ENDPOINT}api/productos/all`, producto,
@@ -191,11 +192,11 @@ export default function Producto() {
     // Funciones de editado
 
     const callProduct = async () => {
-        const data = await getProductoById(id);
-        setProducto(data)
-        setInstitucion(data.institucion);
-        document.getElementById("RVOE").checked = data.RVOE === 'on' ? true : false;
-        document.getElementById("otro").value = data.tipo;
+        const res = await axios.get(`${process.env.NEXT_PUBLIC_ENDPOINT}api/producto/` + nombre);
+        setProducto(res.data)
+        setInstitucion(res.data.institucion);
+        document.getElementById("RVOE").checked = res.data.RVOE === 'on' ? true : false;
+        document.getElementById("otro").value = res.data.tipo;
     }
 
     const updateCourse = async (e) => {
@@ -213,10 +214,10 @@ export default function Producto() {
             return;
         }
         producto.lastUpdate = "El " + getTimeStamp() + " por " + session.user.names;
-        await axios.put(`${process.env.NEXT_PUBLIC_ENDPOINT}api/productos/` + Producto._id, producto)
+        await axios.put(`${process.env.NEXT_PUBLIC_ENDPOINT}api/producto/updateFase1=` + Producto.nombre, producto)
             .then(() => {
                 toast.success("Producto actualizado con éxito");
-                router.push(`${process.env.NEXT_PUBLIC_ENDPOINT}vw/aprobado/` + producto._id);
+                router.push(`${process.env.NEXT_PUBLIC_ENDPOINT}vw/aprobado/` + producto.nombre);
             })
     }
 
@@ -232,9 +233,9 @@ export default function Producto() {
         </Head>
         <Layout>
             <div className={styles.main_content}>
-                <h1>{id === 'new' ? 'Genera un producto' : 'Actualiza el producto'}</h1>
+                <h1>{nombre === 'new' ? 'Genera un producto' : 'Actualiza el producto'}</h1>
                 <div className={styles.box_container}>
-                    <form onSubmit={(e) => id === "new" ? registerCourse(e) : updateCourse(e)}>
+                    <form onSubmit={(e) => nombre === "new" ? registerCourse(e) : updateCourse(e)}>
                         <div className={styles.form_group}>
                             <h2>Datos generales</h2>
                             <input
@@ -242,6 +243,7 @@ export default function Producto() {
                                 name="nombre"
                                 placeholder="Propuesta del nombre del producto"
                                 defaultValue={Producto.nombre}
+                                disabled={nombre !== "new" ? true : false}
                                 onChange={(e) => setProductoItem(e)} />
                             <div className="radio_ck_section">
                                 <h3>Tipo de oferta</h3>
@@ -397,7 +399,7 @@ export default function Producto() {
                                         </div>
                                     </>
                             }
-                            <div className={styles.files_zone} style={id !== "new" ? { display: "none" } : { display: "block" }}>
+                            <div className={styles.files_zone} style={nombre !== "new" ? { display: "none" } : { display: "block" }}>
                                 <label className={styles.form_files}>
                                     <input type="file" name="files_att" id="fileUpload" onChange={(e) => verifyFiles(e)} multiple />
                                     Subir archivos
@@ -452,7 +454,7 @@ export default function Producto() {
                                     <input type="checkbox" name="RVOE" id="RVOE" onChange={(e) => setProductoItem(e)} />
                                     RVOE
                                 </label>
-                                <input type="submit" value={id === 'new' ? "Registrar producto" : "Actualizar producto"} />
+                                <input type="submit" value={nombre === 'new' ? "Registrar producto" : "Actualizar producto"} />
                             </div>
                         </div>
                     </form>

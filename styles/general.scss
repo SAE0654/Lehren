@@ -638,6 +638,10 @@ input[type="file"] {
 
 input {
     color-scheme: dark;
+    &:disabled {
+        opacity: 0.8;
+        cursor: not-allowed;
+    }
 }
 
 .btn_gr {

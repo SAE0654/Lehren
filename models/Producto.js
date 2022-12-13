@@ -29,7 +29,10 @@ const SchemaProduct = new dynamoose.Schema({
         type: String,
         default: 'No ha sido aprobado'
     },
-    "objetivo": Array,
+    "objetivo": {
+        type: Array,
+        schema: [String]
+    },
     "temas": {
         type: String,
         default: null
@@ -48,7 +51,7 @@ const SchemaProduct = new dynamoose.Schema({
     },
     "instrumentoValidacion": {
         type: Array,
-        schema: [String]
+        schema: [Object]
     },
     "datosSustentan": {
         type: String,
@@ -68,7 +71,7 @@ const SchemaProduct = new dynamoose.Schema({
     },
     "comentarios": {
         type: Array,
-        schema: [String]
+        schema: [Object]
     },
     "archivosETP1": {
         type: Array,

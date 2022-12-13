@@ -15,51 +15,53 @@ export default function ValidacionView() {
     const [Producto, setProducto] = useState(null);
     // Función de cambios sin guardar
 
-    const { id } = router.query;
+    const { nombre } = router.query;
     const { data: session } = useSession();
 
     useEffect(() => {
-        getId();
+        getnombre();
         if (!Producto) {
-            getProductoById();
+            getProductoByNombre();
         }
         document.querySelector("body").className = '';
         document.querySelector("body").classList.add("consultas_bg");
         sessionHasExpired();
     }, []);
 
-    const getId = () => {
-        if (typeof id === 'undefined') {
-            id = localStorage.getItem("Id");
+    const getnombre = () => {
+        if (typeof nombre === 'undefined') {
+            nombre = localStorage.getItem("nombre");
         }
-        localStorage.setItem("Id", id);
+        localStorage.setItem("nombre", nombre);
     }
 
-    const getProductoById = async () => {
-        await axios.get(`${process.env.NEXT_PUBLIC_ENDPOINT}api/productos/` + id)
+    const getProductoByNombre = async () => {
+        await axios.get(`${process.env.NEXT_PUBLIC_ENDPOINT}api/producto/` + nombre)
             .then((res) => {
                 setProducto(res.data);
                 if (res.data.etapa === "Validación") {
-                    redirect(res.data._id)
+                    redirect(res.data.nombre)
                 }
+            }).catch((res) => {
+               toast.error(res.response.data.message);
             });
     }
 
-    const redirect = (lId) => router.push('/act/stage/validacion/' + lId)
+    const redirect = (lnombre) => router.push('/act/stage/validacion/' + lnombre)
 
     const setStatus = async (Status) => {
         const producto = Producto;
         producto.status = Status === "Validación" ? "Elección" : "Revisión";
         producto.etapa = Status;
         if (Status === "Validación") {
-            await axios.put(`${process.env.NEXT_PUBLIC_ENDPOINT}api/productos/` + id, producto,
+            await axios.put(`${process.env.NEXT_PUBLIC_ENDPOINT}api/productos/` + nombre, producto,
                 {
                     headers: {
                         accept: '*/*',
                         'Content-Type': 'application/json'
                     }
                 }).then(() => {
-                    router.push(`/act/stage/validacion/${Producto._id}`);
+                    router.push(`/act/stage/validacion/${Producto.nombre}`);
                 }).catch(() => {
                     toast.error("Error al procesar");
                 })
@@ -88,7 +90,7 @@ export default function ValidacionView() {
                 comentarios: res.value,
                 createdAt: getTimeStamp()
             }];
-            await axios.put(`${process.env.NEXT_PUBLIC_ENDPOINT}api/productos/` + id, producto,
+            await axios.put(`${process.env.NEXT_PUBLIC_ENDPOINT}api/productos/` + nombre, producto,
                 {
                     headers: {
                         accept: '*/*',
