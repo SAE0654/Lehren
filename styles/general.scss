@@ -44,6 +44,10 @@ body {
     &.registro_bg {
         background-image: url("/img/bg2.png");
     }
+    
+    &.reportes_bg {
+        background-color: rgb(15, 14, 14);
+    }
 
     &::-webkit-scrollbar {
         width: 8px;

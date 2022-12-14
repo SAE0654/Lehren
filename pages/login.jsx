@@ -2,10 +2,8 @@ import Head from 'next/head'
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/router'
 import { signIn, useSession } from 'next-auth/react'
-import Layout from "../components/Layout";
 import { AiOutlineUser } from "react-icons/ai";
 import { MdOutlinePassword } from "react-icons/md";
-import { isAnyFieldEmpty } from '../utils/forms';
 import { toast, ToastContainer } from 'react-toastify';
 import styles from "../styles/pages/login.module.scss";
 

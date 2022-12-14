@@ -1,0 +1,82 @@
+@use "../util/mixins" as mix;
+
+.container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr 1fr;
+    gap: 1em;
+    grid-auto-flow: row;
+    grid-template-areas:
+        "graphics_area artek_number_products"
+        "graphics_area sae_number_products"
+        "most_active_users current_users_online";
+        max-width: 1300px;
+        margin: 3em auto;
+        h1, h2 {
+            color: #fff;
+        }
+}
+
+.graphics_area {
+    grid-area: graphics_area;
+    border: 1px solid rgb(35, 33, 29);
+    padding: 1em;
+    .bar_action {
+        @include mix.flexBox(row, center, flex-start);
+        width: 100%;
+        position: relative;
+        margin-bottom: 2em;
+        button, select {
+            padding: 0.7em;
+            color: #fff;
+        }
+        button {
+            background-color: transparent;
+            border-bottom: 2px solid transparent;
+            transition: 250ms;
+            &.active {
+                border-bottom: 2px solid #0074d9;
+                font-weight: bold;
+            }
+        }
+        select {
+            min-width: 130px;
+            margin-left: 3em;
+            background-color: transparent;
+            position: absolute;
+            top: 0;
+            right: 0;
+            border: 1px solid rgb(38, 35, 35);
+            &:focus {
+                background-color: #000;
+            }
+        }
+    }
+    // Estilos del componente
+    .chart_container {
+        width: 100%;
+        &.pie {
+            width: 50%;
+            margin: auto;
+        }
+        h2 {
+            font-family: 'Poppins', sans-serif;
+        }
+    }
+}
+
+.most_active_users {
+    grid-area: most_active_users;
+}
+
+.sae_number_products {
+    grid-area: sae_number_products;
+}
+
+.artek_number_products {
+    grid-area: artek_number_products;
+}
+
+.current_users_online {
+    grid-area: current_users_online;
+}

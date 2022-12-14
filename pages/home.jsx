@@ -1,7 +1,7 @@
 import Head from 'next/head';
 import { AiOutlineFileAdd, AiOutlineFileSearch } from "react-icons/ai";
+import { TbDeviceAnalytics } from "react-icons/tb"
 import { BsFolderPlus } from "react-icons/bs"
-import { BiBookContent } from "react-icons/bi"
 import { MdPersonAdd } from "react-icons/md";
 import { NavLink } from '../components/NavLink';
 import { useSession } from 'next-auth/react';
@@ -30,7 +30,7 @@ export default function Home() {
         ADMIN[1].icono = <AiOutlineFileSearch className="icon_button" />;
         ADMIN[2].icono = <AiOutlineFileSearch className="icon_button" />;
         ADMIN[3].icono = <MdPersonAdd className="icon_button" />
-        ADMIN[4].icono = <BiBookContent className="icon_button" />
+        ADMIN[4].icono = <TbDeviceAnalytics className="icon_button" />
         setInterface(ADMIN);
         break;
       case 'staff':

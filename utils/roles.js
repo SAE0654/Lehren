@@ -21,8 +21,8 @@ export const ADMIN = [
     },
     {
         icono: '',
-        texto: "Catálogo de validación",
-        link: "/vw/catalogue"
+        texto: "REPORTES",
+        link: "/vw/reportes"
     }
 ]
 
