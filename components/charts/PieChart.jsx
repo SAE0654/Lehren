@@ -11,7 +11,7 @@ function PieChart({ chartData }) {
           plugins: {
             title: {
               display: true,
-              text: "Users Gained between 2016-2020"
+              text: "Productos"
             },
             legend: {
               display: true

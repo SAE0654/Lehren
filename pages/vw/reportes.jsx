@@ -11,7 +11,7 @@ import { BarChart } from '../../components/charts/BarChart';
 import LineChart from '../../components/charts/LineChart';
 import { Chart, registerables } from 'chart.js';
 // Funciones externas
-import { ModalidadInforme, StatusInforme } from '../../utils/reportes';
+import { ModalidadInforme, RegistradosPorMes, RVOEInforme, StatusInforme, TipoOfertaInforme } from '../../utils/reportes';
 
 Chart.register(...registerables);
 
@@ -55,8 +55,8 @@ const Reportes = () => {
                 label: "SAE",
                 data: SAE,
                 backgroundColor: [
-                    "rgba(75,192,192,1)",
-                    "#ecf0f1",
+                    "rgba(153, 102, 255, 1)",
+                    "rgba(54, 162, 235, 1)",
                     "#50AF95",
                     "#f3ba2f",
                     "#2a71d0"
@@ -81,6 +81,7 @@ const Reportes = () => {
     });
 
     const requestInforme = (SAE, ARTEK, datoSolicitado) => {
+        console.log(datoSolicitado)
         switch (datoSolicitado) {
             case 'statusProducto':
                 const status = StatusInforme(SAE, ARTEK);
@@ -88,8 +89,20 @@ const Reportes = () => {
                 break;
             case 'modalidad':
                 const modalidad = ModalidadInforme(SAE, ARTEK);
-                console.log("=", modalidad)
                 loadDataset(modalidad[0].dataset, modalidad[1].dataset, modalidad[0].labels);
+                break;
+            case 'tipo':
+                const tipo = TipoOfertaInforme(SAE, ARTEK);
+                loadDataset(tipo[0].dataset, tipo[1].dataset, tipo[0].labels);
+                break;
+            case 'RVOE':
+                const RVOE = RVOEInforme(SAE, ARTEK);
+                loadDataset(RVOE[0].dataset, RVOE[1].dataset, RVOE[0].labels);
+                break;
+            case 'perMonth':
+                const meses = RegistradosPorMes(SAE, ARTEK);
+                loadDataset(meses[0].dataset, meses[1].dataset, meses[0].labels);
+                break;
             default:
                 break;
         }
@@ -113,11 +126,14 @@ const Reportes = () => {
                         <button onClick={() => setGraphicIndex(0)} className={GraphicIndex === 0 ? styles.active : null}>Gráfico circular</button>
                         <button onClick={() => setGraphicIndex(1)} className={GraphicIndex === 1 ? styles.active : null}>Gráfico de barras</button>
                         <button onClick={() => setGraphicIndex(2)} className={GraphicIndex === 2 ? styles.active : null}>Gráfico linear</button>
-                        <select name="dataToBring" onChange={(e) => requestInforme(DataSAE, DataARTEK, e.target.value)}>
-                            <option value="statusProducto">Estatus</option>
-                            <option value="modalidad">Modalidad</option>
-                        </select>
                     </div>
+                    <select name="dataToBring" onChange={(e) => requestInforme(DataSAE, DataARTEK, e.target.value)}>
+                        <option value="statusProducto">Estatus</option>
+                        <option value="modalidad">Modalidad</option>
+                        <option value="tipo">Tipo de oferta</option>
+                        <option value="RVOE">RVOE</option>
+                        <option value="perMonth">Registrados por mes</option>
+                    </select>
                     {GraphicIndex === 0 ? <PieChart chartData={chartData} /> : null}
                     {GraphicIndex === 1 ? <BarChart chartData={chartData} /> : null}
                     {GraphicIndex === 2 ? <LineChart chartData={chartData} /> : null}
@@ -126,10 +142,24 @@ const Reportes = () => {
                     <h2>Usuarios más activos</h2>
                 </div>
                 <div className={styles.sae_number_products}>
-                    <h2>Productos SAE registrados</h2>
+                    <h2>Productos SAE</h2>
+                    <div className={styles.box_info}>
+                        <h3>{DataSAE.length}</h3>
+                        <div className={styles.box}>
+                            <h3>Último producto registrado:</h3>
+                            <p>&nbsp;Este producto</p>
+                        </div>
+                    </div>
                 </div>
                 <div className={styles.artek_number_products}>
-                    <h2>Productos ARTEK registrados</h2>
+                    <h2>Productos ARTEK</h2>
+                    <div className={styles.box_info}>
+                        <h3>{DataARTEK.length}</h3>
+                        <div className={styles.box}>
+                            <h3>Último producto registrado:</h3>
+                            <p>&nbsp;Este producto</p>
+                        </div>
+                    </div>
                 </div>
                 <div className={styles.current_users_online}>
                     <h2>Usuarios en línea</h2>

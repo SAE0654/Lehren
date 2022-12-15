@@ -1,3 +1,5 @@
+import { MESES } from "./forms";
+
 export function StatusInforme(SAE, ARTEK) { // Revisión, Recolección, Validado, No aprobado
     let statusSAE = [0, 0, 0, 0]; 
     let statusARTEK = [0, 0, 0, 0]; 
@@ -20,7 +22,6 @@ export function StatusInforme(SAE, ARTEK) { // Revisión, Recolección, Validado
             dataset: statusSAE
         },
         {
-            labels: ['Revisión', 'Recolección', 'Validado', 'No aprobado'],
             dataset: statusARTEK
         }
     ]
@@ -49,8 +50,100 @@ export function ModalidadInforme(SAE, ARTEK) { // Presencial, Mixto, En línea a
             dataset: modalidadSAE
         },
         {
-            labels: ['Presencial', 'Mixto', 'En línea asincrónico', 'En línea sincrónico'],
             dataset: modalidadARTEK
+        }
+    ]
+    return resultado;
+}
+
+export function TipoOfertaInforme(SAE, ARTEK) { // Diplomado, Especialidad, Licenciatura, Maestría, Taller, Curso, Certificado, Libro, Otro
+    let tipoOfertaSAE = [0, 0, 0, 0, 0, 0, 0, 0, 0];
+    let tipoOfertaARTEK = [0, 0, 0, 0, 0, 0, 0, 0, 0];
+
+    SAE.map(({ tipo }) => {
+        if (tipo === 'Diplomado') tipoOfertaSAE[0]++;
+        if (tipo === 'Especialidad') tipoOfertaSAE[1]++;
+        if (tipo === 'Licenciatura') tipoOfertaSAE[2]++;
+        if (tipo === 'Maestría') tipoOfertaSAE[3]++;
+        if (tipo === 'Taller') tipoOfertaSAE[4]++;
+        if (tipo === 'Curso') tipoOfertaSAE[5]++;
+        if (tipo === 'Certificado') tipoOfertaSAE[6]++;
+        if (tipo === 'Libro') tipoOfertaSAE[7]++;
+        if (tipo === 'Otro') tipoOfertaSAE[8]++;
+    })
+    ARTEK.map(({ tipo }) => {
+        if (tipo === 'Diplomado') tipoOfertaARTEK[0]++;
+        if (tipo === 'Especialidad') tipoOfertaARTEK[1]++;
+        if (tipo === 'Licenciatura') tipoOfertaARTEK[2]++;
+        if (tipo === 'Maestría') tipoOfertaARTEK[3]++;
+        if (tipo === 'Taller') tipoOfertaARTEK[4]++;
+        if (tipo === 'Curso') tipoOfertaARTEK[5]++;
+        if (tipo === 'Certificado') tipoOfertaARTEK[6]++;
+        if (tipo === 'Libro') tipoOfertaARTEK[7]++;
+        if (tipo === 'Otro') tipoOfertaARTEK[8]++;
+    })
+    const resultado = [
+        {
+            labels: ['Diplomado', 'Especialidad', 'Licenciatura', 'Maestría', 'Taller', 'Curso', 'Certificado', 'Libro', 'Otro'],
+            dataset: tipoOfertaSAE
+        },
+        {
+            dataset: tipoOfertaARTEK
+        }
+    ]
+    return resultado;
+}
+
+export function RVOEInforme(SAE, ARTEK) { // off, on
+    let RVOESAE = [0, 0];
+    let RVOEARTEK = [0, 0];
+
+    SAE.map(({ RVOE }) => {
+        if (RVOE === 'off') RVOESAE[0]++;
+        if (RVOE === 'on') RVOESAE[1]++;
+    })
+    ARTEK.map(({ RVOE }) => {
+        if (RVOE === 'off') RVOEARTEK[0]++;
+        if (RVOE === 'on') RVOEARTEK[1]++;
+    })
+    const resultado = [
+        {
+            labels: ['Sin RVOE', 'Con RVOE'],
+            dataset: RVOESAE
+        },
+        {
+            dataset: RVOEARTEK
+        }
+    ]
+    return resultado;
+}
+
+export function FechasPerMonth() {
+    // PENDIENTE
+}
+
+export function RegistradosPorMes(SAE, ARTEK) {
+    const meses = ['Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
+    const mesesSAE = [0, 0, 0, 0, 0, 0];
+    const mesesARTEK = [0, 0, 0, 0, 0, 0];
+    console.log(SAE[0].creadoPor.split(" "))
+    SAE.map((sae) => {
+        const fechaSAE = sae.creadoPor.split(" ");
+        const monthSAE = meses.indexOf(fechaSAE[5]);
+        mesesSAE[monthSAE]++;
+    });
+    ARTEK.map((sae) => {
+        const fechaARTEK = sae.creadoPor.split(" ");
+        const monthARTEK = meses.indexOf(fechaARTEK[5]);
+        mesesARTEK[monthARTEK]++;
+    })
+    const resultado = [
+        {
+            labels: meses,
+            dataset: mesesSAE
+        },
+        {
+            dataset: mesesARTEK
         }
     ]
     return resultado;

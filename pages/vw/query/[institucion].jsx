@@ -445,7 +445,7 @@ export default function Consultas() {
                                                         <td className="medium">{producto.aprobadoPor}</td>
                                                         {
                                                             producto.lastUpdate ? <td className="long">
-                                                                {producto.lastUpdate !== "Sin actualizaciones" ? <>{producto.lastUpdate}</> : "No ha sido actualizado "}
+                                                                {producto.lastUpdate}
                                                             </td> : null
                                                         }
                                                     </tr>

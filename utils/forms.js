@@ -1,12 +1,13 @@
 import { signOut } from "next-auth/react";
 const bcrypt = require('bcryptjs');
 
+export const MESES = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
+
 export const isAnyFieldEmpty = (form) => {
   let isEmpty = false;
   for (let i = 0; i < form.length; i++) {
     if (form[i].name === "files_att" || form[i].id === "otro") {
-      console.log("Archivo u Otro")
-      console.log(form[i].id)
+      console.log(" __ ")
     } else {
       // console.log(form[i].value.trim().length, "===", form[i])
       form[i].value.trim().length <= 0 ? isEmpty = true : null;
@@ -19,7 +20,7 @@ export const getTimeStamp = () => {
   let meses = new Array("Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre");
   let date = new Date();
   let fecha = date.getDate() + " de " + meses[date.getMonth()] + " del " + date.getFullYear();
-  const time = date.getHours() + ":" + (date.getMinutes() < 10 ? "0" + date.getMinutes() : date.getMinutes());
+  const time = (date.getHours() < 10 ? "0" + date.getHours() : date.getHours()) + ":" + (date.getMinutes() < 10 ? "0" + date.getMinutes() : date.getMinutes());
   const timeStamp = fecha + " a las " + time;
   return timeStamp;
 }
