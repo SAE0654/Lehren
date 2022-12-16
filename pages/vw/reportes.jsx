@@ -42,10 +42,8 @@ const Reportes = () => {
             SAE = res.data;
             setDataSAE(SAE);
         });
-        console.log(ARTEK);
-        console.log(SAE)
         setCargando(false);
-        requestInforme(SAE, ARTEK, 'statusProducto');
+        requestInforme(SAE, ARTEK, 'perMonth');
     }
 
     const loadDataset = (SAE, ARTEK, labelsArray) => setChartData({
@@ -128,11 +126,11 @@ const Reportes = () => {
                         <button onClick={() => setGraphicIndex(2)} className={GraphicIndex === 2 ? styles.active : null}>Gráfico linear</button>
                     </div>
                     <select name="dataToBring" onChange={(e) => requestInforme(DataSAE, DataARTEK, e.target.value)}>
+                        <option value="perMonth">Registrados por mes</option>
                         <option value="statusProducto">Estatus</option>
                         <option value="modalidad">Modalidad</option>
                         <option value="tipo">Tipo de oferta</option>
                         <option value="RVOE">RVOE</option>
-                        <option value="perMonth">Registrados por mes</option>
                     </select>
                     {GraphicIndex === 0 ? <PieChart chartData={chartData} /> : null}
                     {GraphicIndex === 1 ? <BarChart chartData={chartData} /> : null}
