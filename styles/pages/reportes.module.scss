@@ -2,14 +2,14 @@
 
 .container {
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 2fr 1fr;
     grid-template-rows: 1fr 1fr 1fr;
     gap: 1em;
     grid-auto-flow: row;
     grid-template-areas:
         "graphics_area artek_number_products"
         "graphics_area sae_number_products"
-        "most_active_users current_users_online";
+        "most_active_users numbers_of_users";
         max-width: 1300px;
         margin: 3em auto;
         h1, h2 {
@@ -45,7 +45,7 @@
                 margin-left: 3em;
                 background-color: transparent;
                 position: absolute;
-                bottom: 1em;
+                top: 1em;
                 right: 1em;
                 border: 1px solid rgb(38, 35, 35);
                 &:focus {
@@ -55,6 +55,11 @@
             // Estilos del componente
             .chart_container {
                 width: 100%;
+                min-height: 40vh;
+                canvas {
+                    width: 100%;
+                    min-height: 100%;
+                }
                 &.pie {
                     width: 50%;
                     margin: auto;
@@ -65,7 +70,8 @@
             }
         }
         .sae_number_products,
-        .artek_number_products {
+        .artek_number_products,
+        .numbers_of_users {
             @include mix.flexBox(column, center, center);
             font-family: 'Poppins', sans-serif;
             border: 1px solid rgb(35, 33, 29);
@@ -111,6 +117,6 @@
     grid-area: artek_number_products;
 }
 
-.current_users_online {
-    grid-area: current_users_online;
+.numbers_of_users {
+    grid-area: numbers_of_users;
 }

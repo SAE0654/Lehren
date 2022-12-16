@@ -53,27 +53,29 @@ const Reportes = () => {
                 label: "SAE",
                 data: SAE,
                 backgroundColor: [
-                    "rgba(153, 102, 255, 1)",
-                    "rgba(54, 162, 235, 1)",
-                    "#50AF95",
-                    "#f3ba2f",
-                    "#2a71d0"
+                    "#241178",
+                    "#2510a3",
+                    "#673dff",
+                    "#101084",
+                    "#0044d0"
                 ],
-                borderColor: "black",
-                borderWidth: 2
+                borderColor: "rgba(255, 255, 255, 0.1)",
+                borderWidth: 1,
+                // tension: 0.4
             },
             {
                 label: "ARTEK",
                 data: ARTEK,
                 backgroundColor: [
-                    "rgba(75,192,192,1)",
-                    "#ecf0f1",
-                    "#50AF95",
-                    "#f3ba2f",
-                    "#2a71d0"
+                    "#241178",
+                    "#2510a3",
+                    "#673dff",
+                    "#101084",
+                    "#0044d0"
                 ],
-                borderColor: "black",
-                borderWidth: 2
+                borderColor: "rgba(255, 255, 255, 0.1)",
+                borderWidth: 1,
+                // tension: 0.4
             }
         ]
     });
@@ -137,30 +139,33 @@ const Reportes = () => {
                     {GraphicIndex === 2 ? <LineChart chartData={chartData} /> : null}
                 </div>
                 <div className={styles.most_active_users}>
-                    <h2>Usuarios más activos</h2>
+                    <h2>Usuarios con más registros</h2>
                 </div>
                 <div className={styles.sae_number_products}>
                     <h2>Productos SAE</h2>
                     <div className={styles.box_info}>
                         <h3>{DataSAE.length}</h3>
-                        <div className={styles.box}>
+                        {/* <div className={styles.box}>
                             <h3>Último producto registrado:</h3>
                             <p>&nbsp;Este producto</p>
-                        </div>
+                        </div> */}
                     </div>
                 </div>
                 <div className={styles.artek_number_products}>
                     <h2>Productos ARTEK</h2>
                     <div className={styles.box_info}>
                         <h3>{DataARTEK.length}</h3>
-                        <div className={styles.box}>
+                        {/* <div className={styles.box}>
                             <h3>Último producto registrado:</h3>
                             <p>&nbsp;Este producto</p>
-                        </div>
+                        </div> */}
                     </div>
                 </div>
-                <div className={styles.current_users_online}>
-                    <h2>Usuarios en línea</h2>
+                <div className={styles.numbers_of_users}>
+                    <h2>Número de usuarios</h2>
+                    <p>Administradores: 5</p>
+                    <p>Staff: 7</p>
+                    <p>Docentes: 45</p>
                 </div>
             </div>
         </Layout>

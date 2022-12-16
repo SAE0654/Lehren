@@ -1,24 +1,26 @@
 import { MESES } from "./forms";
 
-export function StatusInforme(SAE, ARTEK) { // Revisión, Recolección, Validado, No aprobado
-    let statusSAE = [0, 0, 0, 0]; 
-    let statusARTEK = [0, 0, 0, 0]; 
+export function StatusInforme(SAE, ARTEK) { // Revisión, Elección, Validado, No aprobado
+    let statusSAE = [0, 0, 0, 0, 0]; 
+    let statusARTEK = [0, 0, 0, 0, 0]; 
 
     SAE.map(({ statusProducto }) => {
         if (statusProducto === 'Revisión') statusSAE[0]++;
-        if (statusProducto === 'Recolección') statusSAE[1]++;
+        if (statusProducto === 'Elección') statusSAE[1]++;
         if (statusProducto === 'Validado') statusSAE[2]++;
-        if (statusProducto === 'No aprobado') statusSAE[3]++;
+        if (statusProducto === 'Pendiente') statusSAE[3]++;
+        if (statusProducto === 'No aprobado') statusSAE[4]++;
     });
     ARTEK.map(({ statusProducto }) => {
         if (statusProducto === 'Revisión') statusARTEK[0]++;
-        if (statusProducto === 'Recolección') statusARTEK[1]++;
+        if (statusProducto === 'Elección') statusARTEK[1]++;
         if (statusProducto === 'Validado') statusARTEK[2]++;
-        if (statusProducto === 'No aprobado') statusARTEK[3]++;
+        if (statusProducto === 'Pendiente') statusARTEK[3]++;
+        if (statusProducto === 'No aprobado') statusARTEK[4]++;
     });
     const resultado = [
         {
-            labels: ['Revisión', 'Recolección', 'Validado', 'No aprobado'],
+            labels: ['Revisión', 'Elección', 'Validado', 'Pendiente', 'No aprobado'],
             dataset: statusSAE
         },
         {

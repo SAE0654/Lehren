@@ -43,7 +43,7 @@ export default function ValidacionView() {
                     redirect(res.data.nombre)
                 }
             }).catch((res) => {
-               toast.error(res.response.data.message);
+                toast.error(res.response.data.message);
             });
     }
 
@@ -90,16 +90,20 @@ export default function ValidacionView() {
                 comentarios: res.value,
                 createdAt: getTimeStamp()
             }];
-            await axios.put(`${process.env.NEXT_PUBLIC_ENDPOINT}api/productos/` + nombre, producto,
+            await axios.put(`${process.env.NEXT_PUBLIC_ENDPOINT}api/producto/updateStatus=${nombre}`, ['Pendiente', 'Propuesta'],
                 {
                     headers: {
                         accept: '*/*',
                         'Content-Type': 'application/json'
                     }
                 }).then(() => {
-                    router.push(`/vw/query/${Producto.institucion}`);
+                    router.push(`/`);
                 }).catch(() => {
                     toast.error("Error al procesar");
+                })
+                await axios.put(`${process.env.NEXT_PUBLIC_ENDPOINT}api/productos/${nombre}=updateComment`, producto)
+                .then(() => {
+                    toast.success("Puesto en pendiente");
                 })
         })
     }
@@ -120,7 +124,7 @@ export default function ValidacionView() {
         <Layout>
             <div className={styles.main_content} style={{ transform: 'translate(0%, -40%)', maxHeight: '1000px' }}>
                 <div className={styles.box_container}>
-                    <h1 className={styles.t_container} style={{ marginTop: "10em" }}>Etapa de propuesta</h1>
+                    <h1 className={styles.t_container} style={{ marginTop: "13em" }}>Etapa de propuesta</h1>
                     <div className={styles.info_container}>
                         <div className={styles.info_box_step2}>
                             <h2 className={styles.title}>Datos registrados</h2>
