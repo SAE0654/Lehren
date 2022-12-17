@@ -19,7 +19,6 @@ export default function Home() {
     if (!data) return;
     setRolInterface();
     document.querySelector("body").className = '';
-    document.querySelector("body").classList.add("menu");
     sessionHasExpired();
   }, []);
 

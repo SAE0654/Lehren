@@ -9,6 +9,7 @@ import { getTimeStamp, sessionHasExpired } from '../../../utils/forms';
 import { toast } from 'react-toastify';
 import Swal from 'sweetalert2/dist/sweetalert2';
 import { NavLink } from '../../../components/NavLink';
+import { getProductoByNombre } from '../../../services/productos';
 
 export default function ValidacionView() {
     const router = useRouter();
@@ -21,10 +22,10 @@ export default function ValidacionView() {
     useEffect(() => {
         getnombre();
         if (!Producto) {
-            getProductoByNombre();
+            getProducto();
         }
-        document.querySelector("body").className = '';
-        document.querySelector("body").classList.add("consultas_bg");
+        // document.querySelector("body").className = '';
+        // document.querySelector("body").classList.add("consultas_bg");
         sessionHasExpired();
     }, []);
 
@@ -35,16 +36,12 @@ export default function ValidacionView() {
         localStorage.setItem("nombre", nombre);
     }
 
-    const getProductoByNombre = async () => {
-        await axios.get(`${process.env.NEXT_PUBLIC_ENDPOINT}api/producto/` + nombre)
-            .then((res) => {
-                setProducto(res.data);
-                if (res.data.etapa === "Validación") {
-                    redirect(res.data.nombre)
-                }
-            }).catch((res) => {
-                toast.error(res.response.data.message);
-            });
+    const getProducto = async () => {
+        const data = await getProductoByNombre(nombre);
+        setProducto(data);
+        if (data.etapa === "Validación") {
+            redirect(data.nombre)
+        }
     }
 
     const redirect = (lnombre) => router.push('/act/stage/validacion/' + lnombre)
@@ -101,7 +98,7 @@ export default function ValidacionView() {
                 }).catch(() => {
                     toast.error("Error al procesar");
                 })
-                await axios.put(`${process.env.NEXT_PUBLIC_ENDPOINT}api/productos/${nombre}=updateComment`, producto)
+            await axios.put(`${process.env.NEXT_PUBLIC_ENDPOINT}api/productos/${nombre}=updateComment`, producto)
                 .then(() => {
                     toast.success("Puesto en pendiente");
                 })

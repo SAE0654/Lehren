@@ -1,8 +1,8 @@
-import { MESES } from "./forms";
+import { compareDesc, formatDistance } from "date-fns";
 
 export function StatusInforme(SAE, ARTEK) { // Revisión, Elección, Validado, No aprobado
-    let statusSAE = [0, 0, 0, 0, 0]; 
-    let statusARTEK = [0, 0, 0, 0, 0]; 
+    let statusSAE = [0, 0, 0, 0, 0];
+    let statusARTEK = [0, 0, 0, 0, 0];
 
     SAE.map(({ statusProducto }) => {
         if (statusProducto === 'Revisión') statusSAE[0]++;
@@ -120,8 +120,16 @@ export function RVOEInforme(SAE, ARTEK) { // off, on
     return resultado;
 }
 
-export function FechasPerMonth() {
-    // PENDIENTE
+export function MasRecienteProducto(SAE, ARTEK) {
+    let saeUltimoProducto;
+    let artekUltimoProducto;
+    const datesSAE = SAE.map((item) => new Date(item.createdAt).getTime());
+    const ordenadoSAE = datesSAE.sort(compareDesc);
+    saeUltimoProducto = SAE.filter((item) => item.createdAt === ordenadoSAE[0]);
+    const datesARTEK = ARTEK.map((item) => new Date(item.createdAt).getTime());
+    const ordenadoARTEK = datesARTEK.sort(compareDesc);
+    artekUltimoProducto = ARTEK.filter((item) => item.createdAt === ordenadoARTEK[0]);
+    return [saeUltimoProducto[0], artekUltimoProducto[0]];
 }
 
 export function RegistradosPorMes(SAE, ARTEK) {

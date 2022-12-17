@@ -1,4 +1,5 @@
 import { signOut } from "next-auth/react";
+import { compareDesc } from "date-fns";
 const bcrypt = require('bcryptjs');
 
 export const MESES = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
@@ -62,24 +63,27 @@ export const acceptedFiles = (e) => {
 
 }
 
-export const makeid = (length) => {
-  var result = '';
-  var characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-  var charactersLength = characters.length;
-  for (var i = 0; i < length; i++) {
-    result += characters.charAt(Math.floor(Math.random() *
-      charactersLength));
-  }
-  return result;
-}
-
 const SALT_WORK_FACTOR = 10;
 export const encryptPassword = async (password) => {
-    const encrypted = await bcrypt.genSalt(SALT_WORK_FACTOR);
-    const hash = bcrypt.hash(password, encrypted);
-    return hash;
+  const encrypted = await bcrypt.genSalt(SALT_WORK_FACTOR);
+  const hash = bcrypt.hash(password, encrypted);
+  return hash;
 }
 
 export const matchPassword = async (password1, password2) => {
   return await bcrypt.compare(password1, password2)
+}
+
+export const sortByDate = (array) => {
+  let newArray = [];
+  const dates = array.map((item) => new Date(item.createdAt).getTime());
+  const ordenado = dates.sort(compareDesc);
+  for (let i = 0; i < ordenado.length; i++) {
+    array.map((item) => {
+      if (item.createdAt === ordenado[i]) {
+        newArray.push(item)
+      }
+    });
+  }
+  return newArray;
 }

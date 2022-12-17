@@ -25,6 +25,7 @@ const handler = async (req, res) => {
                     return res.status(200).json(newProduct);
                 } catch (error) {
                     console.log("Error: ", error);
+                    return res.status(400).json({message: 'Error inesperado'})
                 }
             } catch (error) {
                 return res.status(400).json({ message: 'Ha ocurrido un error inesperado. Recarga la página' });

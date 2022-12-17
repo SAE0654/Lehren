@@ -27,8 +27,8 @@ export default function SignUp() {
     const { data: session } = useSession()
 
     useEffect(() => {
-        document.querySelector("body").className = '';
-        document.querySelector("body").classList.add("consultas_bg");
+        // document.querySelector("body").className = '';
+        // document.querySelector("body").classList.add("consultas_bg");
         sessionHasExpired();
     }, []);
 

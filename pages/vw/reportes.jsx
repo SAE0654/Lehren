@@ -11,7 +11,7 @@ import { BarChart } from '../../components/charts/BarChart';
 import LineChart from '../../components/charts/LineChart';
 import { Chart, registerables } from 'chart.js';
 // Funciones externas
-import { ModalidadInforme, RegistradosPorMes, RVOEInforme, StatusInforme, TipoOfertaInforme } from '../../utils/reportes';
+import { MasRecienteProducto, ModalidadInforme, RegistradosPorMes, RVOEInforme, StatusInforme, TipoOfertaInforme } from '../../utils/reportes';
 
 Chart.register(...registerables);
 
@@ -21,14 +21,14 @@ const Reportes = () => {
     const [Cargando, setCargando] = useState(true);
     const [DataSAE, setDataSAE] = useState([]);
     const [DataARTEK, setDataARTEK] = useState([]);
+    const [UltimoProducto, setUltimoProducto] = useState([]);
 
     useEffect(() => {
-        document.querySelector("body").className = '';
-        document.querySelector("body").classList.add("reportes_bg");
+        // document.querySelector("body").className = '';
+        // document.querySelector("body").classList.add("reportes_bg");
         if (Cargando) {
             getProductosDataset();
         }
-        console.log(chartData)
     }, [chartData]);
 
     const getProductosDataset = async () => {
@@ -44,6 +44,7 @@ const Reportes = () => {
         });
         setCargando(false);
         requestInforme(SAE, ARTEK, 'perMonth');
+        setUltimoProducto(MasRecienteProducto(SAE, ARTEK));
     }
 
     const loadDataset = (SAE, ARTEK, labelsArray) => setChartData({
@@ -81,7 +82,6 @@ const Reportes = () => {
     });
 
     const requestInforme = (SAE, ARTEK, datoSolicitado) => {
-        console.log(datoSolicitado)
         switch (datoSolicitado) {
             case 'statusProducto':
                 const status = StatusInforme(SAE, ARTEK);
@@ -106,10 +106,9 @@ const Reportes = () => {
             default:
                 break;
         }
-
     }
 
-    if (Cargando && chartData === null) {
+    if (Cargando && chartData === null || UltimoProducto === []) {
         return <h1>Cargando...</h1>
     }
 
@@ -145,20 +144,20 @@ const Reportes = () => {
                     <h2>Productos SAE</h2>
                     <div className={styles.box_info}>
                         <h3>{DataSAE.length}</h3>
-                        {/* <div className={styles.box}>
-                            <h3>Último producto registrado:</h3>
-                            <p>&nbsp;Este producto</p>
-                        </div> */}
+                        <div className={styles.box}>
+                            <h3>Más reciente:</h3>
+                            <p>&nbsp;{UltimoProducto[0].nombre}</p>
+                        </div>
                     </div>
                 </div>
                 <div className={styles.artek_number_products}>
                     <h2>Productos ARTEK</h2>
                     <div className={styles.box_info}>
                         <h3>{DataARTEK.length}</h3>
-                        {/* <div className={styles.box}>
-                            <h3>Último producto registrado:</h3>
-                            <p>&nbsp;Este producto</p>
-                        </div> */}
+                        <div className={styles.box}>
+                            <h3>Más reciente:</h3>
+                            <p>&nbsp;{UltimoProducto[1].nombre}</p>
+                        </div>
                     </div>
                 </div>
                 <div className={styles.numbers_of_users}>

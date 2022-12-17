@@ -13,6 +13,7 @@ import Swal from 'sweetalert2/dist/sweetalert2';
 import { NavLink } from '../../../components/NavLink';
 // Funciones externas
 import { sessionHasExpired } from '../../../utils/forms';
+import { getProductoByNombre } from '../../../services/productos';
 
 export default function ViewProduct() {
   const router = useRouter();
@@ -27,8 +28,8 @@ export default function ViewProduct() {
     if (!Producto) {
       callProduct();
     }
-    document.querySelector("body").className = '';
-    document.querySelector("body").classList.add("consultas_bg");
+    // document.querySelector("body").className = '';
+    // document.querySelector("body").classList.add("consultas_bg");
     sessionHasExpired();
   }, []);
 
@@ -40,11 +41,10 @@ export default function ViewProduct() {
   }
 
   const callProduct = async () => {
-    const res = await axios.get(`${process.env.NEXT_PUBLIC_ENDPOINT}api/producto/` + nombre);
-    setProducto(res.data);
-    setFilesETP1(res.data.archivosETP1);
-    setFilesETP2(res.data.archivosETP2)
-    console.log(res.data)
+    const data = await getProductoByNombre(nombre);
+    setProducto(data);
+    setFilesETP1(data.archivosETP1);
+    setFilesETP2(data.archivosETP2)
   }
 
   const deleteFile = async (fileName, etapa) => {

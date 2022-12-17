@@ -7,6 +7,7 @@ import Layout from '../../../components/Layout';
 import styles from "../../../styles/pages/ventas.module.scss";
 import { sessionHasExpired } from '../../../utils/forms';
 import { NavLink } from '../../../components/NavLink';
+import { getProductoByNombre } from '../../../services/productos';
 
 export default function ResultadoView() {
     const router = useRouter();
@@ -19,28 +20,26 @@ export default function ResultadoView() {
     useEffect(() => {
         getNombre();
         if (!Producto) {
-            getProductoByNombre();
+            getProducto();
         }
-        document.querySelector("body").className = '';
-        document.querySelector("body").classList.add("consultas_bg");
+        // document.querySelector("body").className = '';
+        // document.querySelector("body").classList.add("consultas_bg");
         sessionHasExpired();
     }, []);
+
+    const getProducto = async() => {
+        const data = await getProductoByNombre(nombre);
+        setProducto(data);
+        if(data.status === "No aprobado" || data.status === "Aprobado") {
+            redirect(res.data.nombre)
+        }
+    }
 
     const getNombre = () => {
         if (typeof nombre === 'undefined') {
             nombre = localStorage.getItem("Nombre");
         }
         localStorage.setItem("Nombre", nombre);
-    }
-
-    const getProductoByNombre = async () => {
-        await axios.get(`${process.env.NEXT_PUBLIC_ENDPOINT}api/producto/` + nombre)
-            .then((res) => {
-                setProducto(res.data);
-                if(res.data.status === "No aprobado" || res.data.status === "Aprobado") {
-                    redirect(res.data.nombre)
-                }
-            });
     }
 
     const redirect = (lNombre) => router.push('/act/stage/resultado/' + lNombre)

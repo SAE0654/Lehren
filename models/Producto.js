@@ -115,7 +115,8 @@ const SchemaProduct = new dynamoose.Schema({
     "dislikes": {
         type: Array,
         schema: [String]
-    }
+    },
+    "createdAt": Number
 });
 
 const Product = dynamoose.model("P1_Productos", SchemaProduct);

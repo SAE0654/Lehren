@@ -43,9 +43,10 @@ export async function GetProductosByIndexDB(indexCampo, campo, valor) {
         TableName: 'P1_Productos',
         IndexName: indexCampo,
         KeyConditionExpression: `${campo} = :${campo}`,
-        ExpressionAttributeValues: { [':' + campo]: valor }
+        ExpressionAttributeValues: { [':' + campo]: valor },
     };
     try {
+        console.log("sort ")
         const data = await db.query(params).promise();
         return data;
     } catch (error) {
@@ -140,7 +141,7 @@ export async function UpdateComment(nombre, comentario) {
     return executar(params);
 }
 
-export async function UpdateStatus(nombre, nuevoStatus, nuevaEtapa) {
+export async function UpdaP1_Productosatus(nombre, nuevoStatus, nuevaEtapa) {
     const params = {
         TableName: 'P1_Productos',
         Key: {

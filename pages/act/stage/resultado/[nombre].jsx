@@ -30,8 +30,8 @@ export default function Complete() {
     if (!Producto) {
       getProductoByNombre();
     }
-    document.querySelector("body").className = '';
-    document.querySelector("body").classList.add("consultas_bg");
+    // document.querySelector("body").className = '';
+    // document.querySelector("body").classList.add("consultas_bg");
     sessionHasExpired();
   }, []);
 

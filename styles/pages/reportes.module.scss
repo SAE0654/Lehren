@@ -89,14 +89,20 @@
                     margin: 0;
                 }
                 .box {
-                    @include mix.flexBox(row, center, center);
+                    @include mix.flexBox(column, center, center);
                     h3 {
                         color: rgb(209, 197, 197);
                         font-size: 0.9rem;
                         font-weight: 400;
+                        margin: 0;
                     }
                     p {
+                        width: 90%;
+                        margin: auto;
+                        text-align: center;
                         color: gray;
+                        font-size: 0.8rem;
+                        text-transform: capitalize;
                     }
                 }
             }

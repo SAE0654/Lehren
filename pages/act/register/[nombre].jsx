@@ -28,8 +28,8 @@ export default function Producto() {
     let url_files = [];
 
     useEffect(() => {
-        document.querySelector("body").className = '';
-        document.querySelector("body").classList.add("registro_bg");
+        // document.querySelector("body").className = '';
+        // document.querySelector("body").classList.add("registro_bg");
         sessionHasExpired();
         if (nombre === "new") return;
         callProduct();
@@ -76,9 +76,9 @@ export default function Producto() {
             likes: [],
             dislikes: [],
             comentarios: [],
-            instrumentoValidacion: []
+            instrumentoValidacion: [],
+            createdAt: new Date().getTime()
         }
-        console.log(producto)
         await axios.post(`${process.env.NEXT_PUBLIC_ENDPOINT}api/productos/all`, producto,
             {
                 headers: {

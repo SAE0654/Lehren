@@ -9,8 +9,8 @@ const Catalogue = () => {
   const cat_scroll = useRef(null);
 
   useEffect(() => {
-    document.querySelector("body").className = '';
-    document.querySelector("body").classList.add("registro_bg");
+    // document.querySelector("body").className = '';
+    // document.querySelector("body").classList.add("registro_bg");
     sessionHasExpired();
   }, []);
 
