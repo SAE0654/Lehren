@@ -13,7 +13,6 @@ const VotosComponent = ({ nombre, likes, dislikes }) => {
     useEffect(() => {
         setNumberDislikes(dislikes.length);
         setNumberLikes(likes.length);
-        console.log(nombre)
     }, [nombre]);
 
     useEffect(() => {

@@ -94,6 +94,7 @@ export default function Login() {
         </div>
         <div className="error">{loginError}</div>
         <input type="submit" value="Acceder" className="login_btn" disabled={logginIn} />
+        <a href="#">¿Olvidaste tu contraseña?</a>
       </form>
     </div>
 

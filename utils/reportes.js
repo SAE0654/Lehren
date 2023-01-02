@@ -136,7 +136,7 @@ export function RegistradosPorMes(SAE, ARTEK) {
     const meses = ['Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
     const mesesSAE = [0, 0, 0, 0, 0, 0];
     const mesesARTEK = [0, 0, 0, 0, 0, 0];
-    console.log(SAE[0].creadoPor.split(" "))
+    console.log(SAE)
     SAE.map((sae) => {
         const fechaSAE = sae.creadoPor.split(" ");
         const monthSAE = meses.indexOf(fechaSAE[5]);

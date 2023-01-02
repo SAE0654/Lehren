@@ -10,7 +10,6 @@ const handler = async (req, res) => {
                 const producto = await Product.query("nombre").eq(nombre).exec();
                 return res.status(200).json(producto.toJSON()[0])
             } catch (error) {
-                console.log(error)
                 return res.status(400).json({message: "Ocurrió un error inesperado"});
             }
             case 'POST':
@@ -39,12 +38,10 @@ const handler = async (req, res) => {
                     await UpdateUrlETP(nombre.split("=")[1], body[0], body[1]); // nombre, carga, etapaArchivos
                     return res.status(200).json({message: "Archivo eliminado"});
                 }
-                console.log(body)
                 const updateProduct = new Product(body);
                 await updateProduct.save();
                 return res.status(200).json({message: "Actualizado con éxito"});
             } catch (error) {
-                console.log(error)
                 return res.status(400).json({message: "Ya valió :c"})
             }
         default:

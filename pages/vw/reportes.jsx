@@ -12,6 +12,7 @@ import LineChart from '../../components/charts/LineChart';
 import { Chart, registerables } from 'chart.js';
 // Funciones externas
 import { MasRecienteProducto, ModalidadInforme, RegistradosPorMes, RVOEInforme, StatusInforme, TipoOfertaInforme } from '../../utils/reportes';
+import { getProductosByInstitution } from '../../services/productos';
 
 Chart.register(...registerables);
 
@@ -24,8 +25,8 @@ const Reportes = () => {
     const [UltimoProducto, setUltimoProducto] = useState([]);
 
     useEffect(() => {
-        // document.querySelector("body").className = '';
-        // document.querySelector("body").classList.add("reportes_bg");
+        document.querySelector("body").className = '';
+        document.querySelector("body").classList.add('consultas_bg');
         if (Cargando) {
             getProductosDataset();
         }
@@ -38,10 +39,9 @@ const Reportes = () => {
             ARTEK = res.data;
             setDataARTEK(ARTEK);
         });
-        await axios(`${process.env.NEXT_PUBLIC_ENDPOINT}api/productos/sae`).then((res) => {
-            SAE = res.data;
-            setDataSAE(SAE);
-        });
+        const dataSAE = await getProductosByInstitution("sae");
+        SAE = dataSAE;
+        setDataSAE(dataSAE)
         setCargando(false);
         requestInforme(SAE, ARTEK, 'perMonth');
         setUltimoProducto(MasRecienteProducto(SAE, ARTEK));
@@ -54,11 +54,11 @@ const Reportes = () => {
                 label: "SAE",
                 data: SAE,
                 backgroundColor: [
-                    "#241178",
-                    "#2510a3",
-                    "#673dff",
-                    "#101084",
-                    "#0044d0"
+                    "#50899c",
+                    "#3197b9",
+                    "#2a809d",
+                    "#1898af",
+                    "#50899c"
                 ],
                 borderColor: "rgba(255, 255, 255, 0.1)",
                 borderWidth: 1,
@@ -138,7 +138,7 @@ const Reportes = () => {
                     {GraphicIndex === 2 ? <LineChart chartData={chartData} /> : null}
                 </div>
                 <div className={styles.most_active_users}>
-                    <h2>Usuarios con más registros</h2>
+                    <h2>Otra área</h2>
                 </div>
                 <div className={styles.sae_number_products}>
                     <h2>Productos SAE</h2>
@@ -161,10 +161,7 @@ const Reportes = () => {
                     </div>
                 </div>
                 <div className={styles.numbers_of_users}>
-                    <h2>Número de usuarios</h2>
-                    <p>Administradores: 5</p>
-                    <p>Staff: 7</p>
-                    <p>Docentes: 45</p>
+                    <h2>Otra área</h2>
                 </div>
             </div>
         </Layout>

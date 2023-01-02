@@ -28,8 +28,8 @@ export default function Producto() {
     let url_files = [];
 
     useEffect(() => {
-        // document.querySelector("body").className = '';
-        // document.querySelector("body").classList.add("registro_bg");
+        document.querySelector("body").className = '';
+        document.querySelector("body").classList.add('registro_bg');
         sessionHasExpired();
         if (nombre === "new") return;
         callProduct();
@@ -58,7 +58,6 @@ export default function Producto() {
             || typeof producto.institucion === 'undefined'
             || typeof producto.areaV === 'undefined') { // Si true, campos vacíos
             toast.error("Rellena todos los campos");
-            console.log(e.target)
             return;
         }
         if ((producto.tipo === 'Otro' && Otro === null) || Otro?.trim() === '') {

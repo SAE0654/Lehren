@@ -22,8 +22,8 @@ export default function ResultadoView() {
         if (!Producto) {
             getProducto();
         }
-        // document.querySelector("body").className = '';
-        // document.querySelector("body").classList.add("consultas_bg");
+        document.querySelector("body").className = '';
+        document.querySelector("body").classList.add('consultas_bg');
         sessionHasExpired();
     }, []);
 

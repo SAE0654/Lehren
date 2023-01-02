@@ -61,8 +61,8 @@ export default function Consultas() {
         if (Productos.length <= 0) {
             getProductos();
         }
-        // document.querySelector("body").className = '';
-        // document.querySelector("body").classList.add("consultas_bg");
+        document.querySelector("body").className = '';
+        document.querySelector("body").classList.add('consultas_bg');
         sessionHasExpired();
     }, []);
 

@@ -20,7 +20,7 @@ const handler = async (req, res) => {
 
             return res.status(200).json({message: "Success"})
         } catch (error) {
-            console.log("ERRORSOTE: ", error)
+            return res.status(401).json({ message: 'Error al registrar' });
         }
     }
 }

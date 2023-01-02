@@ -84,7 +84,6 @@ const ValidationToolsForm = ({HerramientasValidacion, setHerramientasValidacion}
         } else {
             herramientas.push(herramienta);
         }
-        console.log(herramientas)
     }
 
     useEffect(() => {

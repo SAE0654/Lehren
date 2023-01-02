@@ -28,8 +28,8 @@ export default function ViewProduct() {
     if (!Producto) {
       callProduct();
     }
-    // document.querySelector("body").className = '';
-    // document.querySelector("body").classList.add("consultas_bg");
+    document.querySelector("body").className = '';
+    document.querySelector("body").classList.add('consultas_bg');
     sessionHasExpired();
   }, []);
 
@@ -104,7 +104,7 @@ export default function ViewProduct() {
       <link rel="icon" href="/favicon.ico" />
     </Head>
     <Layout>
-      <div className={styles.main_content} style={{ transform: 'translate(0%, -40%)', maxHeight: '200vh' }}>
+      <div className={styles.main_content} style={{ transform: 'translate(0%, -45em)', maxHeight: '200vh' }}>
         <div className={styles.box_container}>
           <h1 className={styles.t_container}>Datos completos del producto</h1>
           <div className={styles.info_container}>

@@ -81,9 +81,24 @@ export const sortByDate = (array) => {
   for (let i = 0; i < ordenado.length; i++) {
     array.map((item) => {
       if (item.createdAt === ordenado[i]) {
-        newArray.push(item)
+        const alreadyIn = newArray.filter((arr) => arr.nombre === item.nombre)
+        if(alreadyIn.length <= 0) {
+          newArray.push(item);
+        }
       }
     });
   }
   return newArray;
 }
+
+export const makeid = (length) => {
+  var result = '';
+  var characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+  var charactersLength = characters.length;
+  for (var i = 0; i < length; i++) {
+    result += characters.charAt(Math.floor(Math.random() *
+      charactersLength));
+  }
+  return result;
+}
+

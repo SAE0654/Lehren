@@ -24,8 +24,8 @@ export default function ValidacionView() {
         if (!Producto) {
             getProducto();
         }
-        // document.querySelector("body").className = '';
-        // document.querySelector("body").classList.add("consultas_bg");
+        document.querySelector("body").className = '';
+        document.querySelector("body").classList.add('consultas_bg');
         sessionHasExpired();
     }, []);
 
@@ -109,8 +109,6 @@ export default function ValidacionView() {
     if (!Producto) {
         return <h1>Cargando...</h1>
     }
-
-    console.log(Producto)
 
     return <>
         <Head>

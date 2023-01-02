@@ -61,7 +61,6 @@ export default function Search() {
             return;
         }
         const idMsg = toast.loading("Actualizando datos...");
-        console.log(camposACambiar)
         await axios.put(`${process.env.NEXT_PUBLIC_ENDPOINT}api/usuario/` + camposACambiar, Resultados)
             .then(() => {
                 toast.success("Usuario actualizado con éxito");

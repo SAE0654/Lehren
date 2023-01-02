@@ -24,7 +24,6 @@ const handler = async (req, res) => {
                     await newProduct.save();
                     return res.status(200).json(newProduct);
                 } catch (error) {
-                    console.log("Error: ", error);
                     return res.status(400).json({message: 'Error inesperado'})
                 }
             } catch (error) {
@@ -48,7 +47,7 @@ const handler = async (req, res) => {
                 await DeleteProductoByName(id); // Aquí el id = nombre
                 return res.status(200).json({ message: 'Eliminado con éxito' });
             } catch (error) {
-                console.log(error);
+                return res.status(401).json({ message: 'Error al borrar' });
             }
         default:
             return res.status(500).json({ message: 'No autorizado' });
