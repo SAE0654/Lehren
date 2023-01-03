@@ -5,7 +5,7 @@ import Layout from '../../../components/Layout';
 import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
-import { acceptedFiles, getTimeStamp, isAnyFieldEmpty, makeid, sessionHasExpired } from '../../../utils/forms';
+import { acceptedFiles, getTimeStamp, isAnyFieldEmpty, sessionHasExpired } from '../../../utils/forms';
 import { useRouter } from 'next/router';
 import { IoMdClose } from "react-icons/io";
 

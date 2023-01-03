@@ -1,5 +1,5 @@
 import User from "../../../models/User";
-import { UpdatePasswords, UpdateUserField } from "../../../utils/dynamoOps";
+import { UpdateUserField } from "../../../utils/dynamoOps";
 
 const handler = async (req, res) => {
     const body = req.body;
@@ -11,6 +11,7 @@ const handler = async (req, res) => {
                 const user = await User.scan("names").contains(nombreCapitalizado).exec(); // Scan no es la mejor opción, pero la BD no es enorme
                 if (user['count'] === 0) {
                     const user = await User.scan("email").contains(nombre.toLowerCase()).exec();
+                    delete user.password;
                     return res.status(200).json(user);
                 }
                 return res.status(200).json(user);

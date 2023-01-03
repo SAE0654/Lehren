@@ -6,7 +6,6 @@ import Options from "./options";
 
 const ValidationToolsForm = ({HerramientasValidacion, setHerramientasValidacion}) => {
     const [hasChange, setHasChange] = useState(false);
-    const [Herramientas, setTools] = useState([]);
 
     const [ValitationTool, setValitationTool] = useState({
         fg: [1],

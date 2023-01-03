@@ -1,17 +1,20 @@
 import Head from 'next/head'
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/router'
-import { signIn, useSession } from 'next-auth/react'
+import { signIn } from 'next-auth/react'
 import { AiOutlineUser } from "react-icons/ai";
 import { MdOutlinePassword } from "react-icons/md";
 import { toast, ToastContainer } from 'react-toastify';
 import styles from "../styles/pages/login.module.scss";
+import RestoreEmailComponent from '../components/RestoreEmail';
 
 export default function Login() {
-  const [correo, setCorreo] = useState('')
-  const [password, setPassword] = useState('')
-  const [loginError, setLoginError] = useState('')
-  const [logginIn, setlogginIn] = useState(false)
+  const [correo, setCorreo] = useState('');
+  const [password, setPassword] = useState('');
+  const [loginError, setLoginError] = useState('');
+  const [logginIn, setlogginIn] = useState(false);
+  const [ShowRestorePassword, setShowRestorePassword] = useState(false);
+
   const router = useRouter()
 
   useEffect(() => {
@@ -93,11 +96,11 @@ export default function Login() {
           </div>
         </div>
         <div className="error">{loginError}</div>
+        <button type="button" className={styles.anchor_btn} onClick={() => setShowRestorePassword(true)}>No puedo acceder a mi cuenta</button>
         <input type="submit" value="Acceder" className="login_btn" disabled={logginIn} />
-        <a href="#">¿Olvidaste tu contraseña?</a>
       </form>
     </div>
-
+    { ShowRestorePassword ? <RestoreEmailComponent setShowRestorePassword={setShowRestorePassword} /> : null}
   </>
   )
 }
