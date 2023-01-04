@@ -38,7 +38,7 @@ export default function Login() {
       {
         email,
         password,
-        callbackUrl: `https://www.productoslehren.com/`
+        callbackUrl: `http://localhost:3000/`
       }
     ).then(() => {
       toast.dismiss(toastId);

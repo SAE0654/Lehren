@@ -1,6 +1,7 @@
 import * as dynamoose from "dynamoose";
 
 const SchemaUser = new dynamoose.Schema({
+    "id": String,
     "email": String,
     "password": String,
     "rol": String,

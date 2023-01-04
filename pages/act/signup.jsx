@@ -9,7 +9,7 @@ import axios from 'axios';
 import { getSession } from 'next-auth/react';
 import { Router, useRouter } from 'next/router';
 import styles from "../../styles/pages/login.module.scss";
-import { sessionHasExpired } from '../../utils/forms';
+import { makeid, sessionHasExpired } from '../../utils/forms';
 import Search from '../../components/Search';
 import { useSession } from "next-auth/react"
 
@@ -67,6 +67,8 @@ export default function SignUp() {
             toast.error("Las contraseñas no coinciden");
             return;
         };
+
+        Data.id = makeid(23).toString();
 
         const toastId = toast.loading('Guardando...');
         axios.post(`${process.env.NEXT_PUBLIC_ENDPOINT}api/signup`, Data)

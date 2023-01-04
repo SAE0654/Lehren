@@ -1,23 +1,25 @@
-import User from "../../models/User";
+import { GetUserByEmail } from "../../utils/dynamoOps";
 import { matchPassword } from "../../utils/forms";
 
 const handler = async (req, res) => {
     const { user } = req.body;
     let _user = null;
     if (req.method == 'POST') {
+        console.log(user)
         try {
-            const usuario = await User.query("email").eq(user.email).exec();
+            const usuario = await GetUserByEmail("email-index", "email", user.email);
             if(usuario['count'] === 0) {
                 return res.status(404).json({message: "Usuario o contraseña incorrectos"});
             }
             _user = {
                 user: {
-                    email: usuario[0].email,
-                    names: usuario[0].names,
-                    rol: usuario[0].rol
+                    id: usuario['Items'][0].id,
+                    email: usuario['Items'][0].email,
+                    names: usuario['Items'][0].names,
+                    rol: usuario['Items'][0].rol
                 }
             }
-            const passwordDoesMatch = await matchPassword(user.password, usuario[0].password);
+            const passwordDoesMatch = await matchPassword(user.password, usuario['Items'][0].password);
             if (passwordDoesMatch) {
                 return res.status(200).json(_user);
             } else {

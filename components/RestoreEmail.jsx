@@ -16,28 +16,29 @@ export default function RestoreEmailComponent({setShowRestorePassword}) {
             return;
         }
         const email = Email.trim();
-        console.log(email)
         if (email.split("@").length === 1) {
             toast.error("Correo no válido");
             return;
         }
-        const thisUserExist = await getOneUserByEmail(email);
-        if (thisUserExist) {
-            // await axios.post("/api/mail/restore-password", {
-            //     email: email
-            // }).then((res) => {
-            //     console.log("Éxito: ", res);
-            // }).catch((err) => {
-            //     console.log("Error: ", err)
-            // })
+        const user = await getOneUserByEmail(email);
+        if (user.length > 0) {
+            const url = "http://localhost:3000/restore-password/" + user[0].id + "#" + new Date().getTime();
+            console.log("SASSS")
+            await axios.post("/api/mail/restore-password", {
+                email: email,
+                url: url
+            }).then((res) => {
+                console.log("Éxito: ", res);
+            }).catch((err) => {
+                console.log("Error: ", err)
+            })
         }
         Swal.fire({
             title: 'Éxito',
             text: 'Si el correo está registrado se te mandará un código de restauración',
             icon: 'success',
             confirmButtonText: 'De acuerdo'
-        }
-        )
+        })
         setEmail(null);
     };
 
@@ -45,7 +46,7 @@ export default function RestoreEmailComponent({setShowRestorePassword}) {
         <button onClick={() => setShowRestorePassword(false)}>Cerrar ventana</button>
         <form>
             <p>Introduce la dirección del correo electrónico registrado</p>
-            <span>Se te enviará un correo desde donde podrás restaurar tu contraseña</span>
+            <span>Se te enviará un enlace desde donde podrás restaurar tu contraseña</span>
             <input type="email" name="email" id="email" placeholder="Correo electrónico" onChange={(e) => setEmail(e.target.value)} defaultValue={Email} />
             <button type="button" onClick={() => sendEmail()}>Enviar correo</button>
         </form>

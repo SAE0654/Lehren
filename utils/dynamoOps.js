@@ -28,10 +28,24 @@ export async function UpdateUserField(email, rol, password, names, camposACambia
             const _data = await db.update(params).promise();
             return _data;
         } catch (error) {
-            console.log(error)
             throw new Error(error)
         }
     })
+}
+
+export async function GetUserByEmail(indexCampo, campo, valor) {
+    const params = {
+        TableName: 'P1_Usuarios',
+        IndexName: indexCampo,
+        KeyConditionExpression: `${campo} = :${campo}`,
+        ExpressionAttributeValues: { [':' + campo]: valor },
+    };
+    try {
+        const data = await db.query(params).promise();
+        return data;
+    } catch (error) {
+        return []
+    }
 }
 
 /*
@@ -46,7 +60,6 @@ export async function GetProductosByIndexDB(indexCampo, campo, valor) {
         ExpressionAttributeValues: { [':' + campo]: valor },
     };
     try {
-        console.log("sort ")
         const data = await db.query(params).promise();
         return data;
     } catch (error) {

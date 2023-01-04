@@ -25,7 +25,7 @@ export default function Search() {
         const idMsg = toast.loading("Buscando usuario...");
         let nombre = Name;
         nombre = nombre[0].toUpperCase() + nombre.substring(1);
-        axios.get(`${process.env.NEXT_PUBLIC_ENDPOINT}api/usuario/` + Name)
+        axios.get(`${process.env.NEXT_PUBLIC_ENDPOINT}api/usuarios/` + Name)
             .then((res) => {
                 if (res.data.length === 0) {
                     toast.info("No se encontró una coincidencia");
@@ -61,7 +61,7 @@ export default function Search() {
             return;
         }
         const idMsg = toast.loading("Actualizando datos...");
-        await axios.put(`${process.env.NEXT_PUBLIC_ENDPOINT}api/usuario/` + camposACambiar, Resultados)
+        await axios.put(`${process.env.NEXT_PUBLIC_ENDPOINT}api/usuarios/` + camposACambiar, Resultados)
             .then(() => {
                 toast.success("Usuario actualizado con éxito");
             });
