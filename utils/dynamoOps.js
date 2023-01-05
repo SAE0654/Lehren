@@ -48,6 +48,21 @@ export async function GetUserByEmail(indexCampo, campo, valor) {
     }
 }
 
+export async function UpdatePassword(id, password, rol) {
+    const params = {
+        TableName: 'P1_Usuarios',
+        Key: {
+            id: id, 
+            rol: rol
+        },
+        UpdateExpression: 'set password = :p',
+        ExpressionAttributeValues: {
+            ':p': password
+        },
+    }
+    return executar(params);
+}
+
 /*
 ############### OPERACIONES DE PRODUCTOS ##################
 */

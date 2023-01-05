@@ -8,3 +8,12 @@ export const getOneUserByEmail = async (email) => {
         return []
     }
 }
+
+export const getOneUserById = async (id) => {
+    try {
+        const { data } = await axios(`${process.env.NEXT_PUBLIC_ENDPOINT}api/usuario/` + id);
+        return data.Items;
+    } catch (error) {
+        return []
+    }
+}
