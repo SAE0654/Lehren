@@ -10,6 +10,7 @@ import Pagination from '../../../components/Pagination';
 import Comment from '../../../components/Comment';
 import { CSVLink } from 'react-csv';
 import VotosComponent from '../../../components/VotosComponent';
+import { toast } from "react-toastify";
 
 export const InstitucionVista = ({
     Productos,
@@ -142,14 +143,24 @@ export const InstitucionVista = ({
                                                                         </div>
                                                                         :
                                                                         <div className={styles.etapa2}>
-                                                                            <NavLink
-                                                                                href={
-                                                                                    `/vw/${producto.etapa === "Propuesta" || producto.etapa === "Validación" || producto.etapa === "Pendiente"
-                                                                                        ? "validacion" :
-                                                                                        producto.etapa.toLowerCase()}/` + producto.nombre}
-                                                                                exact>
-                                                                                {producto.etapa}
-                                                                            </NavLink>
+                                                                            {
+                                                                                producto.statusProducto === "Pendiente" ?
+                                                                                    <NavLink
+                                                                                        href={"/vw/query/" + producto.institucion}
+                                                                                        onClick={() => toast.info("Este producto está en Pendiente")}
+                                                                                        >
+                                                                                        {producto.etapa}
+                                                                                    </NavLink>
+                                                                                    :
+                                                                                    <NavLink
+                                                                                        href={
+                                                                                            `/vw/${producto.etapa === "Propuesta" || producto.etapa === "Validación" || producto.etapa === "Pendiente"
+                                                                                                ? "validacion" :
+                                                                                                producto.etapa.toLowerCase()}/` + producto.nombre}
+                                                                                        exact>
+                                                                                        {producto.etapa}
+                                                                                    </NavLink>
+                                                                            }
                                                                         </div>
                                                                     : null
                                                             }
@@ -221,7 +232,6 @@ export const InstitucionVista = ({
                                         }
                                     </tbody>
                                 </table>
-
                         }
                         {
                             TempProductos.length === 0 && !Loading ?

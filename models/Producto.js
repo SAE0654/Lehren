@@ -116,7 +116,8 @@ const SchemaProduct = new dynamoose.Schema({
         type: Array,
         schema: [String]
     },
-    "createdAt": Number
+    "createdAt": Number,
+    "statusAnterior": String
 });
 
 const Product = dynamoose.model("P1_Productos", SchemaProduct);

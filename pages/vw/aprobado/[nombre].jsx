@@ -9,11 +9,10 @@ import styles from "../../../styles/pages/ventas.module.scss";
 import { AiTwotoneDelete } from 'react-icons/ai';
 import { toast } from 'react-toastify';
 import Swal from 'sweetalert2/dist/sweetalert2';
-// Componentes
-import { NavLink } from '../../../components/NavLink';
 // Funciones externas
 import { sessionHasExpired } from '../../../utils/forms';
 import { getProductoByNombre } from '../../../services/productos';
+import CambiarStatusComponent from '../../../components/CambiarStatus';
 
 export default function ViewProduct() {
   const router = useRouter();
@@ -86,7 +85,7 @@ export default function ViewProduct() {
           return '¡Debes elegir algo!'
         }
       }
-    })
+    });
 
     if (editChose) {
       router.push(`${process.env.NEXT_PUBLIC_ENDPOINT}` + editChose)
@@ -184,9 +183,9 @@ export default function ViewProduct() {
                 {
                   Producto.archivosETP1 && FilesETP1.length > 0 ?
                     FilesETP1.map((item, index) => (
-                      <div className={styles.container_file} key={index} style={{minWidth: '200px', alignItems: 'center'}}>
+                      <div className={styles.container_file} key={index} style={{ minWidth: '200px', alignItems: 'center' }}>
                         <AiTwotoneDelete className={styles.btn_delete} onClick={() => deleteFile(item, "archivosETP1")} />
-                        <a href={item} target="_blank" rel="noopener noreferrer" style={{marginTop: 'inherit', marginBottom: 'inherit', width: '40%'}}>
+                        <a href={item} target="_blank" rel="noopener noreferrer" style={{ marginTop: 'inherit', marginBottom: 'inherit', width: '40%' }}>
                           {item.split("https://sae-files.s3.amazonaws.com/")}
                         </a>
                       </div>
@@ -209,12 +208,10 @@ export default function ViewProduct() {
               </p>
             </div>
           </div>
+          {Producto.statusProducto === "No aprobado" ? null : <CambiarStatusComponent Producto={Producto} />}
           <button className={styles.editar_btn} onClick={() => editOptions()}>
             Actualizar información
           </button>
-          <NavLink href={"/vw/query/" + Producto.institucion} exact>
-            Regresar
-          </NavLink>
         </div>
       </div>
     </Layout>

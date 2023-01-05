@@ -1,15 +1,16 @@
 import { useRouter } from 'next/router'
 import { getSession, useSession } from "next-auth/react";
 import { useEffect, useState } from 'react'
-import axios from 'axios';
+
 import Head from 'next/head';
 import Layout from '../../../components/Layout';
 import styles from "../../../styles/pages/ventas.module.scss";
-import { getTimeStamp, sessionHasExpired } from '../../../utils/forms';
-import { toast } from 'react-toastify';
-import Swal from 'sweetalert2/dist/sweetalert2';
+import { sessionHasExpired } from '../../../utils/forms';
+
 import { NavLink } from '../../../components/NavLink';
 import { getProductoByNombre } from '../../../services/productos';
+import CambiarStatusComponent from '../../../components/CambiarStatus';
+import axios from 'axios';
 
 export default function ValidacionView() {
     const router = useRouter();
@@ -44,14 +45,11 @@ export default function ValidacionView() {
         }
     }
 
-    const redirect = (lnombre) => router.push('/act/stage/validacion/' + lnombre)
+    const redirect = (lnombre) => router.push('/act/stage/validacion/' + lnombre);
 
     const setStatus = async (Status) => {
-        const producto = Producto;
-        producto.statusProducto = Status === "Validación" ? "Elección" : "Revisión";
-        producto.etapa = Status;
         if (Status === "Validación") {
-            await axios.put(`${process.env.NEXT_PUBLIC_ENDPOINT}api/producto/updateStatus=${nombre}`, [producto.statusProducto, producto.etapa],
+            await axios.put(`${process.env.NEXT_PUBLIC_ENDPOINT}api/producto/updateStatus=${nombre}`, ['Elección', 'Validación', 'Elección'], // nuevoStatus, etapa, statusAnterior
                 {
                     headers: {
                         accept: '*/*',
@@ -64,47 +62,7 @@ export default function ValidacionView() {
                 })
             return;
         }
-        await Swal.fire({
-            input: 'textarea',
-            inputLabel: "Explica por qué el producto será puesto en Pendiente",
-            inputValue: '',
-            inputPlaceholder: "Comentario...",
-            inputAttributes: {
-                'aria-label': 'Escribe tu comentario aquí',
-                maxlength: 1500
-            },
-            showCancelButton: true,
-            confirmButtonText: 'Poner en Pendiente',
-            cancelButtonText: 'Cancelar',
-        }).then(async (res) => {
-            if (res.isDismissed) return;
-            if (res.value.trim().length === 0 && res.isConfirmed) {
-                toast.warn("El comentario no puede estar vacío");
-                return;
-            }
-            producto.comentarios = [{
-                user: session.user.names,
-                comentarios: res.value,
-                createdAt: getTimeStamp()
-            }];
-            await axios.put(`${process.env.NEXT_PUBLIC_ENDPOINT}api/producto/updateStatus=${nombre}`, ['Pendiente', 'Propuesta'],
-                {
-                    headers: {
-                        accept: '*/*',
-                        'Content-Type': 'application/json'
-                    }
-                }).then(() => {
-                    router.push(`/`);
-                }).catch(() => {
-                    toast.error("Error al procesar");
-                })
-            await axios.put(`${process.env.NEXT_PUBLIC_ENDPOINT}api/productos/${nombre}=updateComment`, producto)
-                .then(() => {
-                    toast.success("Puesto en pendiente");
-                })
-        })
     }
-
 
     if (!Producto) {
         return <h1>Cargando...</h1>
@@ -147,9 +105,7 @@ export default function ValidacionView() {
                     </div>
                     <br />
                     <NavLink href={"/act/stage/validacion/" + Producto.nombre} style={{ color: "#fff" }} onClick={() => setStatus("Validación")}>Mandar a proceso de validación</NavLink>
-                    <button onClick={() => setStatus("Pendiente")}>
-                        Poner en pendiente
-                    </button>
+                    <CambiarStatusComponent Producto={Producto}/>
                 </div>
             </div>
         </Layout>

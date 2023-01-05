@@ -121,6 +121,28 @@ export async function UpdateToNoAprobado({ nombre, statusProducto, etapa, aproba
     return executar(params);
 }
 
+export async function UpdateStatus(nombre, statusNuevo, etapa, statusAnterior) {
+    console.log(statusAnterior)
+    const params = {
+        TableName: 'P1_Productos',
+        Key: {
+            nombre: nombre
+        },
+        UpdateExpression: 'set statusProducto = :s, etapa = :e, statusAnterior = :sa',
+        ExpressionAttributeValues: {
+            ':s': statusNuevo,
+            ':e': etapa,
+            ':sa': statusAnterior
+        },
+    }
+    try {
+        await db.update(params).promise();
+        return {message: 'success'};
+    } catch (error) {
+        throw new Error(error);
+    }
+}
+
 export async function UpdateUrlETP(nombre, carga, etapa) {
     const params = {
         TableName: 'P1_Productos',
@@ -219,7 +241,7 @@ async function executar(params) {
         const _data = await db.update(params).promise();
         return _data;
     } catch (error) {
-        console.log(error)
+        console.log("AAAA: ", error)
         throw new Error(error)
     }
 }
