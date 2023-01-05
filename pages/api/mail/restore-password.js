@@ -3,13 +3,13 @@ import sendgrid from "@sendgrid/mail";
 sendgrid.setApiKey(process.env.SENDGRID_API_KEY);
 
 async function sendEmail(req, res) {
-    const { email, url } = req.body;
-    try {
-        await sendgrid.send({
-            to: email,
-            from: "l.alcantara@saei.mx",
-            subject: "Restauración de contraseña",
-            html: `<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional //EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+  const { email, url } = req.body;
+  try {
+    await sendgrid.send({
+      to: email,
+      from: "l.alcantara@saei.mx",
+      subject: "Restauración de contraseña",
+      html: `<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional //EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
             <html xmlns="http://www.w3.org/1999/xhtml" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office">
             <head>
             <!--[if gte mso 9]>
@@ -157,7 +157,7 @@ async function sendEmail(req, res) {
                   <td style="overflow-wrap:break-word;word-break:break-word;padding:10px;font-family:arial,helvetica,sans-serif;" align="left">
                     
               <div style="line-height: 140%; text-align: left; word-wrap: break-word;">
-                <p style="font-size: 14px; line-height: 140%;">Si recibiste este correo es porque hubo una solicitud de cambio de contraseña, si este no es el caso, por favor ponte en contacto con el siguiente correo: <a rel="noopener" href="mailto:r.delacruztapia@sae.edu" target="_blank">r.delacruztapia@sae.edu</a></p>
+                <p style="font-size: 14px; line-height: 140%;">Si recibiste este correo es porque hubo una solicitud de cambio de contraseña, si este no es el caso, por favor envía un correo a: <a rel="noopener" href="mailto:r.delacruztapia@sae.edu" target="_blank">r.delacruztapia@sae.edu</a></p>
             <p style="font-size: 14px; line-height: 140%;">De lo contrario, da clic en el siguiente enlace: <a rel="noopener" href="${url}" target="_blank">${url}</a> </p>
               </div>
             
@@ -187,12 +187,12 @@ async function sendEmail(req, res) {
             
             </html>
             `
-        })
-    } catch (error) {
-        return res.status(error.statusCode || 500).json({ error: error.message });
-    }
+    })
+  } catch (error) {
+    return res.status(error.statusCode || 500).json({ error: error.message });
+  }
 
-    return res.status(200).json({ error: "" });
+  return res.status(200).json({ error: "" });
 }
 
 export default sendEmail;

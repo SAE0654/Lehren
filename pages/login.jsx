@@ -27,6 +27,8 @@ export default function Login() {
 
   const handleLogin = (e) => {
     e.preventDefault();
+    if(ShowRestorePassword) return;
+    console.log("ENVIARS")
     setlogginIn(true);
     const toastId = toast.loading('Accediendo...');
     if (correo.trim().length === 0 || password.trim().length === 0) {

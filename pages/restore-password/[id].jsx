@@ -5,6 +5,7 @@ import "react-toastify/dist/ReactToastify.css";
 import axios from "axios";
 import Head from "next/head";
 import { useRouter } from "next/router";
+import Swal from 'sweetalert2/dist/sweetalert2';
 const bcrypt = require('bcryptjs');
 
 let _i = 0; // controlador
@@ -15,24 +16,54 @@ const RestorePassword = () => {
   const [Password2, setPassword2] = useState(null);
 
   const router = useRouter();
-
+  const { query } = router;
   useEffect(() => {
-    if (_i === 0) {
-      getUserByEmail();
+    if (typeof query.id === "undefined") {
+      return;
     }
+    console.log(query.id.split("=").length)
+    if(query.id.split("=").length <= 1 || query.id.split("=").length >= 3) {
+      Swal.fire({
+        title: 'Enlace no válido',
+        text: 'Si tienes problemas, contáctanos',
+        icon: 'info',
+        confirmButtonText: 'De acuerdo'
+    })
+      redirect();
+      return;
+    }
+    if (new Date().getTime() >= query.id.split("=")[1]) {
+      Swal.fire({
+        title: 'Enlace expirado',
+        text: 'Lo sentimos, este enlace ha expirado',
+        icon: 'info',
+        confirmButtonText: 'De acuerdo'
+    })
+      redirect();
+      return;
+    }
+    getUserByEmail();
     _i++;
-  }, []);
-
+  }, [query]);
 
   const getUserByEmail = async () => {
-    await axios.get(`${process.env.NEXT_PUBLIC_ENDPOINT}api/usuario/NHggxGHS1oCJRWNPDna8A1z`)
+    await axios.get(`${process.env.NEXT_PUBLIC_ENDPOINT}api/usuario/` + query.id.split("=")[0])
       .then(({ data }) => {
+        if (data['Count'] === 0) {
+          redirect();
+          return;
+        }
         setUser(data[0]);
-      })
+      });
   }
 
   const updatePassword = async (e) => {
     e.preventDefault();
+
+    if (new Date().getTime() >= query.id.split("=")[1]) {
+      redirect();
+      return;
+    }
 
     if (Password1 === null || Password2 === null) {
       toast.info("Rellena todos los campos");
@@ -51,20 +82,24 @@ const RestorePassword = () => {
 
     const encrypted = await bcrypt.genSalt(10);
     bcrypt.hash(Password1, encrypted)
-      .then((res) => {
+      .then(async (res) => {
         User.password = res;
+        await axios.put(`${process.env.NEXT_PUBLIC_ENDPOINT}api/usuario/` + User.id, {
+          password: User.password,
+          rol: User.rol
+        })
+          .then(() => {
+            Swal.fire({
+              title: 'Éxito',
+              text: 'Tu contraseña ha sido actualizada con éxito',
+              icon: 'success',
+              confirmButtonText: 'Cerrar'
+          })
+            redirect();
+          }).catch(() => {
+            toast.error("Ocurrió un error");
+          })
       });
-
-    await axios.put(`${process.env.NEXT_PUBLIC_ENDPOINT}api/usuario/` + User.id, {
-      password: User.password,
-      rol: User.rol
-    })
-      .then(() => {
-        toast.success("Contraseña actualizada");
-        redirect();
-      }).catch((res) => {
-        toast.error("Ocurrió un error");
-      })
   }
 
   const redirect = () => router.push("/");
