@@ -92,6 +92,7 @@ export default function Consultas() {
         setTempProductos(data);
         setLoading(false);
         computePages(data);
+        console.log(data)
     }
 
     const search = (e) => {

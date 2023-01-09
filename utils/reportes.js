@@ -132,21 +132,31 @@ export function MasRecienteProducto(SAE, ARTEK) {
     return [saeUltimoProducto[0], artekUltimoProducto[0]];
 }
 
-export function RegistradosPorMes(SAE, ARTEK) {
-    const meses = ['Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
-    const mesesSAE = [0, 0, 0, 0, 0, 0];
-    const mesesARTEK = [0, 0, 0, 0, 0, 0];
-    console.log(SAE)
-    SAE.map((sae) => {
-        const fechaSAE = sae.creadoPor.split(" ");
+export function RegistradosPorMes(SAE, ARTEK, year) {
+    const meses = year === '2022'
+        ? ['Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre']
+        : ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre']
+    const mesesSAE = year === '2022' ? [0, 0, 0, 0, 0, 0] : [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+    const mesesARTEK = year === '2022' ? [0, 0, 0, 0, 0, 0] : [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+
+    console.log("AÑO: ", year)
+    const SAEYear = SAE.filter((sae) => sae.creadoPor.split(" ")[7] === year);
+    const ARTEKYear = ARTEK.filter((artek) => artek.creadoPor.split(" ")[7] === year);
+
+    console.log(SAEYear);
+    console.log(ARTEKYear)
+
+    SAEYear.map((sae) => {
+        const fechaSAE = sae.creadoPor.split(" "); // Posición 7 es el año
+        console.log(fechaSAE)
         const monthSAE = meses.indexOf(fechaSAE[5]);
         mesesSAE[monthSAE]++;
     });
-    ARTEK.map((sae) => {
+    ARTEKYear.map((sae) => {
         const fechaARTEK = sae.creadoPor.split(" ");
         const monthARTEK = meses.indexOf(fechaARTEK[5]);
         mesesARTEK[monthARTEK]++;
-    })
+    });
     const resultado = [
         {
             labels: meses,
