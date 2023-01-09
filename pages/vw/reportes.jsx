@@ -117,7 +117,7 @@ const Reportes = () => {
             <Head>
                 <title>Reportes</title>
                 <meta name="description" content="Start app" />
-                <link rel="icon" href="/favicon.ico" />
+                <link rel="icon" href="/favicon-33.ico" />
             </Head>
             <div className={styles.container}>
                 <div className={styles.graphics_area}>

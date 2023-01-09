@@ -56,7 +56,7 @@ export default function Home() {
       <Head>
         <title>Inicio</title>
         <meta name="description" content="Start app" />
-        <link rel="icon" href="/favicon.ico" />
+        <link rel="icon" href="/favicon-33.ico" />
       </Head>
       <Layout>
         <div className={styles.quest_next}>

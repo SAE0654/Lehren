@@ -100,7 +100,7 @@ export default function ViewProduct() {
     <Head>
       <title>Vista de datos </title>
       <meta name="description" content="Login app" />
-      <link rel="icon" href="/favicon.ico" />
+      <link rel="icon" href="/favicon-33.ico" />
     </Head>
     <Layout>
       <div className={styles.main_content} style={{ transform: 'translate(0%, -45em)', maxHeight: '200vh' }}>

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { toast, ToastContainer } from "react-toastify";
 import styles from "../../styles/restorepassword.module.scss";
 import "react-toastify/dist/ReactToastify.css";
@@ -15,6 +15,8 @@ const RestorePassword = () => {
   const [Password1, setPassword1] = useState(null);
   const [Password2, setPassword2] = useState(null);
 
+  const error = useRef(null);
+
   const router = useRouter();
   const { query } = router;
   useEffect(() => {
@@ -22,13 +24,13 @@ const RestorePassword = () => {
       return;
     }
     console.log(query.id.split("=").length)
-    if(query.id.split("=").length <= 1 || query.id.split("=").length >= 3) {
+    if (query.id.split("=").length <= 1 || query.id.split("=").length >= 3) {
       Swal.fire({
         title: 'Enlace no válido',
         text: 'Si tienes problemas, contáctanos',
         icon: 'info',
         confirmButtonText: 'De acuerdo'
-    })
+      })
       redirect();
       return;
     }
@@ -38,7 +40,7 @@ const RestorePassword = () => {
         text: 'Lo sentimos, este enlace ha expirado',
         icon: 'info',
         confirmButtonText: 'De acuerdo'
-    })
+      })
       redirect();
       return;
     }
@@ -94,12 +96,29 @@ const RestorePassword = () => {
               text: 'Tu contraseña ha sido actualizada con éxito',
               icon: 'success',
               confirmButtonText: 'Cerrar'
-          })
+            })
             redirect();
           }).catch(() => {
             toast.error("Ocurrió un error");
           })
       });
+  }
+
+  const validatePassword = (password) => {
+    if (password.length < 7) {
+      error.current.innerHTML = `<li>La contraseña debe contener al menos 7 caracteres<li>`;
+      return;
+    }
+    if (password.search(/[a-z]/) < 0) {
+      error.current.innerHTML = `<li>La contraseña debe contener al menos una minúscula<li>`;
+      return;
+    }
+    if (password.search(/[0-9]/) < 0) {
+      error.current.innerHTML = `<li>La contraseña debe contener al menos un número<li>`;
+      return;
+    }
+    error.current.innerHTML = "";
+    setPassword1(password);
   }
 
   const redirect = () => router.push("/");
@@ -128,7 +147,8 @@ const RestorePassword = () => {
     <div className={styles.page_container}>
       <form onSubmit={(e) => updatePassword(e)}>
         <h1>RESTAURAR CONTRASEÑA <span>Hola, {User.names}, este enlace expirará en 15 minutos</span></h1>
-        <input type="password" placeholder="Nueva contraseña" onChange={(e) => setPassword1(e.target.value)} />
+        <div className={styles.error} ref={error}>Debes</div>
+        <input type="password" placeholder="Nueva contraseña" onChange={(e) => validatePassword(e.target.value)} />
         <input type="password" placeholder="Repetir contraseña" onChange={(e) => setPassword2(e.target.value)} />
         <input type="submit" value="Actualizar" />
       </form>

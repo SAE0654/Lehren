@@ -23,7 +23,7 @@ const Catalogue = () => {
       <Head>
         <title>Catálogo de validación</title>
         <meta name="description" content="Start app" />
-        <link rel="icon" href="/favicon.ico" />
+        <link rel="icon" href="/favicon-33.ico" />
       </Head>
       <Layout>
         <div className={styles.main_content}>

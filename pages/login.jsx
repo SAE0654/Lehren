@@ -52,7 +52,7 @@ export default function Login() {
     <Head>
       <title>Inicia sesión</title>
       <meta name="description" content="Login app" />
-      <link rel="icon" href="/favicon.ico" />
+      <link rel="icon" href="/favicon-33.ico" />
     </Head>
     <ToastContainer
       position="bottom-right"

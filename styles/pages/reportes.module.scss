@@ -33,6 +33,7 @@
                     transition: 250ms;
                     padding: 0.7em;
                     color: #fff;
+                    font-size: 1rem;
                     &.active {
                         border-bottom: 2px solid #0074d9;
                         font-weight: bold;
@@ -49,6 +50,7 @@
                 top: 1em;
                 right: 1em;
                 border: 1px solid rgb(38, 35, 35);
+                font-size: 1rem;
                 &:focus {
                     background-color: #000;
                 }
@@ -79,7 +81,7 @@
             background-color: rgb(12, 12, 12);
             h2 {
                 text-align: center;
-                font-size: 1rem;
+                font-size: 1.5rem;
             }
             .box_info {
                 & > h3 {
@@ -92,17 +94,17 @@
                 .box {
                     @include mix.flexBox(column, center, center);
                     h3 {
-                        color: rgb(209, 197, 197);
-                        font-size: 0.9rem;
+                        color: rgb(255, 255, 255);
+                        font-size: 1.4rem;
                         font-weight: 400;
                         margin: 0;
                     }
                     p {
-                        width: 90%;
+                        width: 100%;
                         margin: auto;
                         text-align: center;
-                        color: gray;
-                        font-size: 0.8rem;
+                        color: rgb(255, 255, 255);
+                        font-size: 1rem;
                         text-transform: capitalize;
                     }
                 }
@@ -114,16 +116,20 @@
 
 .most_active_users {
     grid-area: most_active_users;
+    font-family: 'Quicksand', sans-serif;
 }
 
 .sae_number_products {
     grid-area: sae_number_products;
+    font-family: 'Quicksand', sans-serif;
 }
 
 .artek_number_products {
     grid-area: artek_number_products;
+    font-family: 'Quicksand', sans-serif;
 }
 
 .numbers_of_users {
     grid-area: numbers_of_users;
+    font-family: 'Quicksand', sans-serif;
 }
