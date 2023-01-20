@@ -122,12 +122,12 @@ const Reportes = () => {
     }
 
     return <>
+        <Head>
+            <title>Reportes</title>
+            <meta name="description" content="Start app" />
+            <link rel="icon" href="/favicon-33.ico" />
+        </Head>
         <Layout>
-            <Head>
-                <title>Reportes</title>
-                <meta name="description" content="Start app" />
-                <link rel="icon" href="/favicon-33.ico" />
-            </Head>
             <div className={styles.container}>
                 <div className={styles.graphics_area}>
                     <div className={styles.bar_action}>

@@ -44,8 +44,7 @@ export default function Producto() {
             document.getElementById("razon").value = "";
             document.getElementById("descripcion").value = "";
         }
-    }, [nombre])
-
+    }, [nombre]);
 
     const registerCourse = async (e) => {
         e.preventDefault();
@@ -68,6 +67,7 @@ export default function Producto() {
             producto.tipo = Otro;
         }
         await saveFilesToAWS();
+
         producto = {
             ...producto,
             archivosETP1: url_files,
@@ -96,7 +96,6 @@ export default function Producto() {
             }).catch((res) => {
                 toast.error(res.response.data.message);
             });
-
     }
 
     const setProductoItem = (e) => {
