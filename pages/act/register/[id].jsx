@@ -26,7 +26,7 @@ export default function Producto() {
     const { id } = router.query;
     const { data: session } = useSession();
 
-    let url_files = [];
+    let url_files = Producto.archivosETP1;
 
     useEffect(() => {
         document.querySelector("body").className = '';
@@ -59,7 +59,6 @@ export default function Producto() {
             || typeof producto.institucion === 'undefined'
             || typeof producto.areaV === 'undefined') { // Si true, campos vacíos
             toast.error("Rellena todos los campos");
-            console.log(e.target)
             return;
         }
         if((producto.tipo === 'Otro' && Otro === null) || Otro?.trim() === '') {
@@ -148,6 +147,7 @@ export default function Producto() {
             file.push(_file);
         });
         setFiles([...Files, ...file]);
+        if (!notSaved) setNotSaved(true);
     }
 
     const deleteFiles = (index) => {
@@ -192,6 +192,7 @@ export default function Producto() {
         const data = await getProductoById(id);
         setProducto(data)
         setInstitucion(data.institucion);
+        url_files = data.archivosETP1;
         document.getElementById("RVOE").checked = data.RVOE === 'on' ? true : false;
         document.getElementById("otro").value = data.tipo;
     }
@@ -202,6 +203,7 @@ export default function Producto() {
             toast.info("Debes modificar la información")
             return;
         }
+        await saveFilesToAWS();
         const producto = Producto;
         if (isAnyFieldEmpty(e.target)
             || producto.institucion === 'default'
@@ -211,6 +213,7 @@ export default function Producto() {
             return;
         }
         producto.lastUpdate = "El " + getTimeStamp() + " por " + session.user.names;
+        producto = { ...producto, archivosETP1: url_files }
         await axios.put(`${process.env.NEXT_PUBLIC_ENDPOINT}api/productos/` + Producto._id, producto)
             .then(() => {
                 toast.success("Producto actualizado con éxito");
