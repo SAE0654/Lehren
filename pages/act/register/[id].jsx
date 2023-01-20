@@ -395,7 +395,7 @@ export default function Producto() {
                                         </div>
                                     </>
                             }
-                            <div className={styles.files_zone} style={id !== "new" ? { display: "none" } : { display: "block" }}>
+                            <div className={styles.files_zone}>
                                 <label className={styles.form_files}>
                                     <input type="file" name="files_att" id="fileUpload" onChange={(e) => verifyFiles(e)} multiple />
                                     Subir archivos
