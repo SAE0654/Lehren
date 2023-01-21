@@ -26,7 +26,7 @@ export default function Producto() {
     const { id } = router.query;
     const { data: session } = useSession();
 
-    let url_files = Producto.archivosETP1;
+    let url_files = typeof Producto.archivosETP1 === "undefined" ? [] : Producto.archivosETP1;
 
     useEffect(() => {
         document.querySelector("body").className = '';
