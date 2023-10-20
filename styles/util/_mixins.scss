@@ -1,0 +1,30 @@
+@mixin flexBox($direction, $alignment, $justification) {
+    display: flex;
+    flex-direction: $direction;
+    align-items: $alignment;
+    justify-content: $justification;
+}
+
+@mixin fontTitle($size) {
+    margin: 0.5rem;
+    font-family: 'Montserrat', sans-serif;
+    font-size: clamp(1.3rem, $size, 2.5rem);
+}
+
+@mixin fontParagraph($size) {
+    margin: 0.3em;
+    font-size: clamp(0.8rem, $size, 1.4rem);
+}
+
+@mixin absoluteCenter {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+@mixin generalWidth {
+    width: 95%;
+    max-width: 1100px;
+    margin: auto;
+}
