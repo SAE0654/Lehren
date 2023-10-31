@@ -13,7 +13,7 @@ const handler = async (req, res) => {
                 user: {
                     email: userRes.email,
                     names: userRes.names,
-                    username: userRes.username,
+                    username: userRes.Primernombre,
                     rol: userRes.rol
                 }
             };

@@ -4,10 +4,16 @@ const bcrypt = require('bcryptjs');
 const SALT_WORK_FACTOR = 10;
 
 const userSchema = new Schema({
+    Identificador: { type: String, required: true },
+    Comite: { type: String, required: true },
+    names: { type: String, required: true },
     email: { type: String, required: true },
-    names: { type: String, required: true},
-    password: { type: String, required: true },
-    rol: { type: String, required: true }
+    rol: { type: String, required: true },
+    Primernombre: { type: String, required: true },
+    password: { type: String, required: true }
+    // names: { type: String, required: true},
+    // password: { type: String, required: true },
+    // rol: { type: String, required: true }
 });
 
 userSchema.methods.encryptPassword = async (password) => {
@@ -16,8 +22,8 @@ userSchema.methods.encryptPassword = async (password) => {
     return hash;
 }
 
-userSchema.methods.matchPassword = async function(password) {
-    return await bcrypt.compare(password, this.password) 
+userSchema.methods.matchPassword = async function (password) {
+    return await bcrypt.compare(password, this.password)
 }
 
 const User = models.User || model('User', userSchema);

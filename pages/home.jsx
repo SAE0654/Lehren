@@ -31,13 +31,15 @@ export default function Home() {
         setInterface(ADMIN);
         break;
       case 'staff':
-        STAFF[1].icono = <AiOutlineFileSearch className="icon_button" />;
         STAFF[0].icono = <AiOutlineFolderAdd className="icon_button" />;
+        STAFF[1].icono = <AiOutlineFileSearch className="icon_button" />;
+        STAFF[2].icono = <AiOutlineFolderAdd className="icon_button" />
         setInterface(STAFF);
         break;
       case 'docente':
-        STAFF[1].icono = <AiOutlineFileSearch className="icon_button" />;
         STAFF[0].icono = <AiOutlineFolderAdd className="icon_button" />;
+        STAFF[1].icono = <AiOutlineFileSearch className="icon_button" />;
+        STAFF[2].icono = <AiOutlineFolderAdd className="icon_button" />
         setInterface(STAFF);
         break;
       default:

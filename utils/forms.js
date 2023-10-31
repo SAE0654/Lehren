@@ -17,7 +17,6 @@ export const isAnyFieldEmpty = (form, schema) => {
         continue;
       } else {
         if (schema[form[i].name].trim().length <= 0) {
-          console.log("---------->", form[i].title)
           fieldEmpty = form[i].title.toLowerCase();
           break;
         }

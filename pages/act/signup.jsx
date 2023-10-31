@@ -2,9 +2,9 @@ import Head from 'next/head'
 import { useEffect, useState } from 'react'
 import Layout from "../../components/Layout";
 import { FaUserAlt, FaUsers } from "react-icons/fa";
-import { RiLockPasswordFill, RiLockPasswordLine } from "react-icons/ri";
+import { RiLockPasswordFill, RiLockPasswordLine, RiUser4Fill } from "react-icons/ri";
 import { toast } from 'react-toastify';
-import { AiOutlineMail, AiOutlineClose } from 'react-icons/ai';
+import { AiOutlineMail, AiOutlineClose, AiOutlineGroup } from 'react-icons/ai';
 import axios from 'axios';
 import { getSession } from 'next-auth/react';
 import { Router, useRouter } from 'next/router';
@@ -59,6 +59,10 @@ export default function Login() {
             toast.error("Selecciona un rol");
             return;
         }
+        if (Data.Comite === 'default' || typeof Data.Comite === 'undefined') {
+            toast.error("Selecciona Sí o No para Comité");
+            return;
+        }
         if (payload.length <= 3) {
             toast.error("Rellena todos los campos");
             return;
@@ -69,7 +73,9 @@ export default function Login() {
         };
 
         const toastId = toast.loading('Guardando...');
-        axios.post(`${process.env.NEXT_PUBLIC_ENDPOINT}api/signup`, Data)
+        const newUser = { Identificador: Date.now().toString(), ...Data };
+
+        axios.post(`${process.env.NEXT_PUBLIC_ENDPOINT}api/signup`, newUser)
             .then(() => {
                 toast.success("Usuario registrado");
                 toast.dismiss(toastId)
@@ -86,7 +92,7 @@ export default function Login() {
         return false;
     }
 
-    if(typeof session === 'undefined') return <h1>Cargando</h1>
+    if (typeof session === 'undefined') return <h1>Cargando</h1>
 
     return (<>
         <Head>
@@ -132,6 +138,16 @@ export default function Login() {
                         </div>
                     </div>
                     <div className={styles.input_box}>
+                        <AiOutlineGroup className={styles.icon} />
+                        <div className={styles.group}>
+                            <select name="Comite" onChange={(e) => (setData({ ...Data, [e.target.name]: e.target.value }), setNotSaved(true))}>
+                                <option value="default">Comité</option>
+                                <option value="Sí">Sí</option>
+                                <option value="No">No</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div className={styles.input_box}>
                         <FaUsers className={styles.icon} />
                         <div className={styles.group}>
                             <select name="rol" onChange={(e) => (setData({ ...Data, [e.target.name]: e.target.value }), setNotSaved(true))}>
@@ -154,6 +170,20 @@ export default function Login() {
                             <span className="highlight"></span>
                             <span className="bar"></span>
                             <label>Nombre completo</label>
+                        </div>
+                    </div>
+                    <div className={styles.input_box}>
+                        <RiUser4Fill className={styles.icon} />
+                        <div className={styles.group}>
+                            <input
+                                name="Primernombre"
+                                type="text"
+                                onChange={(e) => (setData({ ...Data, [e.target.name]: e.target.value }), setNotSaved(true))}
+                                required
+                                autoComplete='off' />
+                            <span className="highlight"></span>
+                            <span className="bar"></span>
+                            <label>Primer nombre</label>
                         </div>
                     </div>
                     <div className={styles.input_box}>

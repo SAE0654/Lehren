@@ -6,6 +6,7 @@ import { AiOutlineUser } from "react-icons/ai";
 import { MdOutlinePassword } from "react-icons/md";
 import { toast } from 'react-toastify';
 import styles from "../styles/pages/login.module.scss";
+import { cargarUnUsuario, cargarUsuarios } from '../utils/cargamasiva';
 
 export default function Login() {
   const [correo, setCorreo] = useState('')
@@ -50,43 +51,42 @@ export default function Login() {
       <link rel="icon" href="/favicon.ico" />
     </Head>
 
-      <div className={styles.login_container}>
-        <img src="/img/Logo_Vertical.svg" alt="" />
-        <h1>Inicia sesión</h1>
-        <form onSubmit={(e) => handleLogin(e)}>
-          <div className={styles.input_box}>
-            <AiOutlineUser className={styles.icon} />
-            <div className={styles.group}>
-              <input
-                name="email"
-                type="text"
-                onChange={(e) => setCorreo(e.target.value)}
-                required
-                autoComplete="off"
-                 />
-              <span className="highlight"></span>
-              <span className="bar"></span>
-              <label>Correo electrónico</label>
-            </div>
+    <div className={styles.login_container}>
+      <img src="/img/Logo_Vertical.svg" alt="" />
+      <h1>Inicia sesión</h1>
+      <form onSubmit={(e) => handleLogin(e)}>
+        <div className={styles.input_box}>
+          <AiOutlineUser className={styles.icon} />
+          <div className={styles.group}>
+            <input
+              name="email"
+              type="text"
+              onChange={(e) => setCorreo(e.target.value)}
+              required
+              autoComplete="off"
+            />
+            <span className="highlight"></span>
+            <span className="bar"></span>
+            <label>Correo electrónico</label>
           </div>
-          <div className={styles.input_box}>
-            <MdOutlinePassword className={styles.icon} />
-            <div className={styles.group}>
-              <input
-                name="password"
-                type="password"
-                onChange={(e) => setPassword(e.target.value)}
-                required />
-              <span className="highlight"></span>
-              <span className="bar"></span>
-              <label>Contraseña</label>
-            </div>
+        </div>
+        <div className={styles.input_box}>
+          <MdOutlinePassword className={styles.icon} />
+          <div className={styles.group}>
+            <input
+              name="password"
+              type="password"
+              onChange={(e) => setPassword(e.target.value)}
+              required />
+            <span className="highlight"></span>
+            <span className="bar"></span>
+            <label>Contraseña</label>
           </div>
-          <div className="error">{loginError}</div>
-          <input type="submit" value="Acceder" className="login_btn" disabled={logginIn} />
-        </form>
-      </div>
-
+        </div>
+        <div className="error">{loginError}</div>
+        <input type="submit" value="Acceder" className="login_btn" disabled={logginIn} />
+      </form>
+    </div>
   </>
   )
 }

@@ -64,7 +64,7 @@ function Nav({ShowNavbar}) {
                     </li>
                     <li>
                         <button className={styles.btn_signOut}>
-                            <span>{data.user.names}</span>
+                            <span>{data.user.username}</span>
                             <AiOutlineUser />
                         </button>
                         <ul>

@@ -8,18 +8,18 @@ const providers = [
         authorize: async (credentials) => {
             try {
                 const user = await axios.post('https://www.productoslehren.com/api/login',
-                {
-                  user: {
-                    password: credentials.password,
-                    email: credentials.email
-                  }
-                },
-                {
-                  headers: {
-                    accept: '*/*',
-                    'Content-Type': 'application/json'
-                  }
-                })
+                    {
+                        user: {
+                            password: credentials.password,
+                            email: credentials.email
+                        }
+                    },
+                    {
+                        headers: {
+                            accept: '*/*',
+                            'Content-Type': 'application/json'
+                        }
+                    })
                 if (user) {
                     return { status: 'success', data: user.data.user }
                 } else {

@@ -349,7 +349,9 @@ export default function Consultas() {
                                                             </div>
                                                         </td>
                                                         <td className="medium">
-                                                            <StatusComponent id={producto._id} status={producto.status} nombre={producto.nombre} />
+                                                            {
+                                                                session.user.rol === 'staff' ? 'N/A' : <StatusComponent id={producto._id} status={producto.status} nombre={producto.nombre} />
+                                                            }
                                                         </td>
                                                         <td>
                                                             <VotosComponent id={producto._id} likes={producto.likes} dislikes={producto.dislikes} />
