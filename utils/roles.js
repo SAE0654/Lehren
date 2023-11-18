@@ -21,7 +21,12 @@ export const ADMIN = [
     }
 ]
 
-export const STAFF = [
+export const COMITE = [
+    {
+        icono: '',
+        texto: "Registrar producto",
+        link: "/act/register/new"
+    },
     {
         icono: '',
         texto: "Consultar SAE",
@@ -31,10 +36,13 @@ export const STAFF = [
         icono: '',
         texto: "Consultar ARTEK",
         link: "/vw/query/artek"
-    },
+    }
+]
+
+export const STAFF = [
     {
         icono: '',
         texto: "Registrar producto",
         link: "/act/register/new"
-    },
+    }
 ]

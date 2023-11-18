@@ -50,7 +50,6 @@ export default function Login() {
       <meta name="description" content="Login app" />
       <link rel="icon" href="/favicon.ico" />
     </Head>
-
     <div className={styles.login_container}>
       <img src="/img/Logo_Vertical.svg" alt="" />
       <h1>Inicia sesión</h1>

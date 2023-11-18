@@ -1,4 +1,3 @@
-
 @use "util/mixins" as mix;
 @use "util/colors" as color;
 @forward "util/fonts";
@@ -368,10 +367,12 @@ button:disabled {
     justify-content: flex-start;
     align-items: flex-start;
     flex-wrap: wrap;
+
     .control {
         display: flex;
         align-items: flex-start;
         justify-content: flex-start;
+
         span {
             margin-top: 0.4em;
         }
@@ -463,6 +464,7 @@ button:disabled {
 .control-radio.valid .control_indicator:after {
     background: rgb(148, 148, 32);
 }
+
 .control.valid input:checked~.control_indicator {
     background: #fff;
 }
@@ -558,63 +560,157 @@ button:disabled {
 .sininiciar {
     color: #ffffff;
     background-color: #999999;
+
+    &:disabled {
+        color: #ffffff;
+        background-color: #999999;
+        cursor: inherit;
+    }
 }
 
 .quickmarketoverlook {
     color: #fff;
     background-color: #585958;
+
+    &:disabled {
+        color: #fff;
+        background-color: #585958;
+        cursor: inherit;
+    }
 }
 
 .rúbrica {
     color: #fff;
     background-color: #3c78d8;
+
+    &:disabled {
+        color: #fff;
+        background-color: #3c78d8;
+        cursor: inherit;
+    }
 }
 
 .rechazadaenrúbrica {
     color: #fff;
     background-color: #fe0001;
+    cursor: inherit;
+
+    &:disabled {
+        color: #fff;
+        background-color: #fe0001;
+        cursor: inherit;
+    }
 }
 
 .validacióndemercado {
     color: #fff;
     background-color: #999999;
+    &:disabled {
+        color: #fff;
+        background-color: #999999;
+        cursor: inherit;
+    }
 }
 
 .fasttrack {
     color: #fff;
     background-color: #fe00fe;
+    &:disabled {
+        color: #fff;
+        background-color: #fe00fe;
+        cursor: inherit;
+    }
 }
 
 .standby {
     color: #000;
     background-color: #fefe00;
+    &:disabled {
+        color: #000;
+        background-color: #fefe00;
+        cursor: inherit;
+    }
 }
 
 .rechazadaenvalidacióndemercado {
     color: #fff;
     background-color: #fe0001;
+    &:disabled {
+        color: #fff;
+        background-color: #fe0001;
+        cursor: inherit;
+    }
 }
 
 .roi {
     color: #fff;
     background-color: #fe7d10;
+    &:disabled {
+        color: #fff;
+        background-color: #fe7d10;
+        cursor: inherit;
+    }
 }
 
 .producción {
     color: #fff;
     background-color: #fe7d10;
+    &:disabled {
+        color: #fff;
+        background-color: #fe7d10;
+        cursor: inherit;
+    }
 }
 
 .promoción {
     color: #fff;
     background-color: #fe7d10;
+    &:disabled {
+        color: #fff;
+        background-color: #fe7d10;
+        cursor: inherit;
+    }
 }
 
 .programainiciado {
     color: #000000;
     background-color: #00fe01;
+    &:disabled {
+        color: #000000;
+        background-color: #00fe01;
+        cursor: inherit;
+    }
 }
 
+.pre-producción {
+    background-color: #ff7d11;
+    color: #000;
+    &:disabled {
+        background-color: #ff7d11;
+        color: #000;
+        cursor: inherit;
+    }
+}
+
+.validacióndecoursera {
+    color: #fff;
+    background-color: #0001fe;
+    &:disabled {
+        color: #fff;
+        background-color: #0001fe;
+        cursor: inherit;
+    }
+}
+
+.validaciónfinaldelanzamiento {
+    color: #fff;
+    background-color: #0001fe;
+    &:disabled {
+        color: #fff;
+        background-color: #0001fe;
+        cursor: inherit;
+    }
+}
 
 .swal2-popup,
 .swal2-input,
@@ -719,12 +815,15 @@ input {
     justify-content: center;
     gap: 1em;
     margin-top: 3em;
-    button, input[type="submit"] {
+
+    button,
+    input[type="submit"] {
         display: block;
         width: 75%;
         margin-top: inherit !important;
         margin-bottom: inherit !important;
     }
+
     button {
         border: 1px solid gray;
         border-radius: 7px;
@@ -739,26 +838,31 @@ input {
     align-items: center;
     justify-content: center;
     gap: 0.5em;
+
     .box_like {
         display: flex;
         flex-direction: column;
         align-items: center;
         justify-content: center;
         font-family: "Poppins", sans-serif;
+
         .icon {
             font-size: 1.2rem;
             color: rgb(194, 181, 181);
             cursor: pointer;
+
             &:active {
                 scale: 0.9;
             }
         }
+
         span {
             color: rgb(194, 181, 181);
             font-weight: bold;
         }
+
         .taked {
-           color: #fff;
+            color: #fff;
         }
     }
 }

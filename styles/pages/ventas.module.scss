@@ -172,6 +172,15 @@
                     @include mix.flexBox(column, flex-start, center);
                     width: 100%;
                     margin-top: 1em;
+                    p {
+                        color: #fff;
+                        margin: 1em auto;
+                    }
+                    .container_rvoe {
+                        @include mix.flexBox(row, center, center);
+                        margin: auto;
+                        gap: 1em;
+                    }
 
                     input[type="submit"] {
                         text-transform: uppercase;

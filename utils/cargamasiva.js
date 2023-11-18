@@ -15,13 +15,13 @@ export function cargarUsuarios() {
 
 export function cargarUnUsuario() {
     const usuario = {
-        Identificador: "1068",
-        Comite: "No",
-        names: "Marcos Raúl González Barcenas",
-        email: "c.martinez@saei.mx",
-        rol: "staff",
-        Primernombre: "Marcos",
-        password: "Marcos1068"
+        Identificador: "",
+        Comite: "",
+        names: "",
+        email: "",
+        rol: "",
+        Primernombre: "",
+        password: ""
     }
     axios.post(`${process.env.NEXT_PUBLIC_ENDPOINT}api/signup`, usuario)
         .then(() => {

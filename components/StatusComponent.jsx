@@ -1,9 +1,11 @@
 import axios from 'axios';
+import { useSession } from 'next-auth/react';
 import { useEffect, useState } from 'react';
 import Swal from 'sweetalert2/dist/sweetalert2';
 
 const StatusComponent = ({ id, status, nombre }) => {
     const [Status, setStatus] = useState(status);
+    const { data: session } = useSession();
 
     useEffect(() => {
         if (status === Status) return;
@@ -13,7 +15,7 @@ const StatusComponent = ({ id, status, nombre }) => {
     useEffect(() => {
         setStatus(status);
     }, [id])
-    
+
 
     const actualizarStatus = () => {
         Swal.fire({
@@ -48,7 +50,8 @@ const StatusComponent = ({ id, status, nombre }) => {
             id="status"
             onChange={(e) => setStatus(e.target.value)}
             value={Status}
-            className={Status.replace(/\s/g, '').toLowerCase()}>
+            className={Status.replace(/\s/g, '').toLowerCase()}
+            disabled={session.user.rol === 'comité' ? true : false}>
             <option value="Sin iniciar">Sin iniciar</option>
             <option value="Quick market overlook">Quick market overlook</option>
             <option value="Rúbrica">Rúbrica</option>
@@ -60,7 +63,10 @@ const StatusComponent = ({ id, status, nombre }) => {
             <option value="ROI">ROI</option>
             <option value="Producción">Producción</option>
             <option value="Promoción">Promoción</option>
-            <option value="Programa iniciado">Programada iniciado</option>
+            <option value="Programa iniciado">Programa iniciado</option>
+            <option value="Pre-producción">Pre-producción</option>
+            <option value="Validación de Coursera">Validación de Coursera</option>
+            <option value="Validación final de lanzamiento">Validación final de lanzamiento</option>
         </select>
     </div>
 }

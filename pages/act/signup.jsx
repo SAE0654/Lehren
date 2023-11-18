@@ -110,7 +110,7 @@ export default function Login() {
                         <button onClick={() => setOnChangeRoute(false)}>Cancelar</button>
                     </div>
                 </div>
-                {session.user.rol === 'administrador' ? <button className="btn_normal" onClick={() => setIsSearching(!IsSearching)}>Buscar usuario</button> : null}
+                {session.user.rol === 'administrador' || session.user.rol === 'super-admin' ? <button className="btn_normal" onClick={() => setIsSearching(!IsSearching)}>Buscar usuario</button> : null}
                 {IsSearching ?
                     <>
                         <Search />
@@ -153,6 +153,7 @@ export default function Login() {
                             <select name="rol" onChange={(e) => (setData({ ...Data, [e.target.name]: e.target.value }), setNotSaved(true))}>
                                 <option value="default">Seleccionar rol</option>
                                 <option value="administrador">Administrador</option>
+                                <option value="comité">Comité</option>
                                 <option value="staff">Staff</option>
                                 <option value="docente">Docente</option>
                             </select>
@@ -217,7 +218,6 @@ export default function Login() {
                     <input type="submit" value="Registrar" />
                 </form>
             </div>
-
         </Layout>
     </>
     )

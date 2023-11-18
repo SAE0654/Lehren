@@ -7,14 +7,14 @@ import { AiOutlinePoweroff, AiFillHome } from "react-icons/ai";
 import { NavLink } from './NavLink';
 import { useState } from "react";
 
-function Nav({ShowNavbar}) {
+function Nav({ ShowNavbar }) {
     const [ShowConsultar, setShowConsultar] = useState(false);
     const [ShowRegistrar, setShowRegistrar] = useState(false);
     const { data } = useSession();
 
     return (
         data ? (
-            <nav className={styles.navbar} style={!ShowNavbar ? {left: '-100vw'} : {left: '0'}}>
+            <nav className={styles.navbar} style={!ShowNavbar ? { left: '-100vw' } : { left: '0' }}>
                 <img src="/img/Logo_horizontal.svg" alt="" />
 
                 <ul data-animation="center">
@@ -24,21 +24,26 @@ function Nav({ShowNavbar}) {
                             Inicio
                         </NavLink>
                         <div>
-                            <button className={styles.btn_sub} href="#" onClick={() => (setShowConsultar(!ShowConsultar), setShowRegistrar(false))}>
-                                Consultar
-                                <ul className={styles.submenu_consultas} style={ShowConsultar ? { display: "flex" } : { display: "none" }}>
-                                    <li>
-                                        <NavLink href="/vw/query/sae" exact>
-                                            Consultar SAE
-                                        </NavLink>
-                                    </li>
-                                    <li>
-                                        <NavLink href="/vw/query/artek" exact>
-                                            Consultar ARTEK
-                                        </NavLink>
-                                    </li>
-                                </ul>
-                            </button>
+                            {console.log(data.user)}
+                            {
+                                data.user.rol === 'administrador' || data.user.rol === 'super-admin' || data.user.rol === 'comité' ?
+                                    <button className={styles.btn_sub} href="#" onClick={() => (setShowConsultar(!ShowConsultar), setShowRegistrar(false))}>
+                                        Consultar
+                                        <ul className={styles.submenu_consultas} style={ShowConsultar ? { display: "flex" } : { display: "none" }}>
+                                            <li>
+                                                <NavLink href="/vw/query/sae" exact>
+                                                    Consultar SAE
+                                                </NavLink>
+                                            </li>
+                                            <li>
+                                                <NavLink href="/vw/query/artek" exact>
+                                                    Consultar ARTEK
+                                                </NavLink>
+                                            </li>
+                                        </ul>
+                                    </button>
+                                    : null
+                            }
                         </div>
                         <div>
                             <button className={styles.btn_sub} href="#" onClick={() => (setShowRegistrar(!ShowRegistrar), setShowConsultar(false))}>

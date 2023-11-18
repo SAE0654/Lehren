@@ -73,6 +73,7 @@ export default function Producto() {
         e.preventDefault();
         const form = e.target;
         const producto = { ...Producto };
+        console.log('Enviando => ', producto)
         for (let i = 0; i < form.length; i++) {
             if (form[i].type === "submit") continue;
             if (form[i].type === "checkbox") {
@@ -128,6 +129,7 @@ export default function Producto() {
 
         producto = { ...producto, nombre: nombre }
 
+        return;
         await saveFilesToAWS();
         producto = { ...producto, evidenciaAdjunta: url_files }
         await axios.post(`${process.env.NEXT_PUBLIC_ENDPOINT}api/productos/all`, producto,
@@ -160,6 +162,20 @@ export default function Producto() {
 
     const setProductoItem = (e) => {
         if (!notSaved) setNotSaved(true);
+        if (e.target.id === 'RVOE-NO') {
+            setProducto({
+                ...Producto,
+                RVOE: false
+            })
+            return;
+        }
+        if (e.target.id === 'RVOE') {
+            setProducto({
+                ...Producto,
+                RVOE: true
+            })
+            return;
+        }
         if (e.target.name === "institucion") {
             setInstitucion(e.target.value)
         }
@@ -292,10 +308,17 @@ export default function Producto() {
                         <div className={styles.form_group}>
                             <h2>Datos generales</h2>
                             <div className={styles.container_footer}>
-                                <label className={styles.form_control}>
-                                    <input type="checkbox" name="RVOE" id="RVOE" onChange={(e) => setProductoItem(e)} defaultChecked={false} />
-                                    Tiene RVOE
-                                </label>
+                                <p>¿Necesita RVOE?</p>
+                                <div className={styles.container_rvoe}>
+                                    <label className={styles.form_control}>
+                                        <input type="radio" name="RVOE" id="RVOE" onChange={(e) => setProductoItem(e)} defaultChecked={false} />
+                                        Sí
+                                    </label>
+                                    <label className={styles.form_control}>
+                                        <input type="radio" name="RVOE" id="RVOE-NO" onChange={(e) => setProductoItem(e)} defaultChecked={false} />
+                                        No
+                                    </label>
+                                </div>
                             </div>
                             <div className="radio_ck_section">
                                 <h3>* Tipo de oferta</h3>
@@ -395,21 +418,26 @@ export default function Producto() {
                                                 <input type="radio" name="areaV" value="Programación de videojuegos" onChange={(e) => setProductoItem(e)} title="Área a la que se vincula" />
                                                 <div className="control_indicator"></div>
                                             </label>
+                                            <label className="control control-radio">
+                                                Otra
+                                                <input type="radio" name="areaV" value="Otra" onChange={(e) => setProductoItem(e)} title="Área a la que se vincula" />
+                                                <div className="control_indicator"></div>
+                                            </label>
                                         </div>
                                         <div className="radio_ck_section" style={Institucion === 'artek' ? { display: 'block' } : { display: 'none' }}>
                                             <h3>* Área a la que se víncula</h3>
                                             <label className="control control-radio">
-                                                Gestión Tecnológica
+                                                Gestión tecnológica
                                                 <input type="radio" name="areaV" value="Gestión tecnológica" onChange={(e) => setProductoItem(e)} title="Área a la que se vincula" />
                                                 <div className="control_indicator"></div>
                                             </label>
                                             <label className="control control-radio">
-                                                Desarrollo de Software
+                                                Desarrollo de software
                                                 <input type="radio" name="areaV" value="Desarrollo de software" onChange={(e) => setProductoItem(e)} title="Área a la que se vincula" />
                                                 <div className="control_indicator"></div>
                                             </label>
                                             <label className="control control-radio">
-                                                Ciencia de Datos
+                                                Ciencia de datos
                                                 <input type="radio" name="areaV" value="Ciencia de datos" onChange={(e) => setProductoItem(e)} title="Área a la que se vincula" />
                                                 <div className="control_indicator"></div>
                                             </label>
@@ -419,8 +447,18 @@ export default function Producto() {
                                                 <div className="control_indicator"></div>
                                             </label>
                                             <label className="control control-radio">
-                                                Inteligencia Artificial
+                                                Inteligencia artificial
                                                 <input type="radio" name="areaV" value="Inteligencia artificial" onChange={(e) => setProductoItem(e)} title="Área a la que se vincula" />
+                                                <div className="control_indicator"></div>
+                                            </label>
+                                            <label className="control control-radio">
+                                                Programación de videojuegos
+                                                <input type="radio" name="areaV" value="Programación de videojuegos" onChange={(e) => setProductoItem(e)} title="Área a la que se vincula" />
+                                                <div className="control_indicator"></div>
+                                            </label>
+                                            <label className="control control-radio">
+                                                Otra
+                                                <input type="radio" name="areaV" value="Otra" onChange={(e) => setProductoItem(e)} title="Área a la que se vincula" />
                                                 <div className="control_indicator"></div>
                                             </label>
                                         </div>
@@ -540,11 +578,11 @@ export default function Producto() {
                             <input
                                 type="text"
                                 name="periodicidad"
-                                placeholder="Periodicidad"
+                                placeholder="Periodicidad: Ej. sábado 4 horas durante 3 meses"
                                 defaultValue={Producto.periodicidad}
                                 min={0}
                                 onChange={(e) => setProductoItem(e)} />
-                            <input type="text" name="responsable" placeholder="Propuesta de experto" defaultValue={Producto.responsable} onChange={(e) => setProductoItem(e)} maxLength={40} title="Propuesta de experto" />
+                            <input type="text" name="responsable" placeholder="Propuesta de experto (docente(s) que podría impartir)" defaultValue={Producto.responsable} onChange={(e) => setProductoItem(e)} maxLength={40} title="Propuesta de experto" />
                         </div>
                         <div className={styles.form_group}>
                             <h2>Recursos extra necesarios</h2>
@@ -555,7 +593,7 @@ export default function Producto() {
                                 (Ej; Proyector X: x lúmens. Software W 1 licencia x persona,
                                 Renta de foro Z por X días.
                             </span>
-                            <textarea name="descripcion" id="descripcion" maxLength="500" placeholder="Descripción general" defaultValue={Producto.descripcion} onChange={(e) => setProductoItem(e)}></textarea>
+                            <textarea name="descripcion" id="descripcion" maxLength="500" placeholder="Lista de recursos" defaultValue={Producto.descripcion} onChange={(e) => setProductoItem(e)}></textarea>
                             <span className="info_zone">
                                 Si esta sección no aplica para tu propuesta, favor de escribir
                                 “NA” en la caja de texto.

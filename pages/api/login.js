@@ -14,7 +14,8 @@ const handler = async (req, res) => {
                     email: userRes.email,
                     names: userRes.names,
                     username: userRes.Primernombre,
-                    rol: userRes.rol
+                    rol: userRes.rol,
+                    comite: userRes.Comite
                 }
             };
             const passwordsTheSame = await userRes.matchPassword(user.password);
