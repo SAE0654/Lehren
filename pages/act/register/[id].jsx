@@ -129,7 +129,6 @@ export default function Producto() {
 
         producto = { ...producto, nombre: nombre }
 
-        return;
         await saveFilesToAWS();
         producto = { ...producto, evidenciaAdjunta: url_files }
         await axios.post(`${process.env.NEXT_PUBLIC_ENDPOINT}api/productos/all`, producto,
